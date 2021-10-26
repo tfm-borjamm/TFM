@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "tfm-borjamm": {
+      "hosting": {
+        "TFM": [
+          "tfm-borjamm"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "tfm-borjamm"
+  }
+}

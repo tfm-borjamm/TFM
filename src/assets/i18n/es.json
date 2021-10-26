@@ -1,0 +1,17 @@
+{
+  "register": "Registrarse",
+  "forgot_password": "¿Has olvidado la contraseña?",
+  "login": "Iniciar sesión",
+  "send": "Enviar",
+  "save": "Guardar",
+  "restore": "Restablecer",
+  "name": "Nombre",
+  "surname": "Apellidos",
+  "street": "Dirección",
+  "email": "Email",
+  "message_placeholder": "Escribe un mensaje",
+  "error_login": "Correo electrónico o contraseña incorrecta",
+  "error_email_exists": "El correo eléctronico ya se encuentra registrado en la aplicación",
+  "error": "Se ha producido un error",
+  "publications": "Publicaciones"
+}
