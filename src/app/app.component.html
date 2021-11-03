@@ -1,7 +1,8 @@
-<h3>{{ "publications" | translate }}</h3>
-<div class="card" *ngFor="let publication of publications | async">
-  <p>{{ publication.name }}</p>
-  <p>{{ publication.type }}</p>
-  <p>{{ publication.sex }}</p>
+<div [ngClass]="{ app: user?.role === 'admin' }" *ngIf="loadInfomation">
+  <app-sidenav *ngIf="user?.role === 'admin'"></app-sidenav>
+  <div [ngClass]="{ content: user?.role === 'admin' }">
+    <app-header *ngIf="user?.role !== 'admin'" [user]="user"></app-header>
+    <router-outlet></router-outlet>
+    <app-footer *ngIf="user?.role !== 'admin'"></app-footer>
+  </div>
 </div>
-<router-outlet></router-outlet>

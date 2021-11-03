@@ -1,0 +1,109 @@
+<main class="main">
+  <div class="main__container">
+    <h1 class="main__title" *ngIf="url !== '/user/add'">Registrarse</h1>
+    <h1 class="main__title" *ngIf="url === '/user/add'">Añadir usuario</h1>
+    <form class="main__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="name">Nombre (*)</label>
+          <input class="main__input" type="text" id="name" [formControl]="name" placeholder="Nombre" />
+          <div class="errors" *ngIf="registerForm.get('name').errors && (registerForm.get('name').touched || registerForm.get('name').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('name').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('name').errors.minlength">Este campo debe tener mínimo 3 caracteres</span>
+            <span class="errors__meg" *ngIf="registerForm.get('name').errors.maxlength">Este campo no debe tener más de 55 caracteres</span>
+            <span class="errors__msg" *ngIf="registerForm.get('name').errors.pattern">Este campo no debe tener espacios ni caracteres especiales</span>
+          </div>
+        </li>
+        <li class="main__item">
+          <label class="main__label" for="email">Email (*)</label>
+          <input class="main__input" type="email" id="email" [formControl]="email" placeholder="Email" />
+          <div class="errors" *ngIf="registerForm.get('email').errors && (registerForm.get('email').touched || registerForm.get('email').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('email').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="!registerForm.get('email').errors.required && (registerForm.get('email').errors.email || registerForm.get('email').errors.emailValidator)"
+              >El email no tiene un formato válido</span
+            >
+          </div>
+        </li>
+        <li class="main__item">
+          <label class="main__label" for="cp">Código postal (*)</label>
+          <input class="main__input" type="text" id="cp" [formControl]="cp" placeholder="Código postal" />
+          <div class="errors" *ngIf="registerForm.get('cp').errors && (registerForm.get('cp').touched || registerForm.get('cp').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="street">Dirección (*)</label>
+          <input class="main__input" type="text" id="street" [formControl]="street" placeholder="Dirección" />
+          <div class="errors" *ngIf="registerForm.get('street').errors && (registerForm.get('street').touched || registerForm.get('street').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('street').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="telephone">Teléfono (*)</label>
+          <input class="main__input" type="text" id="telephone" [formControl]="telephone" placeholder="Teléfono" />
+          <div class="errors" *ngIf="registerForm.get('telephone').errors && (registerForm.get('telephone').touched || registerForm.get('telephone').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.maxlength">Este campo no debe tener más de 12 caracteres</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="role">Tipo de usuario (*)</label>
+          <select class="main__select" id="role" [formControl]="role" [value]="registerForm.value.role">
+            <option value="" disabled selected>Selecciona el tipo</option>
+            <option *ngFor="let role of roles" value="{{ role }}" [selected]="registerForm.value.role === role">{{ role }}</option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('role').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="province">Provincia (*)</label>
+          <select class="main__select" id="province" [formControl]="province" [value]="registerForm.value.province">
+            <option value="" disabled selected>Selecciona una provincia</option>
+            <option *ngFor="let province of provinces" value="{{ province }}" [selected]="registerForm.value.province === province ? true : false">{{ province }}</option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('province').errors && (registerForm.get('province').touched || registerForm.get('province').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('province').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="password">Contraseña (*)</label>
+          <input class="main__input" type="password" id="password" [formControl]="password" placeholder="Contraseña" />
+          <div class="errors" *ngIf="registerForm.get('passwords.password').errors && (registerForm.get('passwords.password').touched || registerForm.get('passwords.password').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('passwords.password').errors?.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('passwords.password').errors?.minlength">Este campo debe tener mínimo 8 caracteres</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="repeat_password">Confirme la contraseña (*)</label>
+          <input class="main__input" type="password" id="repeat_password" [formControl]="repeat_password" placeholder="Confirme la contraseña" />
+          <div
+            class="errors"
+            *ngIf="
+              (registerForm.get('passwords').errors || registerForm.get('passwords.repeat_password').errors) &&
+              (registerForm.get('passwords.repeat_password').touched || registerForm.get('passwords.repeat_password').dirty)
+            "
+          >
+            <span class="errors__msg" *ngIf="registerForm.get('passwords.repeat_password').errors?.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="!registerForm.get('passwords.repeat_password').errors?.invalidMatch && !registerForm.get('passwords.repeat_password').errors?.required"
+              >Las contraseñas no coinciden</span
+            >
+            <span class="errors__msg" *ngIf="registerForm.get('passwords.repeat_password').errors?.minlength">Este campo debe tener mínimo 8 caracteres</span>
+          </div>
+        </li>
+
+        <li class="main__item main__item--fb-100">
+          <!-- <button class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="url !== '/user/add'">Registrarse</button> -->
+          <!-- <button class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="url === '/user/add'">Crear</button> -->
+          <button class="main__button" type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+</main>

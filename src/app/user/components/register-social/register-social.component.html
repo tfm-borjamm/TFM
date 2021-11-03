@@ -1,0 +1,70 @@
+<main class="main">
+  <div class="main__container">
+    <h1 class="main__title">Registrarse</h1>
+    <form class="main__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="cp">Código postal (*)</label>
+          <input class="main__input" type="text" name="cp" [formControl]="cp" placeholder="Código postal" />
+          <div class="errors" *ngIf="registerForm.get('cp').errors && (registerForm.get('cp').touched || registerForm.get('cp').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="street">Dirección (*)</label>
+          <input class="main__input" type="text" name="street" [formControl]="street" placeholder="Dirección" />
+          <div class="errors" *ngIf="registerForm.get('street').errors && (registerForm.get('street').touched || registerForm.get('street').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('street').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="telephone">Teléfono (*)</label>
+          <input class="main__input" type="telephone" name="telephone" [formControl]="telephone" placeholder="Teléfono" />
+          <div class="errors" *ngIf="registerForm.get('telephone').errors && (registerForm.get('telephone').touched || registerForm.get('telephone').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.maxlength">Este campo no debe tener más de 12 caracteres</span>
+          </div>
+        </li>
+
+        <!-- <li class="main__item">
+              <label class="main__label" for="role">Tipo de usuario (*)</label>
+              <select class="main__select" id="role" [formControl]="role" [value]="registerForm.value.role">
+                <option value="" disabled selected>Selecciona el tipo</option>
+                <option *ngFor="let role of roles" value="{{ role.key }}" [selected]="registerForm.value.role === role.key">{{ role.value }}</option>
+              </select>
+              <div class="errors" *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
+                <span class="errors__msg" *ngIf="registerForm.get('role').errors.required">Este campo es obligatorio</span>
+              </div>
+            </li> -->
+
+        <li class="main__item">
+          <label class="main__label" for="role">Tipo de usuario (*)</label>
+          <select class="main__select" id="role" [formControl]="role" [value]="registerForm.value.role">
+            <option value="" disabled selected>Selecciona el tipo</option>
+            <option *ngFor="let role of roles" value="{{ role }}" [selected]="registerForm.value.role === role">{{ role }}</option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('role').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="province">Provincia(*)</label>
+          <select class="main__select" id="province" [formControl]="province" [value]="registerForm.value.province">
+            <option value="" disabled selected>Selecciona una provincia</option>
+            <option *ngFor="let province of provinces" value="{{ province }}" [selected]="registerForm.value.province === province ? true : false">{{ province }}</option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('province').errors && (registerForm.get('province').touched || registerForm.get('province').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('province').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item main__item--fb-100">
+          <button class="main__button" type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+</main>

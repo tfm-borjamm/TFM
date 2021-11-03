@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { User } from './user/models/user.model';
+import { AuthService } from './user/services/auth.service';
+import { UserService } from './user/services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -10,16 +12,19 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
   title = 'TFM';
-  publications: Observable<any[]>;
 
+  public user: User;
+  public loadInfomation: boolean = false;
+  public firstTime: boolean;
   constructor(
     private translate: TranslateService,
-    private db: AngularFireDatabase
-  ) {
-    this.publications = this.db.list('/publications').valueChanges();
-  }
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    this.firstTime = true;
     this.initializeApp();
   }
 
@@ -27,5 +32,28 @@ export class AppComponent {
     this.translate.setDefaultLang('es');
     this.translate.use(this.translate.getBrowserLang());
     console.log('Idioma: ', this.translate.getDefaultLang());
+
+    this.authService.getCurrentUser().subscribe(async (user: firebase.default.User) => {
+      this.loadInfomation = false;
+      if (user) {
+        this.user = await this.userService.getUserById(user.uid);
+        if (this.user.role) {
+          if (this.user.role === 'admin') {
+            this.router.navigate(['user', 'profile']);
+          }
+          this.router.navigate(['publication/list']);
+        } else {
+          this.router.navigate(['user/register-social']);
+        }
+      } else {
+        this.user = null;
+        if (!this.firstTime)
+          this.router
+            .navigateByUrl('/user/login', { skipLocationChange: true })
+            .then(() => this.router.navigate(['/']));
+      }
+      this.loadInfomation = true;
+      this.firstTime = false;
+    });
   }
 }

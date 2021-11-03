@@ -1,0 +1,43 @@
+<header class="header" *ngIf="user?.role != 'admin'">
+  <nav class="navigation">
+    <div class="navigation__container">
+      <p class="navigation__logo">Cats&Dogs</p>
+    </div>
+
+    <div class="navigation__menu" id="menu">
+      <i class="navigation__icon fas fa-bars"></i>
+    </div>
+
+    <ul class="navigation__list navigation__list--hidden" id="list">
+      <li class="navigation__item">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">Inicio</a>
+      </li>
+      <li class="navigation__item" *ngIf="user && user.role === 'company'">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/my-publications">Mis publicaciones</a>
+      </li>
+      <li class="navigation__item" *ngIf="user && user.role == 'client'">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/favorites">Favoritos</a>
+      </li>
+      <li class="navigation__item">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/contact">Contacto</a>
+      </li>
+      <li class="navigation__item" *ngIf="user && user?.role">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/user/profile">Perfil</a>
+      </li>
+
+      <li class="navigation__item" *ngIf="user && !user?.role">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/user/register-social">Completar registro</a>
+      </li>
+
+      <li class="navigation__item" *ngIf="user">
+        <a class="navigation__link" (click)="onLogout()">Cerrar sesión</a>
+      </li>
+      <li class="navigation__item" *ngIf="!user">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/user/login">Iniciar sesión</a>
+      </li>
+      <li class="navigation__item" *ngIf="!user">
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/user/register">Registrarse</a>
+      </li>
+    </ul>
+  </nav>
+</header>
