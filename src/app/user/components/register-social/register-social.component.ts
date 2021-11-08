@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { provinces } from 'src/assets/mocks/variables';
+import { codes, provinces } from 'src/assets/mocks/variables';
 import { Role } from '../../enums/role.enum';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
@@ -18,12 +18,16 @@ export class RegisterSocialComponent implements OnInit {
   public street: FormControl;
   public province: FormControl;
   public role: FormControl;
+  public code: FormControl;
   public telephone: FormControl;
   public cp: FormControl;
   public password: FormControl;
   public repeat_password: FormControl;
+
+  public codes: any[];
   public provinces: string[] = provinces;
   public roles: any;
+
   public user: User;
 
   constructor(
@@ -35,9 +39,12 @@ export class RegisterSocialComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.codes = this.utilsService.setFormatPhonesCodes(codes);
+
     this.street = new FormControl('', [Validators.required]);
     this.province = new FormControl('', [Validators.required]);
     this.role = new FormControl('', [Validators.required]);
+    this.code = new FormControl('', [Validators.required]);
     this.telephone = new FormControl('', [Validators.required, Validators.maxLength(12)]);
     this.cp = new FormControl('', [Validators.required]);
 
@@ -66,6 +73,7 @@ export class RegisterSocialComponent implements OnInit {
       street: this.street,
       province: this.province,
       role: this.role,
+      code: this.code,
       telephone: this.telephone,
       cp: this.cp,
     }));
@@ -78,6 +86,7 @@ export class RegisterSocialComponent implements OnInit {
         street: this.registerForm.value.street,
         province: this.registerForm.value.province,
         role: this.registerForm.value.role,
+        code: this.registerForm.value.code,
         telephone: this.registerForm.value.telephone,
         cp: this.registerForm.value.cp,
       };
@@ -93,3 +102,5 @@ export class RegisterSocialComponent implements OnInit {
     }
   }
 }
+
+// code.split(" ")[1].replace(/[{()}]/g, ''); // Numbercode

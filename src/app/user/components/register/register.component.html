@@ -41,6 +41,19 @@
         </li>
 
         <li class="main__item">
+          <label class="main__label" for="code">Prefijo (*)</label>
+          <select class="main__select" id="code" [formControl]="code" [value]="registerForm.value.code">
+            <option value="" disabled selected>Selecciona un prefijo</option>
+            <option *ngFor="let code of codes" value="{{ code }}" [selected]="registerForm.value.code === code ? true : false">
+              {{ code }}
+            </option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('code').errors && (registerForm.get('code').touched || registerForm.get('code').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('code').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
           <label class="main__label" for="telephone">Teléfono (*)</label>
           <input class="main__input" type="text" id="telephone" [formControl]="telephone" placeholder="Teléfono" />
           <div class="errors" *ngIf="registerForm.get('telephone').errors && (registerForm.get('telephone').touched || registerForm.get('telephone').dirty)">

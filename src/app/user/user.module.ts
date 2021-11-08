@@ -9,9 +9,10 @@ import { RegisterSocialComponent } from './components/register-social/register-s
 import { ProfileComponent } from './components/profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { UserAdminComponent } from './components/user-admin/user-admin.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, ForgotPasswordComponent, RegisterSocialComponent, ProfileComponent],
+  declarations: [LoginComponent, RegisterComponent, ForgotPasswordComponent, RegisterSocialComponent, ProfileComponent, UserAdminComponent],
   imports: [CommonModule, UserRoutingModule, FormsModule, ReactiveFormsModule, SharedModule],
 })
 export class UserModule {}

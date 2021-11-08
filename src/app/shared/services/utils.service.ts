@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 
@@ -5,7 +6,7 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
   providedIn: 'root',
 })
 export class UtilsService {
-  constructor(private db: AngularFireDatabase) {}
+  constructor(private db: AngularFireDatabase, private http: HttpClient) {}
 
   generateID(): string {
     return this.db.createPushId();
@@ -14,6 +15,10 @@ export class UtilsService {
   getArrayFromObject(object: any): any[] {
     if (object) return Object.keys(object).map((key: string) => object[key]);
     return [];
+  }
+
+  setFormatPhonesCodes(codes: any): string[] {
+    return codes.map((prefix: any) => prefix.code + ' (' + prefix.dial_code + ')').sort();
   }
 
   async errorHandling(e: any) {
@@ -46,5 +51,10 @@ export class UtilsService {
           break;
       }
     }
+  }
+
+  getServerTimeStamp(): Promise<{ timestamp: number }> {
+    const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/current-time';
+    return this.http.get<{ timestamp: number }>(url).toPromise();
   }
 }

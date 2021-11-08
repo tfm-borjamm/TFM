@@ -1,6 +1,7 @@
 <main class="main">
   <div class="main__container">
     <h1 class="main__title">Registrarse</h1>
+    <p>Necesitamos una serie de datos para poder finalizar el proceso de registro correctamente</p>
     <form class="main__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <ul class="main__list">
         <li class="main__item">
@@ -16,6 +17,19 @@
           <input class="main__input" type="text" name="street" [formControl]="street" placeholder="Dirección" />
           <div class="errors" *ngIf="registerForm.get('street').errors && (registerForm.get('street').touched || registerForm.get('street').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('street').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="code">Prefijo (*)</label>
+          <select class="main__select" id="code" [formControl]="code" [value]="registerForm.value.code">
+            <option value="" disabled selected>Selecciona un prefijo</option>
+            <option *ngFor="let code of codes" value="{{ code }}" [selected]="registerForm.value.code === code ? true : false">
+              {{ code }}
+            </option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('code').errors && (registerForm.get('code').touched || registerForm.get('code').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('code').errors.required">Este campo es obligatorio</span>
           </div>
         </li>
 

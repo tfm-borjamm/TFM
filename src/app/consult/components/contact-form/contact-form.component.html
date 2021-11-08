@@ -1,0 +1,51 @@
+<main class="main">
+  <div class="main__container">
+    <h1 class="main__title">Contáctanos</h1>
+    <p>Para cualquier consulta no dudes en ponerte en contacto con nosotros</p>
+    <form class="main__form" [formGroup]="contactForm" (ngSubmit)="contact()">
+      <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="name">Nombre (*)</label>
+          <input class="main__input" id="name" type="name" id="name" [formControl]="name" placeholder="Nombre" />
+          <div class="errors" *ngIf="contactForm.get('name').errors && (contactForm.get('name').touched || contactForm.get('name').dirty)">
+            <span class="errors__msg" *ngIf="contactForm.get('name').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="contactForm.get('name').errors.minlength || contactForm.get('name').errors.maxlength">Minímo 3 caracteres y máximo 55 caracteres</span>
+            <span class="errors__msg" *ngIf="!contactForm.get('name').errors.required && contactForm.get('name').errors.name">Existen errores</span>
+          </div>
+        </li>
+        <li class="main__item">
+          <label class="main__label" for="email">Email (*)</label>
+          <input class="main__input" id="email" type="email" id="email" [formControl]="email" placeholder="Email" />
+          <div class="errors" *ngIf="contactForm.get('email').errors && (contactForm.get('email').touched || contactForm.get('email').dirty)">
+            <span class="errors__msg" *ngIf="contactForm.get('email').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="!contactForm.get('email').errors.required && (contactForm.get('email').errors.email || contactForm.get('email').errors.emailValidator)">
+              El email no tiene un formato válido
+            </span>
+          </div>
+        </li>
+        <li class="main__item">
+          <label class="main__label" for="subject">Asunto (*)</label>
+          <input class="main__input" id="subject" type="subject" id="subject" [formControl]="subject" placeholder="Asunto" />
+          <div class="errors" *ngIf="contactForm.get('subject').errors && (contactForm.get('subject').touched || contactForm.get('subject').dirty)">
+            <span class="errors__msg" *ngIf="contactForm.get('subject').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="contactForm.get('subject').errors.maxlength">Máximo 55 caracteres</span>
+            <span class="errors__msg" *ngIf="!contactForm.get('subject').errors.required && contactForm.get('subject').errors.subject"> Existen errores </span>
+          </div>
+        </li>
+        <li class="main__item">
+          <label class="main__label" for="message">Mensaje (*)</label>
+          <textarea class="main__input" id="message" type="message" id="message" [formControl]="message" placeholder="Mensaje"></textarea>
+          <div class="errors" *ngIf="contactForm.get('message').errors && (contactForm.get('message').touched || contactForm.get('message').dirty)">
+            <span class="errors__msg" *ngIf="contactForm.get('message').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="contactForm.get('message').errors.maxlength">Máximo 500 caracteres</span>
+            <span class="errors__msg" *ngIf="!contactForm.get('message').errors.required && contactForm.get('message').errors.message"> Existen errores </span>
+          </div>
+        </li>
+        <!-- BLOQUE DE Recaptcha!!! -->
+        <li class="main__item">
+          <button class="main__button" type="submit" [disabled]="contactForm.invalid">Enviar</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+</main>

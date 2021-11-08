@@ -1,0 +1,162 @@
+<p>Reciclaremos este componente tanto para crear / editar una publicación para las protectoras y el administrador</p>
+
+<!-- Formulario para editar o añadir una publicación -->
+<main class="main" *ngIf="publicationForm">
+  <div class="main__container">
+    <h1 class="main__title">Publicación</h1>
+    <form class="main__form" [formGroup]="publicationForm" (ngSubmit)="onSubmit()">
+      <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="name">Nombre (*)</label>
+          <input class="main__input" type="name" id="name" [formControl]="name" placeholder="Nombre" />
+          <div class="errors" *ngIf="publicationForm.get('name').errors && (publicationForm.get('name').touched || publicationForm.get('name').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('name').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="size">Tamaño (*)</label>
+          <select class="main__select" id="size" [formControl]="size" [value]="publicationForm.value.size">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let size of sizes" value="{{ size }}" [selected]="publicationForm.value.size === size">{{ size }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('size').errors && (publicationForm.get('size').touched || publicationForm.get('size').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('size').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="type">Tipo de animal (*)</label>
+          <select class="main__select" id="type" [formControl]="type" [value]="publicationForm.value.type">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let type of types" value="{{ type }}" [selected]="publicationForm.value.type === type">{{ type }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('type').errors && (publicationForm.get('type').touched || publicationForm.get('type').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('type').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="sex">Sexo (*)</label>
+          <select class="main__select" id="sex" [formControl]="sex" [value]="publicationForm.value.sex">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let sex of sexs" value="{{ sex }}" [selected]="publicationForm.value.sex === sex">{{ sex }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('sex').errors && (publicationForm.get('sex').touched || publicationForm.get('sex').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('sex').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="vaccinate">Vacunado (*)</label>
+          <select class="main__select" id="vaccinate" [formControl]="vaccinate" [value]="publicationForm.value.vaccinate">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let vaccinate of vaccinates" value="{{ vaccinate }}" [selected]="publicationForm.value.vaccinate === vaccinate ? true : false">{{ vaccinate }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('vaccinate').errors && (publicationForm.get('vaccinate').touched || publicationForm.get('vaccinate').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('vaccinate').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="sterile">Esterilizado (*)</label>
+          <select class="main__select" id="sterile" [formControl]="sterile" [value]="publicationForm.value.sterile">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let sterile of steriles" value="{{ sterile }}" [selected]="publicationForm.value.sterile === sterile ? true : false">{{ sterile }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('sterile').errors && (publicationForm.get('sterile').touched || publicationForm.get('sterile').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('sterile').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="breed">Raza (*)</label>
+          <input class="main__input" type="breed" id="breed" [formControl]="breed" placeholder="Raza" />
+          <div class="errors" *ngIf="publicationForm.get('breed').errors && (publicationForm.get('breed').touched || publicationForm.get('breed').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('breed').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="dewormed">Desparacitado (*)</label>
+          <select class="main__select" id="dewormed" [formControl]="dewormed" [value]="publicationForm.value.dewormed">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let dewormed of dewormeds" value="{{ dewormed }}" [selected]="publicationForm.value.dewormed === dewormed ? true : false">{{ dewormed }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('dewormed').errors && (publicationForm.get('dewormed').touched || publicationForm.get('dewormed').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('dewormed').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="chip">Con chip (*)</label>
+          <select class="main__select" id="chip" [formControl]="chip" [value]="publicationForm.value.chip">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let chip of chips" value="{{ chip }}" [selected]="publicationForm.value.chip === chip ? true : false">{{ chip }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('chip').errors && (publicationForm.get('chip').touched || publicationForm.get('chip').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('chip').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <!-- <li class="main__item">
+          <label class="main__label" for="chip">Con chip (*)</label>
+          <select class="main__select" id="chip" [formControl]="chip" [value]="publicationForm.value.chip">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let chip of chips" value="{{ chip.id }}" [selected]="publicationForm.value.chip === chip.id">{{ chip.value }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('chip').errors && (publicationForm.get('chip').touched || publicationForm.get('chip').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('chip').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li> -->
+
+        <li class="main__item">
+          <label class="main__label" for="age">Edad (*)</label>
+          <select class="main__select" id="age" [formControl]="age" [value]="publicationForm.value.age">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option *ngFor="let age of ages" value="{{ age }}" [selected]="publicationForm.value.age === age ? true : false">{{ age }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('age').errors && (publicationForm.get('age').touched || publicationForm.get('age').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('age').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item main__item--description">
+          <label class="main__label" for="image">Imagen (*)</label>
+          <!-- <input #input class="main__file" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple /> -->
+          <input [formControl]="image" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple />
+          <div class="main__container-img" *ngIf="files.length !== 0">
+            <div *ngFor="let file of files">
+              <img class="main__fileImg" src="{{ file.url || file.src }}" alt="Preimagen" />
+              <span (click)="deleteImage(file)">cruz</span>
+            </div>
+          </div>
+          <div *ngIf="publicationForm.get('image').touched || publicationForm.get('image').dirty">
+            <span *ngIf="files.length === 0">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <!-- <li class="main__item" *ngIf="publication">
+            <div class="main__container-img">
+              <img *ngIf="imageURL" class="main__fileImg" src="{{ imageURL }}" alt="Preimagen" />
+              <ngb-progressbar *ngIf="porcentaje !== 0 && porcentaje !== 100" class="main__progress-bar" [value]="porcentaje" type="dark" striped="true" animated="true"></ngb-progressbar>
+              <button *ngIf="imageURL" type="button" class="main__buttonDelete btn btn-danger" (click)="deleteImage()"><i class="main__icon fas fa-trash"></i></button>
+            </div>
+          </li> -->
+
+        <li class="main__item main__item--description">
+          <label class="main__label" for="description">Descripción (*)</label>
+          <textarea class="main__textarea" name="description" id="description" [formControl]="description" cols="100" rows="10"></textarea>
+          <div class="errors" *ngIf="publicationForm.get('description').errors && (publicationForm.get('description').touched || publicationForm.get('description').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('description').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="publicationForm.get('description').errors.minlength">Debe contener mínimo 100 caracteres</span>
+          </div>
+        </li>
+
+        <li class="main__item main__item--fb-100">
+          <button class="main__button btn btn-info" type="submit" [disabled]="publicationForm.invalid || files.length === 0">Publicar</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+</main>

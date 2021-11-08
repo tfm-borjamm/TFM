@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { provinces } from 'src/assets/mocks/variables';
+import { codes, provinces } from 'src/assets/mocks/variables';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { checkEmail } from '../../validations/checkEmail.validator';
+import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 
 @Component({
   selector: 'app-profile',
@@ -23,9 +23,11 @@ export class ProfileComponent implements OnInit {
   public name: FormControl;
   public street: FormControl;
   public cp: FormControl;
+  public code: FormControl;
   public telephone: FormControl;
   public province: FormControl;
 
+  public codes: string[] = [];
   public provinces: string[] = provinces;
 
   constructor(
@@ -48,6 +50,8 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    this.codes = this.utilsService.setFormatPhonesCodes(codes);
+
     this.name = new FormControl(this.user.name, [
       Validators.required,
       Validators.minLength(3),
@@ -62,6 +66,7 @@ export class ProfileComponent implements OnInit {
     this.role = new FormControl({ value: this.user.role, disabled: true }, [Validators.required]);
     this.street = new FormControl(this.user.street, [Validators.required]);
     this.province = new FormControl(this.user.province, [Validators.required]);
+    this.code = new FormControl(this.user.code ?? '', [Validators.required]);
     this.telephone = new FormControl(this.user.telephone, [Validators.required, Validators.maxLength(12)]);
     this.cp = new FormControl(this.user.cp, [Validators.required]);
     this.editForm = this.createForm();
@@ -74,6 +79,7 @@ export class ProfileComponent implements OnInit {
       name: this.name,
       street: this.street,
       cp: this.cp,
+      code: this.code,
       telephone: this.telephone,
       province: this.province,
     });
@@ -96,6 +102,7 @@ export class ProfileComponent implements OnInit {
         email: this.user.email,
         street: this.editForm.value.street,
         cp: this.editForm.value.cp,
+        code: this.editForm.value.code,
         telephone: this.editForm.value.telephone,
         province: this.editForm.value.province,
         role: this.user.role,

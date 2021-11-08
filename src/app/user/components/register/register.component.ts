@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { provinces } from 'src/assets/mocks/variables';
+import { codes, provinces } from 'src/assets/mocks/variables';
 import { Role } from '../../enums/role.enum';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { checkEmail } from '../../validations/checkEmail.validator';
+import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { confirmPassword } from '../../validations/confirmPassword.validator';
 
 @Component({
@@ -27,9 +27,12 @@ export class RegisterComponent implements OnInit {
   public cp: FormControl;
   public password: FormControl;
   public repeat_password: FormControl;
+  public code: FormControl;
   public url: string;
+
   public roles: any;
   public provinces: string[] = provinces;
+  public codes: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +43,8 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.codes = this.utilsService.setFormatPhonesCodes(codes);
+
     this.url = this.router.url;
     this.name = new FormControl('', [
       Validators.required,
@@ -51,6 +56,7 @@ export class RegisterComponent implements OnInit {
     this.street = new FormControl('', [Validators.required]);
     this.province = new FormControl('', [Validators.required]);
     this.role = new FormControl('', [Validators.required]);
+    this.code = new FormControl('', [Validators.required]);
     this.telephone = new FormControl('', [Validators.required, Validators.maxLength(12)]);
     this.cp = new FormControl('', [Validators.required]);
     this.password = new FormControl('', [Validators.required, Validators.minLength(8)]);
@@ -80,6 +86,7 @@ export class RegisterComponent implements OnInit {
       street: this.street,
       province: this.province,
       role: this.role,
+      code: this.code,
       telephone: this.telephone,
       cp: this.cp,
       passwords: this.formBuilder.group(
@@ -105,6 +112,7 @@ export class RegisterComponent implements OnInit {
           this.user.street = this.registerForm.value.street;
           this.user.role = this.registerForm.value.role;
           this.user.province = this.registerForm.value.province;
+          this.user.code = this.registerForm.value.code;
           this.user.telephone = this.registerForm.value.telephone;
           this.user.cp = this.registerForm.value.cp;
 

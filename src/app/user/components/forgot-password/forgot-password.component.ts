@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { AuthService } from '../../services/auth.service';
-import { checkEmail } from '../../validations/checkEmail.validator';
+import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,7 +12,6 @@ import { checkEmail } from '../../validations/checkEmail.validator';
 export class ForgotPasswordComponent implements OnInit {
   public forgotForm: FormGroup;
   public email: FormControl;
-  public password: FormControl;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private utilsService: UtilsService) {}
 

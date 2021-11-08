@@ -8,14 +8,14 @@ const routes: Routes = [
     path: 'user',
     loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
   },
-  // {
-  //   path: 'publication',
-  //   loadChildren: () => import('./publication/publication.module').then((m) => m.PublicationModule),
-  // },
-  // {
-  //   path: 'contact',
-  //   component: ContactComponent,
-  // },
+  {
+    path: 'publication',
+    loadChildren: () => import('./publication/publication.module').then((m) => m.PublicationModule),
+  },
+  {
+    path: 'consult',
+    loadChildren: () => import('./consult/consult.module').then((m) => m.ConsultModule),
+  },
   { path: '**', component: NoResultsComponent },
 ];
 

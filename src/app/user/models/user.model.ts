@@ -4,6 +4,7 @@ export class User {
   name: string;
   street: string;
   cp: string;
+  code: string;
   telephone: string;
   province: string;
   role: string;
