@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RegisterSocialComponent } from './components/register-social/register-social.component';
 import { RegisterComponent } from './components/register/register.component';
+import { UserAdminComponent } from './components/user-admin/user-admin.component';
 import { NotAuthGuard } from './guards/not-auth.guard';
 
 const routes: Routes = [
@@ -28,6 +29,16 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'profile/:id',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'admin',
+    component: UserAdminComponent,
     canActivate: [AuthGuard],
   },
 ];

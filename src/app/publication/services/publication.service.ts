@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Publication } from '../models/publication.model';
 import * as firebase from 'firebase/compat/app';
+import { State } from '../enums/state.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +64,12 @@ export class PublicationService {
       : (ref: firebase.default.database.Reference) => ref.orderByKey().startAfter(idLastItem).limitToFirst(limitItems);
 
     return this.db.list<string>(url, query).valueChanges().pipe(take(1)).toPromise();
+  }
+
+  public async getPublicationsAdmin(tab: string): Promise<Publication[]> {
+    // Debemos tener en cuenta que debemos saber qué referencia usar...
+    const url = tab === State.available ? '/publications' : '/history';
+    return this.db.list<Publication>(url).valueChanges().pipe(take(1)).toPromise();
   }
 
   // Peticiones del storage

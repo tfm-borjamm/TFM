@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { ConsultRoutingModule } from './consult-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { ConsultAdminComponent } from './components/consult-admin/consult-admin.component';
 import { ConsultDetailsComponent } from './components/consult-details/consult-details.component';
+import { ConsultFormComponent } from './components/consult-form/consult-form.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  declarations: [ContactFormComponent, ConsultAdminComponent, ConsultDetailsComponent],
-  imports: [CommonModule, ConsultRoutingModule, ReactiveFormsModule, FormsModule],
+  declarations: [ConsultFormComponent, ConsultAdminComponent, ConsultDetailsComponent, ConsultFormComponent],
+  imports: [CommonModule, ConsultRoutingModule, ReactiveFormsModule, FormsModule, SharedModule],
 })
 export class ConsultModule {}

@@ -38,19 +38,19 @@ export class AppComponent {
       if (user) {
         this.user = await this.userService.getUserById(user.uid);
         if (this.user.role) {
-          if (this.user.role === 'admin') {
-            this.router.navigate(['user', 'profile']);
-          }
-          this.router.navigate(['publication/list']);
+          // if (this.user.role === 'admin') {
+          // this.router.navigate(['user', 'profile']);
+          // }
+          // this.router.navigate(['publication/list']);
         } else {
           this.router.navigate(['user/register-social']);
         }
       } else {
         this.user = null;
-        if (!this.firstTime)
-          this.router
-            .navigateByUrl('/user/login', { skipLocationChange: true })
-            .then(() => this.router.navigate(['/']));
+        // if (!this.firstTime)
+        //   this.router
+        //     .navigateByUrl('/user/login', { skipLocationChange: true })
+        //     .then(() => this.router.navigate(['/']));
       }
       this.loadInfomation = true;
       this.firstTime = false;

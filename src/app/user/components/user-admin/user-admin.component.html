@@ -1,1 +1,22 @@
-<p>user-admin works!</p>
+<!-- <p>user-admin works!</p> -->
+
+<nav>
+  <ul>
+    <button (click)="tab$.next('client')">Clientes</button>
+    <button (click)="tab$.next('professional')">Profesionales</button>
+  </ul>
+</nav>
+<table>
+  <tr>
+    <th>Identificador</th>
+    <th>Nombre</th>
+    <th>Email</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let user of users" routerLink="/user/profile/{{ user.id }}">
+    <td>{{ user.id }}</td>
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
+    <td>Buttons</td>
+  </tr>
+</table>

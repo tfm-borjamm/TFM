@@ -1,4 +1,4 @@
-import { ConsultState } from '../enums/consult-state.enum';
+import { State } from '../enums/state.enum';
 
 export class Consult {
   id: string;
@@ -7,7 +7,7 @@ export class Consult {
   subject: string;
   message: string;
   creation_date: number;
-  state: ConsultState;
+  state: State;
   admin?: {
     reply_date: number;
     reply: string;

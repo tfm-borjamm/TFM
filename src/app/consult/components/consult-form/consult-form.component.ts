@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { checkEmail } from 'src/app/shared/validations/checkEmail.validator';
-import { ConsultState } from '../../enums/consult-state.enum';
+import { State } from '../../enums/state.enum';
 import { Consult } from '../../models/consult.model';
 import { ConsultService } from '../../services/consult.service';
 
 @Component({
-  selector: 'app-contact-form',
-  templateUrl: './contact-form.component.html',
-  styleUrls: ['./contact-form.component.scss'],
+  selector: 'app-consult-form',
+  templateUrl: './consult-form.component.html',
+  styleUrls: ['./consult-form.component.scss'],
 })
-export class ContactFormComponent implements OnInit {
+export class ConsultFormComponent implements OnInit {
   public contactForm: FormGroup;
   public name: FormControl;
   public email: FormControl;
@@ -54,7 +54,7 @@ export class ContactFormComponent implements OnInit {
         email: this.contactForm.value.email.toLowerCase(),
         subject: this.contactForm.value.subject.toLowerCase(),
         message: this.contactForm.value.message.toLowerCase(),
-        state: ConsultState.unread,
+        state: State.unread,
         creation_date: null,
       };
 

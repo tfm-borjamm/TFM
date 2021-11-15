@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { take } from 'rxjs/operators';
+import { Consult } from 'src/app/consult/models/consult.model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +57,81 @@ export class UtilsService {
 
   getServerTimeStamp(): Promise<{ timestamp: number }> {
     const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/current-time';
-    return this.http.get<{ timestamp: number }>(url).toPromise();
+    return this.http.get<{ timestamp: number }>(url).pipe(take(1)).toPromise();
   }
+
+  sendEmail(consult: Consult): Promise<any> {
+    const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/send-email';
+    const body = {
+      email_dest: consult.email,
+      question_msg: consult.message,
+      answer_msg: consult.admin.reply,
+      name: consult.name,
+    };
+    return this.http.post<any>(url, JSON.stringify(body)).toPromise();
+  }
+
+  setLocalStorage(id: string, storage: any): void {
+    try {
+      // localStorage.setItem(id, JSON.stringify(storage));
+      sessionStorage.setItem(id, JSON.stringify(storage));
+    } catch (e) {
+      this.errorHandling(e);
+    }
+  }
+
+  getLocalStorage(id: string): any {
+    // return JSON.parse(localStorage.getItem(id));
+    const storage = sessionStorage.getItem(id);
+    try {
+      return JSON.parse(storage);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  removeLocalStorage(id: string): void {
+    sessionStorage.removeItem(id);
+  }
+
+  // isAObject(storage: any) {
+  //   return typeof storage === 'object' && storage !== null;
+  // }
+
+  // clearLocalStorage() {
+  //   try {
+  //     // localStorage.clear();
+  //     sessionStorage.clear();
+  //   } catch (e) {
+  //     this.errorHandling(e);
+  //   }
+  // }
+
+  // /**
+  //  * Función que devuelve los identificadores de las actividades favoritas del usuario logado.
+  //  * @return array con el id de las actividades favoritas del usuario logado.
+  //  */
+  // getUserFavoriteActivities(idUser: number): Observable<number[]> {
+  //   let idActivitiesUserFavorites: number[];
+  //   idActivitiesUserFavorites = JSON.parse(localStorage.getItem('lStorageFavorites' + idUser));
+  //   if (idActivitiesUserFavorites === null)
+  //   {
+  //     idActivitiesUserFavorites = new Array<number>();
+  //   }
+  //   return of(idActivitiesUserFavorites);
+  // }
+
+  // /**
+  //  * Función que actualiza los identificadores de las actividades favoritas del usuario logado.
+  //  * @param idActivitiesUserFavorites - array con los id de las actividades favoritas del usuario
+  //  */
+  // setUserFavoriteActivities(idActivitiesUserFavorites: number[], idUser: number): Observable<boolean> {
+  //   try {
+  //     localStorage.setItem('lStorageFavorites' + idUser, JSON.stringify(idActivitiesUserFavorites));
+  //     return of(true);
+  //   }
+  //   catch (e) {
+  //     throw throwError(e);
+  //   }
+  // }
 }

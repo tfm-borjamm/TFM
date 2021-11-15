@@ -7,10 +7,11 @@ import { NoResultsComponent } from './components/no-results/no-results.component
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, LoadingComponent, NoResultsComponent, SidenavComponent],
-  imports: [CommonModule, TranslateModule, RouterModule],
+  imports: [CommonModule, TranslateModule, RouterModule, FormsModule, ReactiveFormsModule], // No Translate Module
   exports: [TranslateModule, HeaderComponent, FooterComponent, SidenavComponent, NoResultsComponent, LoadingComponent],
 })
 export class SharedModule {}

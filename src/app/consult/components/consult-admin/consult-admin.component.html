@@ -1,1 +1,19 @@
-<p>consult-admin works!</p>
+<!-- <p>consult-admin works!</p> -->
+<nav>
+  <ul>
+    <button (click)="tab$.next('unread')">Recibidos</button>
+    <button (click)="tab$.next('answered')">Constestados</button>
+  </ul>
+</nav>
+<table>
+  <tr>
+    <th>Identificador</th>
+    <th>Descripción</th>
+    <th>Actions</th>
+  </tr>
+  <tr class="consult" *ngFor="let consult of consults" routerLink="/consult/details/{{ consult.id }}" [ngClass]="{ unread: consult.state === 'unread', answered: consult.state === 'answered' }">
+    <td>{{ consult.id }}</td>
+    <td>{{ consult.message }}</td>
+    <td>Buttons</td>
+  </tr>
+</table>

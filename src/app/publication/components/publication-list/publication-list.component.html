@@ -1,5 +1,6 @@
 <main>
-  <div *ngIf="currentURL === '/publication/list'">
+  {{ "publications" | translate }}
+  <div *ngIf="currentURL.includes('/publication/list')">
     <select class="main__select" id="size" [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
       <option value="" selected>Todos</option>
       <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
@@ -11,13 +12,13 @@
     </select>
   </div>
 
-  <div *ngIf="currentURL !== '/publication/list'">
-    <div *ngIf="currentURL === '/publication/favorites'">
+  <div *ngIf="!currentURL.includes('/publication/list')">
+    <div *ngIf="currentURL.includes('/publication/favorites')">
       <h1>Tus favoritos</h1>
       <p>Estas son las mascotas que más te gustan</p>
     </div>
 
-    <div *ngIf="currentURL === '/publication/my-publications'">
+    <div *ngIf="currentURL.includes('/publication/my-publications')">
       <h1>Tus publicaciones</h1>
       <p>Estas son todas las publicaciones que has subido a la plataforma</p>
       <div>
@@ -28,7 +29,7 @@
   </div>
 
   <div>
-    <div *ngFor="let publication of publications; trackBy: trackByFn; let last = last" class="item" [ngClass]="{ last: last }">
+    <div *ngFor="let publication of publications; trackBy: trackByFn; let last = last" class="item" [ngClass]="{ last: last }" routerLink="/publication/details/{{ publication.id }}">
       <p>{{ publication.id }}</p>
       <p>{{ publication.name }}</p>
       <p>{{ publication.type }}</p>

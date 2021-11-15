@@ -23,6 +23,11 @@ export class UserService {
     return this.db.list<User>(`users`).valueChanges();
   }
 
+  getUsersAdmin(role: string): Promise<User[]> {
+    const query = (ref: firebase.default.database.Reference) => ref.orderByChild('role').equalTo(role);
+    return this.db.list<User>(`users`, query).valueChanges().pipe(take(1)).toPromise();
+  }
+
   createUser(user: User) {
     return this.db.object(`users/${user.id}`).update(user);
   }
@@ -43,7 +48,7 @@ export class UserService {
   }
 
   async deleteUser(user: User): Promise<any> {
-    if (user.role === 'company') {
+    if (user.role === 'professional') {
       const publicationsUser = this.utilsService
         .getArrayFromObject(user.myPublications)
         .map((id) => this.db.object(`publications/${id}`).remove());

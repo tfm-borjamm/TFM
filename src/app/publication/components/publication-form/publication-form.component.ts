@@ -6,7 +6,8 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { AuthService } from 'src/app/user/services/auth.service';
 import { Publication } from '../../models/publication.model';
 import { PublicationService } from '../../services/publication.service';
-import { age, confirmation } from '../../../../assets/mocks/variables';
+import { age } from 'src/app/publication/helpers/age';
+import { confirmation } from 'src/app/publication/helpers/confirmation';
 import { UserService } from 'src/app/user/services/user.service';
 import { Location } from '@angular/common';
 import { Sex } from '../../enums/sex.enum';
@@ -17,10 +18,9 @@ import { State } from '../../enums/state.enum';
 @Component({
   selector: 'app-publication-form',
   templateUrl: './publication-form.component.html',
-  styleUrls: ['./publication-form.component.scss']
+  styleUrls: ['./publication-form.component.scss'],
 })
 export class PublicationFormComponent implements OnInit {
-
   // @ViewChild('input') input: HTMLInputElement;
   // @ViewChild('input', { static: false }) input: ElementRef;
 
@@ -349,9 +349,3 @@ export class PublicationFormComponent implements OnInit {
     }
   }
 }
-
-
-
-
-
-  

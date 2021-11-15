@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { provinces } from 'src/app/shared/helpers/provinces';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { provinces } from 'src/assets/mocks/variables';
 import { Type } from '../../enums/type.enum';
 import { PublicationService } from '../../services/publication.service';
 
@@ -24,8 +24,8 @@ interface settings {
 export class PublicationListComponent implements OnInit {
   public idLastItem: string = null;
   public limitItems: number = 5;
-  public filterKey: string = null;
-  public filterValue: string = null;
+  // public filterKey: string = null;
+  // public filterValue: string = null;
 
   public filterPublication: FormGroup;
   public province: FormControl;
@@ -40,22 +40,38 @@ export class PublicationListComponent implements OnInit {
   public currentURL: string;
   public queryDB: string;
 
+  public paramType: string = null;
+  public paramProvince: string = null;
+
   constructor(
     private publicationService: PublicationService,
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
-    private router: Router
-  ) {}
+    private router: Router // private activateRoute: ActivatedRoute
+  ) {
+    const filterPublications = this.utilsService.getLocalStorage('filterPublications');
+    const params = filterPublications;
+    if (params) {
+      const isTypeOK = Object.values(Type).includes(params?.type);
+      const isProvinceOK = provinces.includes(params?.province);
+      this.paramType = isTypeOK ? params?.type : null;
+      this.paramProvince = isProvinceOK ? params?.province : null;
+    }
+    console.log('--->', this.paramProvince, this.paramType);
+  }
 
   ngOnInit(): void {
     this.currentURL = this.router.url;
-    if (this.currentURL === '/publication/list') this.loadForm();
+    if (this.currentURL.includes('/publication/list')) {
+      this.loadForm();
+      if (this.paramType || this.paramProvince) this.onChangeFilter();
+    }
     this.getPublications();
   }
 
   loadForm() {
-    this.type = new FormControl('', [Validators.required]);
-    this.province = new FormControl('', [Validators.required]);
+    this.type = new FormControl(this.paramType ?? '', [Validators.required]);
+    this.province = new FormControl(this.paramProvince ?? '', [Validators.required]);
     this.filterPublication = this.createForm();
   }
 
@@ -66,55 +82,98 @@ export class PublicationListComponent implements OnInit {
     });
   }
 
-  async onChangeFilter(selected: filterSelected) {
+  async onChangeFilter(selected?: filterSelected) {
     this.idLastItem = null;
     this.finished = false;
-
-    const { filter, value } = selected;
 
     const search: any = {
       type: this.filterPublication.value.type,
       province: this.filterPublication.value.province,
     };
 
-    search[filter] = value;
+    if (selected) {
+      const { filter, value } = selected;
+      search[filter] = value;
+    }
+
+    console.log('Search: ', search);
 
     if (search.type && search.province) {
-      search.province = search.province.replaceAll(' ', '');
-      this.filterKey = 'filter';
-      this.filterValue = search.type + '+' + search.province;
+      const query = {
+        type: search.type,
+        province: search.province,
+      };
+      this.utilsService.setLocalStorage('filterPublications', query);
     } else if (search.type) {
-      this.filterKey = 'type';
-      this.filterValue = search.type;
+      const query = {
+        type: search.type,
+      };
+      this.utilsService.setLocalStorage('filterPublications', query);
     } else if (search.province) {
-      this.filterKey = 'province';
-      this.filterValue = search.province;
+      const query = {
+        province: search.province,
+      };
+      this.utilsService.setLocalStorage('filterPublications', query);
     } else {
-      this.filterKey = null;
-      this.filterValue = null;
+      this.utilsService.removeLocalStorage('filterPublications');
     }
-    this.getPublications();
+
+    if (selected) this.getPublications();
   }
 
   onScroll() {
     console.log('Cargando...');
     if (this.finished) return;
+    console.log('Sigue habiendo articulos');
     this.getPublications({ start: false });
   }
 
   private async getPublications(settings: settings = { start: true }) {
     let options;
     let nextPublications;
-    if (this.currentURL === '/publication/list') {
+
+    const filterPublications = this.utilsService.getLocalStorage('filterPublications');
+    let filterKey = null;
+    let filterValue = null;
+    const params = filterPublications;
+    if (params) {
+      const { type, province } = params;
+      if (type && province) {
+        const isTypeOK = Object.values(Type).includes(type);
+        const isProvinceOK = provinces.includes(province);
+        if (isTypeOK && isProvinceOK) {
+          filterKey = 'filter';
+          filterValue = type + '+' + province.replaceAll(' ', '');
+        }
+      } else if (type) {
+        const isTypeOK = Object.values(Type).includes(type);
+        if (isTypeOK) {
+          filterKey = 'type';
+          filterValue = type;
+        }
+      } else if (province) {
+        const isProvinceOK = provinces.includes(province);
+        if (isProvinceOK) {
+          filterKey = 'province';
+          filterValue = province;
+        }
+      }
+    }
+    console.log('Valores: ', filterKey, filterValue);
+
+    if (this.currentURL.includes('/publication/list')) {
       options = {
-        filterKey: this.filterKey,
-        filterValue: this.filterValue,
+        filterKey: filterKey,
+        filterValue: filterValue,
         idLastItem: this.idLastItem,
         limitItems: this.limitItems,
       };
       nextPublications = await this.publicationService.getPublications(options);
       this.publications = settings.start ? nextPublications : this.publications.concat(nextPublications);
-    } else if (this.currentURL === '/publication/favorites' || this.currentURL === '/publication/my-publications') {
+    } else if (
+      this.currentURL.includes('/publication/favorites') ||
+      this.currentURL.includes('/publication/my-publications')
+    ) {
       // this.queryDB = this.queryDB ?? `users/${id_user}/myPublications`;
       this.queryDB = this.queryDB ?? `users/myPublications`;
       options = {
@@ -125,7 +184,7 @@ export class PublicationListComponent implements OnInit {
         // url: this.currentURL === '/publication/favorites' ? `users/${id_user}/myFavorites` : this.queryDB,
         idLastItem: this.idLastItem,
         limitItems: this.limitItems,
-        url: this.currentURL === '/publication/favorites' ? 'users/myFavorites' : this.queryDB,
+        url: this.currentURL.includes('/publication/favorites') ? 'users/myFavorites' : this.queryDB, // Favoritos: users/${id_user}/myFavorites
       };
       const idPublications = await this.publicationService.getPublicationsID(options);
       const promisesPublications = idPublications.map((id) => this.publicationService.getPublicationById(id));
@@ -136,8 +195,7 @@ export class PublicationListComponent implements OnInit {
     }
     this.finished = nextPublications.length < this.limitItems;
     this.setLastItemID();
-    // Comprobamos si no hay más publicaciones
-    // if (this.finished) return;
+    console.log('this.finished', this.finished);
   }
 
   setLastItemID() {

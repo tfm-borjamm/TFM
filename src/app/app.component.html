@@ -1,8 +1,16 @@
-<div [ngClass]="{ app: user?.role === 'admin' }" *ngIf="loadInfomation">
-  <app-sidenav *ngIf="user?.role === 'admin'"></app-sidenav>
+<div [ngClass]="{ admin: user?.role === 'admin' }" *ngIf="loadInfomation">
+  <app-sidenav class="sidenav" *ngIf="user?.role === 'admin'"></app-sidenav>
+  <div [ngClass]="{ content: user?.role === 'admin' }">
+    <app-header [user]="user"></app-header>
+    <router-outlet></router-outlet>
+    <app-footer *ngIf="user?.role !== 'admin'"></app-footer>
+  </div>
+</div>
+
+<!-- <div [ngClass]="{ app: user?.role === 'admin' }" *ngIf="loadInfomation">
   <div [ngClass]="{ content: user?.role === 'admin' }">
     <app-header *ngIf="user?.role !== 'admin'" [user]="user"></app-header>
     <router-outlet></router-outlet>
     <app-footer *ngIf="user?.role !== 'admin'"></app-footer>
   </div>
-</div>
+</div> -->
