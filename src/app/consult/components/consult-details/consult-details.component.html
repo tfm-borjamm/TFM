@@ -1,18 +1,19 @@
 <!-- <p>consult-details works!</p> -->
+
+<button (click)="onPreviousPage()">Atrás</button>
+
 <div *ngIf="consult">
+  <button (click)="onDeleteConsult(consult.id)">Eliminar</button>
+  <button *ngIf="consult.state !== 'answered' && !showForm" (click)="showForm = !showForm">Responder</button>
+
   <p>{{ consult.id }}</p>
   <p>{{ consult.name }}</p>
   <p>{{ consult.email }}</p>
   <p>{{ consult.subject }}</p>
   <p>{{ consult.message }}</p>
-  <p>{{ consult.creation_date | date }}</p>
+  <p>{{ consult.creation_date | date: "medium" }}</p>
 
-  <button (click)="showForm = !showForm" *ngIf="consult?.admin">
-    <span *ngIf="showForm">Ocultar Formulario</span>
-    <span *ngIf="!showForm">Mostrar Formulario</span>
-  </button>
-
-  <form class="main__form" [formGroup]="replyForm" (ngSubmit)="onReplyConsult()">
+  <form class="main__form" [formGroup]="replyForm" (ngSubmit)="onReplyConsult()" *ngIf="showForm">
     <ul class="main__list">
       <li class="main__item">
         <!-- <label class="main__label" for="reply">reply (*)</label> -->
@@ -22,7 +23,7 @@
         </div>
       </li>
       <li class="main__item">
-        <button class="main__button" type="submit" [disabled]="replyForm.invalid || consult.admin">Enviar</button>
+        <button #btnForm class="main__button" type="submit" [disabled]="replyForm.invalid && consult.state !== 'answered'">Enviar</button>
       </li>
     </ul>
   </form>

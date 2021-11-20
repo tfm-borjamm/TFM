@@ -12,44 +12,14 @@ import { ConsultService } from '../../services/consult.service';
   styleUrls: ['./consult-admin.component.scss'],
 })
 export class ConsultAdminComponent implements OnInit, OnDestroy {
-  public tabValue: string = null;
-  public tab$: BehaviorSubject<string> = new BehaviorSubject(this.tabValue);
-  public subscriptionTab: Subscription;
   public consults: Consult[];
 
-  constructor(private consultService: ConsultService, private router: Router, private utilsService: UtilsService) {
-    const menu = this.utilsService.getLocalStorage('menu');
-    if (menu?.tab) {
-      const isValueCorrect = Object.values(State).includes(menu?.tab);
-      this.tabValue = isValueCorrect ? menu?.tab : State.unread;
-      if (!isValueCorrect) this.utilsService.setLocalStorage('menu', { tab: this.tabValue });
-    }
+  public defaultTab = State.unread;
+  public tabs = Object.values(State).splice(1); // Admin not
 
-    // this.tabValue = menu?.tab ?? State.unread;
+  constructor(private consultService: ConsultService, private router: Router, private utilsService: UtilsService) {}
 
-    // this.activatedRoute.queryParams.subscribe((params) => {
-    //   // Params de las rutas url
-    //   console.log('params', params);
-    //   this.tabValue = params.tab ?? State.unread;
-    // });
-  }
-
-  ngOnInit(): void {
-    // this.consults = await this.consultService.getAllConsults();
-    this.subscriptionTab = this.tab$.subscribe((tab) => {
-      console.log('Se ha cambiado el filter a: ', tab);
-      if (tab && tab !== this.tabValue) {
-        this.utilsService.setLocalStorage('menu', { tab: tab });
-        this.loadConsults(tab);
-        this.tabValue = tab;
-        // this.router.navigate([], {
-        //   relativeTo: this.activatedRoute,
-        //   queryParams: { tab: this.tabValue },
-        // });
-      }
-    });
-    this.loadConsults(this.tabValue); // Sólo se ejecuta inicialmente!
-  }
+  ngOnInit(): void {}
 
   async loadConsults(filter: string): Promise<void> {
     console.log('Se cargan las consultas!');
@@ -57,10 +27,31 @@ export class ConsultAdminComponent implements OnInit, OnDestroy {
     // Pagination is comming soon!
   }
 
-  ngOnDestroy(): void {
-    if (!this.subscriptionTab.closed) {
-      console.log('Destruimos el subscribe');
-      this.subscriptionTab.unsubscribe();
-    }
+  onDetailsConsult(id: string) {
+    this.router.navigate([`/consult/details/${id}`]);
   }
+
+  onDeleteConsult(id: string) {
+    console.log('Eliminar: ', id);
+    this.consultService
+      .deleteConsult(id)
+      .then(() => {
+        this.consults = this.consults.filter((consult) => consult.id !== id);
+        // this.loadConsults(this.tabValue) // Hacerlo local
+      })
+      .catch((e) => this.utilsService.errorHandling(e));
+  }
+
+  onMarkToRead(id: string) {
+    console.log('Marcar como leído: ', id);
+    this.consultService
+      .setState(id, State.read)
+      .then(() => {
+        this.consults.find((consult) => consult.id === id).state = State.read;
+        // this.loadConsults(this.tabValue); // Hacerlo local
+      })
+      .catch((e) => this.utilsService.errorHandling(e));
+  }
+
+  ngOnDestroy(): void {}
 }

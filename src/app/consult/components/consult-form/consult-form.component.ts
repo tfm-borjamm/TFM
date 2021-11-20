@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { checkEmail } from 'src/app/shared/validations/checkEmail.validator';
@@ -12,6 +12,8 @@ import { ConsultService } from '../../services/consult.service';
   styleUrls: ['./consult-form.component.scss'],
 })
 export class ConsultFormComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
+
   public contactForm: FormGroup;
   public name: FormControl;
   public email: FormControl;
@@ -46,27 +48,32 @@ export class ConsultFormComponent implements OnInit {
     }));
   }
 
-  contact() {
+  async onContact() {
     if (this.contactForm.valid) {
-      const consult: Consult = {
-        id: this.utilsService.generateID(),
-        name: this.contactForm.value.name.toLowerCase(),
-        email: this.contactForm.value.email.toLowerCase(),
-        subject: this.contactForm.value.subject.toLowerCase(),
-        message: this.contactForm.value.message.toLowerCase(),
-        state: State.unread,
-        creation_date: null,
-      };
+      this.btnForm.nativeElement.disabled = true;
+      const servertime = await this.utilsService.getServerTimeStamp().catch((e) => this.utilsService.errorHandling(e));
+      if (servertime) {
+        const consult: Consult = {
+          id: this.utilsService.generateID(),
+          name: this.contactForm.value.name.toLowerCase(),
+          email: this.contactForm.value.email.toLowerCase(),
+          subject: this.contactForm.value.subject.toLowerCase(),
+          message: this.contactForm.value.message.toLowerCase(),
+          state: State.unread,
+          creation_date: servertime.timestamp,
+        };
 
-      this.consultService
-        .createConsult(consult)
-        .then(() => {
-          console.log('Consulta enviada correctamente');
-          this.contactForm.reset();
-        })
-        .catch((e) => {
-          this.utilsService.errorHandling(e);
-        });
+        this.consultService
+          .createConsult(consult)
+          .then(() => {
+            console.log('Consulta enviada correctamente');
+            this.contactForm.reset();
+          })
+          .catch((e) => {
+            this.btnForm.nativeElement.disabled = false;
+            this.utilsService.errorHandling(e);
+          });
+      }
     }
   }
 }

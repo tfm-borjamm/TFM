@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
@@ -8,6 +8,7 @@ import { Role } from '../../enums/role.enum';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-register-social',
@@ -15,6 +16,7 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./register-social.component.scss'],
 })
 export class RegisterSocialComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
   public registerForm: FormGroup;
   public street: FormControl;
   public province: FormControl;
@@ -36,6 +38,7 @@ export class RegisterSocialComponent implements OnInit {
     private authService: AuthService,
     private utilsService: UtilsService,
     private userService: UserService,
+    private location: Location,
     private router: Router
   ) {}
 
@@ -82,6 +85,7 @@ export class RegisterSocialComponent implements OnInit {
 
   async onRegister() {
     if (this.registerForm.valid) {
+      this.btnForm.nativeElement.disabled = true;
       const user: User = {
         ...this.user,
         street: this.registerForm.value.street,
@@ -97,9 +101,18 @@ export class RegisterSocialComponent implements OnInit {
         .then(() => {
           console.log('Registrado correctamente');
           this.registerForm.reset();
-          this.router.navigate(['publication/list']);
+          window.location.reload();
+          // this.router.navigate(['publication/list']);
+          // if (user.role === Role.admin) {
+          //   this.router.navigate(['/publication/admin']);
+          // } else {
+          // this.router.navigate(['/publication/list']);
+          // }
         })
-        .catch((e) => this.utilsService.errorHandling(e));
+        .catch((e) => {
+          this.btnForm.nativeElement.disabled = false;
+          this.utilsService.errorHandling(e);
+        });
     }
   }
 }

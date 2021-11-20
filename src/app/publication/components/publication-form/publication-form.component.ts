@@ -14,6 +14,8 @@ import { Sex } from '../../enums/sex.enum';
 import { Size } from '../../enums/size.enum';
 import { Type } from '../../enums/type.enum';
 import { State } from '../../enums/state.enum';
+import { User } from 'src/app/user/models/user.model';
+import { provinces } from 'src/app/shared/helpers/provinces';
 
 @Component({
   selector: 'app-publication-form',
@@ -38,6 +40,7 @@ export class PublicationFormComponent implements OnInit {
   public vaccinate: FormControl;
   public dewormed: FormControl;
   public image: FormControl;
+  public province: FormControl;
   public sexs: any;
   public types: any;
   public sizes: any;
@@ -60,6 +63,11 @@ export class PublicationFormComponent implements OnInit {
   public files: any = [];
   public originalImages: any = []; // Compare images init on final
 
+  public user: User;
+  public isAdmin: boolean = false;
+  public isAutor: boolean = false;
+  public provinces: string[] = provinces;
+
   constructor(
     private formBuilder: FormBuilder,
     private utilsService: UtilsService,
@@ -71,19 +79,34 @@ export class PublicationFormComponent implements OnInit {
     private location: Location
   ) {
     // Editar o Crear
-    this.activatedRoute.params.forEach((i) => (this.publicationID = i.id));
+    this.activatedRoute.params.forEach((params) => (this.publicationID = params['id']));
   }
 
   async ngOnInit(): Promise<void> {
     // this.route.params.forEach((params) => (publicationID = params['id']));
 
     // Si vamos a editar una publicación
+    this.user = await this.authService.getCurrentUserLogged();
     if (this.publicationID) {
       this.publication = await this.publicationService.getPublicationById(this.publicationID);
-      if (!this.publication) {
-        this.router.navigate(['publication-not-found']);
-        return;
-      }
+      // this.user = await this.authService.getCurrentUserLogged();
+      this.isAutor = this.publication.idAutor === this.user.id;
+      // this.isAdmin = this.user.role === Role.admin;
+
+      // if (!this.publication) {
+      //   this.router.navigate(['publication-not-found']);
+      //   return;
+      // }
+
+      // if (!this.publication) {
+      //   this.router.navigate(['publication-not-found']);
+      //   return;
+      // } else if (!this.isAutor && !this.isAdmin) {
+      //   this.location.back();
+      //   console.log('No tienes permisos para editar la publicación!!!'); // Poner un guard para evitar esto
+      //   return;
+      // }
+
       this.editPublication = true;
       this.publication.images ??= {};
       const [clone1, clone2] = [
@@ -98,6 +121,7 @@ export class PublicationFormComponent implements OnInit {
       // Si vamos a crear una publicación
       this.publicationID = this.utilsService.generateID();
       this.editPublication = false;
+      console.log('Creamos ');
     }
 
     // Enums del diagrama de clase
@@ -137,6 +161,7 @@ export class PublicationFormComponent implements OnInit {
     ]);
     this.dewormed = new FormControl(this.publication.dewormed ? this.publication.dewormed : '', [Validators.required]);
     this.image = new FormControl('');
+    this.province = new FormControl(this.publication.province ? this.publication.province : '', [Validators.required]);
     this.publicationForm = this.createForm();
   }
 
@@ -154,6 +179,7 @@ export class PublicationFormComponent implements OnInit {
       vaccinate: this.vaccinate,
       dewormed: this.dewormed,
       image: this.image,
+      province: this.province,
     });
   }
 
@@ -234,6 +260,12 @@ export class PublicationFormComponent implements OnInit {
     }
   }
 
+  // public async getCurrentUser(): Promise<User> {
+  //   const idUser = await this.authService.getCurrentUserUID();
+  //   const user = await this.userService.getUserById(idUser);
+  //   return user;
+  // }
+
   public deleteImage(file: any): void {
     if (!this.image.dirty) this.image.markAsDirty();
     if (file.url) {
@@ -261,9 +293,8 @@ export class PublicationFormComponent implements OnInit {
         }
       }
 
-      // Comprobación si es el administrador!
-      const idUser = await this.authService.getCurrentUserUID();
-      const user = await this.userService.getUserById(idUser);
+      // // Comprobación si es el administrador!
+      // const user = await this.authService.getCurrentUserLogged();
 
       let images: any = {};
       this.files.forEach((file: any) => {
@@ -273,12 +304,15 @@ export class PublicationFormComponent implements OnInit {
         };
       });
 
+      // console.log('validacion', this.editPublication, this.isAdmin);
+
       let publication: Publication = {
         id: this.publicationID,
-        idAutor: this.editPublication && user.role === 'admin' ? this.publication.idAutor : user.id,
+        idAutor: !this.editPublication ? this.user.id : this.publication.idAutor,
+        // idAutor: this.editPublication && this.isAdmin ? this.publication.idAutor : this.user.id,
         name: this.publicationForm.value.name,
-        // province: this.editPublication && user.role === 'admin' ? this.publication.province : user.province,
-        province: this.publication.province,
+        // province: this.editPublication && this.isAdmin ? this.publication.province : this.user.province,
+        province: this.publicationForm.value.province,
         description: this.publicationForm.value.description,
         images: images,
         age: this.publicationForm.value.age,
@@ -294,7 +328,7 @@ export class PublicationFormComponent implements OnInit {
         // Campos extras!
         // countFavorites: this.publication.countFavorites ?? 0,
         state: this.publication.state ?? State.available,
-        filter: this.publication.type + '+' + this.publication.province.replaceAll(' ', ''),
+        filter: this.publicationForm.value.type + '+' + this.publicationForm.value.province.replaceAll(' ', ''),
       };
 
       // Subimos las imágenes nuevas
@@ -324,14 +358,22 @@ export class PublicationFormComponent implements OnInit {
         });
       }
 
+      if (!publication.date) {
+        const servertime = await this.utilsService
+          .getServerTimeStamp()
+          .catch((e) => this.utilsService.errorHandling(e));
+        if (servertime) {
+          publication.date = servertime.timestamp;
+        }
+      }
+
       if (!this.editPublication) {
         this.publicationService
           .createPublication(publication)
           .then(() => {
             // this.utilsService.successToast('Añadido correctamente');
             this.publicationForm.reset();
-            // this.location.back();
-            // this.router.navigate(['publication', 'list']);
+            this.location.back();
             console.log('Creado correctamente!');
           })
           .catch((e) => this.utilsService.errorHandling(e));
@@ -341,7 +383,7 @@ export class PublicationFormComponent implements OnInit {
           .then(() => {
             // this.utilsService.successToast('Editado correctamente');
             this.publicationForm.reset();
-            // this.location.back();
+            this.location.back();
             console.log('Editado correctamente!');
           })
           .catch((e) => this.utilsService.errorHandling(e));

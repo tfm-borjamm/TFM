@@ -1,7 +1,7 @@
 <main class="main">
   <div class="main__container">
-    <h1 class="main__title" *ngIf="url !== '/user/add'">Registrarse</h1>
-    <h1 class="main__title" *ngIf="url === '/user/add'">Añadir usuario</h1>
+    <h1 class="main__title" *ngIf="!currentUserId">Registrarse</h1>
+    <h1 class="main__title" *ngIf="currentUserId">Nuevo usuario</h1>
     <form class="main__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <ul class="main__list">
         <li class="main__item">
@@ -112,9 +112,8 @@
         </li>
 
         <li class="main__item main__item--fb-100">
-          <!-- <button class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="url !== '/user/add'">Registrarse</button> -->
-          <!-- <button class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="url === '/user/add'">Crear</button> -->
-          <button class="main__button" type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="!currentUserId">Registrarse</button>
+          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="currentUserId">Crear</button>
         </li>
       </ul>
     </form>

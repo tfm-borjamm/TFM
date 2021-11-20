@@ -2,7 +2,7 @@
   <div class="main__container">
     <h1 class="main__title">Contáctanos</h1>
     <p>Para cualquier consulta no dudes en ponerte en contacto con nosotros</p>
-    <form class="main__form" [formGroup]="contactForm" (ngSubmit)="contact()">
+    <form class="main__form" [formGroup]="contactForm" (ngSubmit)="onContact()">
       <ul class="main__list">
         <li class="main__item">
           <label class="main__label" for="name">Nombre (*)</label>
@@ -43,7 +43,7 @@
         </li>
         <!-- BLOQUE DE Recaptcha!!! -->
         <li class="main__item">
-          <button class="main__button" type="submit" [disabled]="contactForm.invalid">Enviar</button>
+          <button #btnForm class="main__button" type="submit" [disabled]="contactForm.invalid">Enviar</button>
         </li>
       </ul>
     </form>

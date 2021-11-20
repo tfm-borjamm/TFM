@@ -6,6 +6,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UtilsService } from 'src/app/shared/services/utils.service';
+import { Role } from '../enums/role.enum';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -36,26 +37,26 @@ export class UserService {
     return this.db.object<User>(`users/${id}`).valueChanges().pipe(take(1)).toPromise();
   }
 
-  async updateUser(user: any, emailEquals: boolean = true): Promise<any> {
+  async updateUser(user: any): Promise<any> {
     // if (!emailEquals) {
     //   const usr = await this.afAuth.currentUser;
     //   const update = await usr.updateEmail(user.email).catch((e) => this.utilsService.errorHandling(e));
     // }
-    return this.db
-      .object(`users/${user.id}`)
-      .update(user)
-      .catch((e) => this.utilsService.errorHandling(e));
+    return this.db.object(`users/${user.id}`).update(user);
   }
 
   async deleteUser(user: User): Promise<any> {
-    if (user.role === 'professional') {
-      const publicationsUser = this.utilsService
-        .getArrayFromObject(user.myPublications)
-        .map((id) => this.db.object(`publications/${id}`).remove());
-      const promiseStorage = this.utilsService
-        .getArrayFromObject(user.myPublications)
-        .map((id) => this.storage.ref(`publications/${id}`).listAll().toPromise());
-      const publicationsStorage = await Promise.all(promiseStorage);
+    const isClient = user.role === Role.client;
+    if (!isClient) {
+      const myPublications = this.utilsService.getArrayFromObject(user.myPublications);
+      const myHistory = this.utilsService.getArrayFromObject(user.myHistory);
+      const totalIds = myPublications.concat(myHistory);
+
+      const promisesItemsStorage = totalIds.map((id) => this.storage.ref(`publications/${id}`).listAll().toPromise());
+      const publicationsStorage = await Promise.all(promisesItemsStorage).catch((e) =>
+        this.utilsService.errorHandling(e)
+      );
+
       let filesUser: any = [];
 
       if (publicationsStorage) {
@@ -64,17 +65,51 @@ export class UserService {
         });
       }
 
+      const deletePublicationsUser = myPublications.map((id) => this.db.object(`publications/${id}`).remove());
+      const deletePublicationsHistoryUser = myHistory.map((id) => this.db.object(`history/${id}`).remove());
+
+      const promisesFavorites = totalIds.map((id) =>
+        this.db.object(`favorites/${id}`).valueChanges().pipe(take(1)).toPromise()
+      );
+      const usersToDeleteFavorites = await Promise.all(promisesFavorites); // [{id:, users:}, {id:, users:}]
+      const onlyFavorites = usersToDeleteFavorites.filter((x) => x); // Quitando los nulos
+
+      const promisesPublicationsFavorites = onlyFavorites.map((favorite: any) =>
+        this.db.object(`favorites/${favorite.id}`).remove()
+      );
+
+      let promisesUsersFavorites: any[] = [];
+
+      onlyFavorites.forEach((favorite: any) => {
+        const users = this.utilsService.getArrayFromObject(favorite.users);
+        users.forEach((idUser) => {
+          promisesUsersFavorites.push(this.db.object(`users/${idUser}/myFavorites/${favorite.id}`).remove());
+        });
+      });
+
       return Promise.all([
         this.db.object<User>(`users/${user.id}`).remove(),
-        Promise.all(publicationsUser),
+        Promise.all(deletePublicationsUser),
+        Promise.all(deletePublicationsHistoryUser),
+        Promise.all(promisesPublicationsFavorites),
+        Promise.all(promisesUsersFavorites),
         Promise.all(filesUser),
       ]);
-    } else if (user.role === 'client') {
-      const favoritesUser = this.utilsService
-        .getArrayFromObject(user.myFavorites)
-        .map((id) => this.db.object(`favorites/${id}/${user.id}`).remove());
+    } else if (isClient) {
+      const myFavorites = this.utilsService.getArrayFromObject(user.myFavorites);
+      const favoritesUser = myFavorites.map((id) => this.db.object(`favorites/${id}/${user.id}`).remove());
+
       return Promise.all([this.db.object<User>(`users/${user.id}`).remove(), Promise.all(favoritesUser)]);
     }
+  }
+
+  testFavorite() {
+    // return this.db.list(`favorites/${'-Morp8YC-gKNCAUycGtl'}/users`).valueChanges().pipe(take(1)).toPromise();
+    return Promise.all([
+      this.db.object(`favorites/${'-Morp8YC-gKNCAUycGtl'}`).valueChanges().pipe(take(1)).toPromise(),
+      this.db.object(`favorites/${'-MosCwP-RbyZsEmmiNz-'}`).valueChanges().pipe(take(1)).toPromise(),
+      this.db.object(`favorites/${'-MosCwP-sdsd-'}`).valueChanges().pipe(take(1)).toPromise(),
+    ]);
   }
 }
 

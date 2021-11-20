@@ -1,5 +1,4 @@
 <main>
-  {{ "publications" | translate }}
   <div *ngIf="currentURL.includes('/publication/list')">
     <select class="main__select" id="size" [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
       <option value="" selected>Todos</option>
@@ -21,24 +20,28 @@
     <div *ngIf="currentURL.includes('/publication/my-publications')">
       <h1>Tus publicaciones</h1>
       <p>Estas son todas las publicaciones que has subido a la plataforma</p>
-      <div>
+      <button (click)="onCreatePublication()">Crear publicación</button>
+      <!-- <div>
         <input type="checkbox" (change)="onChange($event)" />
         <span>MI HISTORIAL</span>
-      </div>
+      </div> -->
+      <app-menu-tabs *ngIf="user" [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="onChange($event)"></app-menu-tabs>
     </div>
   </div>
 
-  <div>
-    <div *ngFor="let publication of publications; trackBy: trackByFn; let last = last" class="item" [ngClass]="{ last: last }" routerLink="/publication/details/{{ publication.id }}">
-      <p>{{ publication.id }}</p>
-      <p>{{ publication.name }}</p>
-      <p>{{ publication.type }}</p>
-      <p>{{ publication.province }}</p>
+  <div *ngIf="publications && publications.length !== 0; else noResults">
+    <div *ngFor="let publication of publications; trackBy: trackByFn; let last = last" class="item" [ngClass]="{ last: last }">
+      <app-publication-item [publication]="publication" [currentUser]="user" (onChangePublication)="onChangePublication($event)"></app-publication-item>
     </div>
 
     <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div>
-
     <app-loading *ngIf="!finished"></app-loading>
     <div *ngIf="finished">Eso son todos los datos de la BD</div>
   </div>
+
+  <ng-template #noResults>
+    <app-no-results></app-no-results>
+  </ng-template>
 </main>
+
+<!-- <div *ngIf="publications && publications.length !== 0" class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div> -->

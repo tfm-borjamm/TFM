@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { AuthService } from '../../services/auth.service';
@@ -10,6 +10,7 @@ import { checkEmail } from '../../../shared/validations/checkEmail.validator';
   styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
   public forgotForm: FormGroup;
   public email: FormControl;
 
@@ -28,6 +29,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   onForgot() {
     if (this.forgotForm.valid) {
+      this.btnForm.nativeElement.disabled = true;
       const email = this.forgotForm.value.email.toLowerCase();
       this.authService
         .resetPassword(email)
@@ -35,7 +37,10 @@ export class ForgotPasswordComponent implements OnInit {
           this.forgotForm.reset();
           console.log('Correo enviado para restablecer la contraseña');
         })
-        .catch((e) => this.utilsService.errorHandling(e));
+        .catch((e) => {
+          this.btnForm.nativeElement.disabled = false;
+          this.utilsService.errorHandling(e);
+        });
     }
   }
 }

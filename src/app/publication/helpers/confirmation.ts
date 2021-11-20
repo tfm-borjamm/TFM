@@ -1,1 +1,1 @@
-export const confirmation: string[] = ['yes', 'no'];
+export const confirmation: string[] = ['yes', 'no', 'unknown'];

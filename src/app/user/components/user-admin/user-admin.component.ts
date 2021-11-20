@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from '../../enums/role.enum';
 import { User } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -12,50 +12,102 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./user-admin.component.scss'],
 })
 export class UserAdminComponent implements OnInit, OnDestroy {
-  public tabValue: string = null;
-  public tab$: BehaviorSubject<string> = new BehaviorSubject(this.tabValue);
-  public subscriptionTab: Subscription;
   public users: User[];
+  public usersV0: User[];
 
-  constructor(private userService: UserService, private router: Router, private utilsService: UtilsService) {
-    const menu = this.utilsService.getLocalStorage('menu');
-    if (menu?.tab) {
-      const isValueCorrect = Object.values(Role).includes(menu?.tab);
-      this.tabValue = isValueCorrect ? menu?.tab : Role.client;
-      if (!isValueCorrect) this.utilsService.setLocalStorage('menu', { tab: this.tabValue });
-    }
-    // this.tabValue = menu?.tab ?? Role.client;
-    // this.activatedRoute.queryParams.subscribe((params) => {
-    //   console.log('PARAMS DE LA URL');
-    //   this.tabValue = params.tab ?? Role.client;
-    // });
-  }
+  public name: string = null;
 
-  ngOnInit(): void {
-    this.subscriptionTab = this.tab$.subscribe((tab) => {
-      console.log('Se ha cambiado el TAB a: ', tab);
-      if (tab && tab !== this.tabValue) {
-        console.log('SE CARGAN NUEVAS USUARIOS!');
-        this.utilsService.setLocalStorage('menu', { tab: tab });
-        this.loadUsers(tab);
-        this.tabValue = tab;
-        // this.router.navigate([], {
-        //   relativeTo: this.activatedRoute,
-        //   queryParams: { tab: this.tabValue },
-        // });
-      }
-    });
-    this.loadUsers(this.tabValue); // Sólo se ejecuta inicialmente!
-  }
+  public defaultTab = Role.client;
+  public tabs = Object.values(Role).splice(1);
+
+  // public currentUserID: string;
+
+  public tab: string;
+
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private utilsService: UtilsService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {}
 
   async loadUsers(tabMenu: string): Promise<void> {
+    this.tab = tabMenu;
+    // this.currentUserID = await this.authService.getCurrentUserUID();
     this.users = await this.userService.getUsersAdmin(tabMenu);
+
+    // this.users = this.users.filter((user) => {
+    //   if (user.role === Role.client) {
+    //     const numberFavorites = this.utilsService.getArrayFromObject(user?.myFavorites ?? {}).length;
+    //     user.myFavorites = numberFavorites;
+    //   } else {
+    //     const numberPublications = this.utilsService.getArrayFromObject(user?.myPublications ?? {}).length;
+    //     user.myPublications = numberPublications;
+    //   }
+    //   return user;
+    // });
+
+    this.usersV0 = this.users;
+    this.name = '';
   }
 
-  ngOnDestroy(): void {
-    if (!this.subscriptionTab.closed) {
-      console.log('Destruimos el subscribe');
-      this.subscriptionTab.unsubscribe();
+  // filterAdmin(user: User) {
+  //   console.log('El usuario es: ', user);
+  //   return user.id !== 'YXq9Kyyoa6dMAyacb9EIO5OY88g1';
+  // }
+
+  onSearchName(searchName: string): void {
+    // Filter name search
+    this.name = searchName.toLowerCase();
+    this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
+  }
+
+  isEqualNames(name1: string, name2: string): boolean {
+    return name1.toLowerCase().includes(name2);
+  }
+
+  onDeleteUser(user: User) {
+    // Método para eliminar un usuario
+    if (window.confirm('¿Está seguro de que desea eliminar el usuario?')) {
+      this.userService
+        .deleteUser(user)
+        .then(async (a) => {
+          console.log('Se ha eliminado correctamente el usuario', a);
+          this.users = this.users.filter((x) => x.id !== user.id); // Localmente!
+          const response = await this.utilsService.deleteUser(user.id).catch((e) => this.utilsService.errorHandling(e));
+          if (response) {
+            console.log('Respuesta: ', response);
+          }
+        })
+        .catch((e) => this.utilsService.errorHandling(e));
+    } else {
+      console.log('El usuario ha cancelado');
     }
+  }
+
+  onEditUser(id: string) {
+    // Método para editar un usuario
+    this.router.navigate([`user/profile/${id}`]);
+  }
+
+  onCreateUser() {
+    // Método para crear un usuario
+    this.router.navigate(['user/register/admin']);
+  }
+
+  async test() {
+    const favorites = await this.userService.testFavorite();
+    console.log(
+      '--->',
+      favorites.filter((x) => x)
+    );
+  }
+  ngOnDestroy(): void {
+    // if (!this.subscriptionTab.closed) {
+    //   console.log('Destruimos el subscribe');
+    //   this.subscriptionTab.unsubscribe();
+    // }
   }
 }

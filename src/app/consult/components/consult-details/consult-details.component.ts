@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
@@ -12,6 +13,8 @@ import { ConsultService } from '../../services/consult.service';
   styleUrls: ['./consult-details.component.scss'],
 })
 export class ConsultDetailsComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
+
   public replyForm: FormGroup;
   public reply: FormControl;
 
@@ -24,7 +27,8 @@ export class ConsultDetailsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private consultService: ConsultService,
     private utilsService: UtilsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private location: Location
   ) {
     this.activatedRoute.params.forEach((params) => {
       // Params desde el routing
@@ -58,37 +62,53 @@ export class ConsultDetailsComponent implements OnInit {
     }));
   }
 
+  onPreviousPage() {
+    this.location.back();
+  }
+
+  onDeleteConsult(id: string) {
+    console.log('Eliminar: ', id);
+    this.consultService
+      .deleteConsult(id)
+      .then((a) => {
+        console.log('Consulta eliminada correctamente', a);
+        this.location.back();
+      })
+      .catch((e) => this.utilsService.errorHandling(e));
+  }
+
   async onReplyConsult() {
-    // const consult; // Normalizamos campos recogidos en el formulario!
-    const consult: Consult = {
-      ...this.consult,
-      state: State.answered,
-      admin: {
-        reply: this.replyForm.value.reply,
-        reply_date: null,
-      },
-    };
+    console.log('Button: ', this.btnForm);
+    if (this.replyForm.valid) {
+      this.btnForm.nativeElement.disabled = true;
+      const consult: Consult = {
+        ...this.consult,
+        state: State.answered,
+        admin: {
+          reply: this.replyForm.value.reply,
+          reply_date: null,
+        },
+      };
 
-    let date;
-    try {
-      date = (await this.utilsService.getServerTimeStamp()).timestamp;
-    } catch (e) {
-      this.utilsService.errorHandling(e);
+      const servertime = await this.utilsService.getServerTimeStamp().catch((e) => this.utilsService.errorHandling(e));
+      if (servertime) {
+        const date = servertime.timestamp;
+        consult.admin.reply_date = date;
+        this.consultService
+          .updateConsult(consult)
+          .then((res) => {
+            // Mostramos el mensaje traducido res[1].message!
+            console.log('Respuesta del servidor: ', res[1].message);
+            this.consult = consult;
+            this.replyForm.controls['reply'].disable();
+          })
+          .catch((e) => {
+            console.log('Respuesta de error del servidor: ', e[1].message);
+            this.btnForm.nativeElement.disabled = false;
+            this.utilsService.errorHandling(e[0]);
+          });
+      }
     }
-
-    if (date) {
-      consult.admin.reply_date = date;
-      this.consultService
-        .updateConsult(consult)
-        .then((res) => {
-          console.log('Respuesta del servidor: ', res[1].message);
-          this.consult = consult;
-          this.replyForm.controls['reply'].disable();
-        })
-        .catch((e) => this.utilsService.errorHandling(e));
-    }
-
-    // console.log('Consulta finalizada', consult);
   }
 
   ngOnDestroy(): void {

@@ -15,18 +15,12 @@
           </div>
         </li>
 
-        <li class="main__item" *ngIf="!id">
+        <li class="main__item">
           <label class="main__label" for="email">Email (*)</label>
           <input class="main__input" type="email" id="email" [formControl]="email" placeholder="Email" />
-          <!-- <div class="errors" *ngIf="editForm.get('email').errors && (editForm.get('email').touched || editForm.get('email').dirty)">
-                  <span class="errors__msg" *ngIf="editForm.get('email').errors.required">Este campo es obligatorio</span>
-                  <span class="errors__msg" *ngIf="!editForm.get('email').errors.required && (editForm.get('email').errors.email || editForm.get('email').errors.emailValidator)"
-                    >El email no tiene un formato válido</span
-                  >
-                </div> -->
         </li>
 
-        <li class="main__item" *ngIf="!id">
+        <li class="main__item">
           <label class="main__label" for="role">Role (*)</label>
           <input class="main__input" type="role" id="role" [formControl]="role" placeholder="role" />
         </li>
@@ -68,7 +62,7 @@
 
         <li class="main__item">
           <label class="main__label" for="cp">Código postal (*)</label>
-          <input class="main__input" type="text" id="cp" [formControl]="cp" placeholder="Código postal" />
+          <input class="main__input" type="number" id="cp" [formControl]="cp" placeholder="Código postal" />
           <div class="errors" *ngIf="editForm.get('cp').errors && (editForm.get('cp').touched || editForm.get('cp').dirty)">
             <span class="errors__msg" *ngIf="editForm.get('cp').errors.required">Este campo es obligatorio</span>
           </div>
@@ -83,7 +77,7 @@
         </li>
 
         <li class="main__item main__item--fb-100">
-          <button type="submit" class="main__button" [disabled]="editForm.invalid">Guardar</button>
+          <button #btnForm type="submit" class="main__button" [disabled]="editForm.invalid">Guardar</button>
         </li>
       </ul>
     </form>

@@ -1,4 +1,4 @@
-<p>Reciclaremos este componente tanto para crear / editar una publicación para las protectoras y el administrador</p>
+<!-- <p>Reciclaremos este componente tanto para crear / editar una publicación para las protectoras y el administrador</p> -->
 
 <!-- Formulario para editar o añadir una publicación -->
 <main class="main" *ngIf="publicationForm">
@@ -48,10 +48,21 @@
         </li>
 
         <li class="main__item">
+          <label class="main__label" for="province">Provincia (*)</label>
+          <select class="main__select" id="province" [formControl]="province" [value]="publicationForm.value.province">
+            <option value="" disabled selected>Selecciona una provincia</option>
+            <option *ngFor="let province of provinces" value="{{ province }}" [selected]="publicationForm.value.province === province ? true : false">{{ province }}</option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('province').errors && (publicationForm.get('province').touched || publicationForm.get('province').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('province').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
           <label class="main__label" for="vaccinate">Vacunado (*)</label>
           <select class="main__select" id="vaccinate" [formControl]="vaccinate" [value]="publicationForm.value.vaccinate">
             <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let vaccinate of vaccinates" value="{{ vaccinate }}" [selected]="publicationForm.value.vaccinate === vaccinate ? true : false">{{ vaccinate }}</option>
+            <option *ngFor="let vaccinate of vaccinates" value="{{ vaccinate }}" [selected]="publicationForm.value.vaccinate === vaccinate ? true : false">{{ vaccinate | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('vaccinate').errors && (publicationForm.get('vaccinate').touched || publicationForm.get('vaccinate').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('vaccinate').errors.required">Este campo es obligatorio</span>

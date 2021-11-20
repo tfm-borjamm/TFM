@@ -21,7 +21,7 @@
           </div>
         </li>
         <li class="main__item">
-          <button class="main__button" type="submit" [disabled]="loginForm.invalid">Iniciar sesión</button>
+          <button #btnForm class="main__button" type="submit" [disabled]="loginForm.invalid">Iniciar sesión</button>
         </li>
         <li class="main__item">
           <a class="main__forgot" href="" routerLink="/user/forgot-password">¿Has olvidado la contraseña?</a>

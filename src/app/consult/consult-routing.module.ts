@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NoResultsComponent } from '../shared/components/no-results/no-results.component';
+import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
 import { ConsultAdminComponent } from './components/consult-admin/consult-admin.component';
 import { ConsultDetailsComponent } from './components/consult-details/consult-details.component';
@@ -24,10 +24,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
-  {
-    path: '**',
-    component: NoResultsComponent,
-  },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

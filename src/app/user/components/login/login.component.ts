@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
+import { Role } from '../../enums/role.enum';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ import { checkEmail } from '../../../shared/validations/checkEmail.validator';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
   public loginForm: FormGroup;
   public email: FormControl;
   public password: FormControl;
@@ -39,6 +41,7 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     if (this.loginForm.valid) {
+      this.btnForm.nativeElement.disabled = true;
       const email = this.loginForm.value.email.toLowerCase();
       const password = this.loginForm.value.password;
       this.authService
@@ -48,7 +51,10 @@ export class LoginComponent implements OnInit {
           console.log('Inicio de sesión correcto');
           // this.router.navigate(['/publication/list']);
         })
-        .catch((e) => this.utilsService.errorHandling(e));
+        .catch((e) => {
+          this.btnForm.nativeElement.disabled = false;
+          this.utilsService.errorHandling(e);
+        });
     }
   }
 
@@ -73,7 +79,12 @@ export class LoginComponent implements OnInit {
         .catch((e) => this.utilsService.errorHandling(e));
     } else {
       console.info('El usuario ya se había registrado');
-      this.router.navigate(['/publication/list']);
+      // const user = await this.userService.getUserById(userAuth.user.uid);
+      // if (user?.role === Role.admin) {
+      //   this.router.navigate(['/publication/admin']);
+      // } else {
+      // this.router.navigate(['/publication/list']);
+      // }
     }
   }
 

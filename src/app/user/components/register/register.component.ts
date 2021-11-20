@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { confirmPassword } from '../../validations/confirmPassword.validator';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +18,7 @@ import { confirmPassword } from '../../validations/confirmPassword.validator';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
   public user: User = new User();
   public registerForm: FormGroup;
   public name: FormControl;
@@ -35,15 +37,18 @@ export class RegisterComponent implements OnInit {
   public provinces: string[] = provinces;
   public codes: any[] = [];
 
+  public currentUserId: string;
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private utilsService: UtilsService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
 
     this.url = this.router.url;
@@ -78,6 +83,7 @@ export class RegisterComponent implements OnInit {
     // });
 
     this.registerForm = this.createForm();
+    this.currentUserId = await this.authService.getCurrentUserUID();
   }
 
   createForm(): FormGroup {
@@ -100,37 +106,59 @@ export class RegisterComponent implements OnInit {
     }));
   }
 
-  onRegister() {
+  async onRegister() {
     if (this.registerForm.valid) {
+      this.btnForm.nativeElement.disabled = true;
       const email = this.registerForm.value.email.toLowerCase();
       const password = this.registerForm.value.passwords.password;
-      this.authService
-        .register(email, password)
-        .then((res) => {
-          this.user.id = res.user.uid;
-          this.user.name = this.registerForm.value.name;
-          this.user.email = email;
-          this.user.street = this.registerForm.value.street;
-          this.user.role = this.registerForm.value.role;
-          this.user.province = this.registerForm.value.province;
-          this.user.code = this.registerForm.value.code;
-          this.user.telephone = this.registerForm.value.telephone;
-          this.user.cp = this.registerForm.value.cp;
 
-          this.userService
-            .createUser(this.user)
-            .then(() => {
-              this.registerForm.reset();
-              console.log('Registrado correctamente');
+      let response;
+      let id;
+      if (this.currentUserId) {
+        console.log('Administrador...');
+        response = await this.utilsService
+          .createUser({ email, password })
+          .catch((e) => this.utilsService.errorHandling(e));
+        if (response) {
+          id = response.id;
+        }
+      } else {
+        console.log('No registrado...');
+        response = await this.authService.register(email, password).catch((e) => this.utilsService.errorHandling(e));
+        if (response) {
+          id = response.user.uid;
+        }
+      }
+
+      if (id) {
+        this.user.id = id;
+        this.user.name = this.registerForm.value.name;
+        this.user.email = email;
+        this.user.street = this.registerForm.value.street;
+        this.user.role = this.registerForm.value.role;
+        this.user.province = this.registerForm.value.province;
+        this.user.code = this.registerForm.value.code;
+        this.user.telephone = this.registerForm.value.telephone;
+        this.user.cp = this.registerForm.value.cp;
+
+        this.userService
+          .createUser(this.user)
+          .then(() => {
+            console.log('Registrado correctamente');
+            this.registerForm.reset();
+            if (this.currentUserId) {
+              // is admin adding user
+              this.location.back();
+            } else {
+              // is a normal user
               this.router.navigate(['publication/list']);
-            })
-            .catch((e) => this.utilsService.errorHandling(e));
-        })
-        .catch((e) => this.utilsService.errorHandling(e));
+            }
+          })
+          .catch((e) => {
+            this.btnForm.nativeElement.disabled = false;
+            this.utilsService.errorHandling(e);
+          });
+      }
     }
   }
-
-  // ngOnDestroy() {
-  //   // this.subscriptionStateUsers.unsubscribe();
-  // }
 }

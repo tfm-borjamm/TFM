@@ -28,6 +28,7 @@
   "response": "Respuesta",
   "answer": "Responder",
   "received": "Recibidos",
+  "unread": "Recibidos",
   "answered": "Contestados",
   "home": "Inicio",
   "contact": "Contacto",
@@ -66,7 +67,7 @@
   "filters": "Filtros",
   "profile": "Perfil",
   "publications_admin": "Estas son todas las publicaciones que existen en la aplicación",
-  "in_adoption": "En adopción",
+  "available": "En adopción",
   "adopted": "Adoptados",
   "author": "Autor",
   "type": "Tipo",
@@ -76,7 +77,10 @@
   "register_description": "Necesitamos una serie de datos extras para poder completar el registro correctamente",
   "reset_password": "Restablecer contraseña",
   "reset_description": "Introduce la dirección de correo de tu cuenta y te enviaremos un enlace para que restablezcas la contraseña",
-  "clients": "Clientes",
-  "professionals": "Profesionales",
-  "users_admin": "Estos son todos los usuarios registrados en la aplicación"
+  "client": "Clientes",
+  "professional": "Profesionales",
+  "users_admin": "Estos son todos los usuarios registrados en la aplicación",
+  "unknown": "Desconocido",
+  "yes": "Si",
+  "no": "No"
 }

@@ -13,7 +13,7 @@ export class User {
   // myPublications?: { [id: string]: { id: string; type: string; province: string; filter: string }[] };
   // myFavorites?: { [id: string]: { id: string; type: string; province: string; filter: string }[] };
   // myHistory?: { [id: string]: { id: string; type: string; province: string; filter: string }[] };
-  myPublications?: { [id: string]: { id: string }[] };
-  myFavorites?: { [id: string]: { id: string }[] };
-  myHistory?: { [id: string]: { id: string }[] };
+  myPublications?: { [id: string]: { id: string }[] } | number;
+  myFavorites?: { [id: string]: { id: string }[] } | number;
+  myHistory?: { [id: string]: { id: string }[] } | number;
 }

@@ -1,0 +1,6 @@
+<nav>
+  <ul>
+    <button [ngClass]="{ selected: tabValue == tab1 }" (click)="onChangeButton(tab1)">{{ tab1 | translate }}</button>
+    <button [ngClass]="{ selected: tabValue == tab2 }" (click)="onChangeButton(tab2)">{{ tab2 | translate }}</button>
+  </ul>
+</nav>

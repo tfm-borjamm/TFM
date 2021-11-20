@@ -4,12 +4,14 @@ import * as firebase from 'firebase/compat/app';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UtilsService } from 'src/app/shared/services/utils.service';
+import { User } from '../models/user.model';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private afAuth: AngularFireAuth, private utilsService: UtilsService) {}
+  constructor(private afAuth: AngularFireAuth, private utilsService: UtilsService, private userService: UserService) {}
 
   login(email: string, password: string): Promise<firebase.default.auth.UserCredential> {
     return this.afAuth.signInWithEmailAndPassword(email, password);
@@ -34,6 +36,12 @@ export class AuthService {
   async getCurrentUserUID(): Promise<string> {
     const user = await this.afAuth.authState.pipe(take(1)).toPromise();
     return user?.uid;
+  }
+
+  async getCurrentUserLogged(): Promise<User> {
+    const uid = await this.getCurrentUserUID();
+    const user = await this.userService.getUserById(uid ?? '');
+    return user;
   }
 
   // Autenticación mediante redes sociales (Facebook o Google)!

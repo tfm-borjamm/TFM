@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
@@ -8,6 +8,7 @@ import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +16,7 @@ import { checkEmail } from '../../../shared/validations/checkEmail.validator';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('btnForm') btnForm: ElementRef;
   public user: User;
   public editForm: FormGroup;
   public id: string;
@@ -36,16 +38,17 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
-    private ActivatedRoute: ActivatedRoute,
-    private router: Router
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private location: Location
   ) {
-    this.ActivatedRoute.params.forEach((params) => {
+    this.activatedRoute.params.forEach((params) => {
       this.id = params.id;
     });
   }
 
   async ngOnInit(): Promise<void> {
-    this.user = await this.getUser();
+    this.user = await this.getUser(); // Proteger que nadie pueda editar un usuario si no es el administrador
     if (!this.user) {
       this.router.navigate(['user-not-found']);
       return;
@@ -93,14 +96,31 @@ export class ProfileComponent implements OnInit {
     return user;
   }
 
-  async onEdit() {
+  onDeleteUser() {
+    // Método para eliminar un usuario
+    this.userService
+      .deleteUser(this.user)
+      .then(async (a) => {
+        console.log('Se ha eliminado correctamente el usuario', a);
+        const response = await this.utilsService
+          .deleteUser(this.user.id)
+          .catch((e) => this.utilsService.errorHandling(e));
+        if (response) {
+          console.log('Respuesta: ', response);
+        }
+      })
+      .catch((e) => this.utilsService.errorHandling(e));
+  }
+
+  onEdit() {
     // Actualizar los campos del usuario en la base de datos
     if (this.editForm.valid) {
+      // email: this.id ? this.user.email : this.editForm.value.email,
+      this.btnForm.nativeElement.disabled = true;
       const user: User = {
         id: this.user.id,
-        name: this.editForm.value.name,
-        // email: this.id ? this.user.email : this.editForm.value.email,
         email: this.user.email,
+        name: this.editForm.value.name,
         street: this.editForm.value.street,
         cp: this.editForm.value.cp,
         code: this.editForm.value.code,
@@ -110,11 +130,16 @@ export class ProfileComponent implements OnInit {
       };
 
       this.userService
-        .updateUser(user, this.user.email === this.editForm.value.email)
+        .updateUser(user)
         .then(() => {
           console.log('Información guardada correctamente');
+          this.btnForm.nativeElement.disabled = false;
+          if (this.id) this.location.back(); // is admin editing user
         })
-        .catch((e) => this.utilsService.errorHandling(e));
+        .catch((e) => {
+          this.btnForm.nativeElement.disabled = false;
+          this.utilsService.errorHandling(e);
+        });
     }
   }
 }

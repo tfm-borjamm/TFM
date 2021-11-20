@@ -1,19 +1,21 @@
 <!-- <p>consult-admin works!</p> -->
-<nav>
-  <ul>
-    <button (click)="tab$.next('unread')">Recibidos</button>
-    <button (click)="tab$.next('answered')">Constestados</button>
-  </ul>
-</nav>
+<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadConsults($event)"></app-menu-tabs>
 <table>
   <tr>
-    <th>Identificador</th>
-    <th>Descripción</th>
-    <th>Actions</th>
+    <th>Nombre</th>
+    <th>Asunto</th>
+    <th>Mensaje</th>
+    <th>Fecha</th>
+    <th></th>
+    <th></th>
   </tr>
-  <tr class="consult" *ngFor="let consult of consults" routerLink="/consult/details/{{ consult.id }}" [ngClass]="{ unread: consult.state === 'unread', answered: consult.state === 'answered' }">
-    <td>{{ consult.id }}</td>
-    <td>{{ consult.message }}</td>
-    <td>Buttons</td>
+  <tr class="consult" *ngFor="let consult of consults" [ngClass]="{ unread: consult.state === 'unread', answered: consult.state === 'answered' }">
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.name }}</td>
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.subject }}</td>
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.message }}</td>
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.creation_date | date: "medium" }}</td>
+
+    <td (click)="onDeleteConsult(consult.id)">Eliminar</td>
+    <td *ngIf="consult.state === 'unread'" (click)="onMarkToRead(consult.id)">Marcar como leído</td>
   </tr>
 </table>

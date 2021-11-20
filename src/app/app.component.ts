@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { User } from './user/models/user.model';
 import { AuthService } from './user/services/auth.service';
 import { UserService } from './user/services/user.service';
+import { Role } from './user/enums/role.enum';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ export class AppComponent {
   ) {}
 
   ngOnInit() {
-    this.firstTime = true;
+    // this.firstTime = true;
     this.initializeApp();
   }
 
@@ -38,10 +39,11 @@ export class AppComponent {
       if (user) {
         this.user = await this.userService.getUserById(user.uid);
         if (this.user.role) {
-          // if (this.user.role === 'admin') {
-          // this.router.navigate(['user', 'profile']);
-          // }
-          // this.router.navigate(['publication/list']);
+          if (this.user.role === Role.admin) {
+            this.router.navigate(['user/admin']);
+          } else {
+            this.router.navigate(['publication/list']);
+          }
         } else {
           this.router.navigate(['user/register-social']);
         }
@@ -53,7 +55,7 @@ export class AppComponent {
         //     .then(() => this.router.navigate(['/']));
       }
       this.loadInfomation = true;
-      this.firstTime = false;
+      // this.firstTime = false;
     });
   }
 }

@@ -1,1 +1,31 @@
-<p>publication-item works!</p>
+<!-- <p>publication-item works!</p> -->
+<!-- CARD MATERIAL -->
+<div *ngIf="publication">
+  <!-- <li *ngIf="currentUser && isClient && !isFavorite" (click)="onChangeFavorite()">Añadir a favorito</li>
+    <li *ngIf="currentUser && isClient && isFavorite" (click)="onChangeFavorite()">Eliminar de favorito</li> -->
+  <div *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()">
+    <button *ngIf="!isFavorite" (click)="onChangeFavorite()">Corazon sin rellenar</button>
+    <button *ngIf="isFavorite" (click)="onChangeFavorite()">Corazon rellenado</button>
+  </div>
+
+  <div (click)="onDetailsPublication()">
+    <img class="card__image" [src]="carrouselImages" />
+    <p>{{ publication.id }}</p>
+    <p>{{ publication.name }}</p>
+    <p>{{ publication.date | date }}</p>
+    <p>{{ publication.description }}</p>
+    <p>{{ publication.type }}</p>
+  </div>
+
+  <ul *ngIf="currentUser && (isAdmin || isAutor) && !isAdopted">
+    <li *ngIf="isPageMyPublications()" (click)="onSharePublication()">Compartir</li>
+    <li (click)="onMarkToAdopted()">Marcar como adoptado</li>
+    <li (click)="onEditPublication()">Editar</li>
+    <li (click)="onDeletePublication()">Eliminar</li>
+  </ul>
+
+  <button (click)="onDeletePublication()" *ngIf="!isClient && isAdopted">Eliminar</button>
+
+  <button *ngIf="currentUser && isClient && isFavorite && isPageFavorites()" (click)="onDeleteFavorite()">Eliminar</button>
+  <button *ngIf="!isPageMyPublications()" (click)="onSharePublication()">Compartir</button>
+</div>

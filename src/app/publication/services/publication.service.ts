@@ -15,9 +15,8 @@ import { State } from '../enums/state.enum';
 export class PublicationService {
   constructor(
     private db: AngularFireDatabase,
-    private httpClient: HttpClient,
     private storage: AngularFireStorage,
-    private utilsService: UtilsService // private favoriteService: FavoriteService
+    private utilsService: UtilsService
   ) {}
 
   public async getPublications(options: any): Promise<Publication[]> {
@@ -56,8 +55,6 @@ export class PublicationService {
     // Favoritos, Mis publicaciones, Mi historial
     const { idLastItem, limitItems, url } = options;
 
-    console.log(url);
-
     // Siguientes y principio
     const query = !idLastItem
       ? (ref: firebase.default.database.Reference) => ref.orderByKey().limitToFirst(limitItems)
@@ -74,71 +71,103 @@ export class PublicationService {
 
   // Peticiones del storage
   //Tarea para subir archivo
-  public tareaCloudStorage(nombreArchivo: string, datos: any) {
+  public tareaCloudStorage(nombreArchivo: string, datos: any): Promise<number> {
     return this.storage.upload(nombreArchivo, datos).percentageChanges().toPromise();
   }
 
   //Referencia del archivo
-  public referenciaCloudStorage(nombreArchivo: string) {
+  public referenciaCloudStorage(nombreArchivo: string): Promise<any> {
     return this.storage.ref(nombreArchivo).getDownloadURL().toPromise();
   }
 
-  public deleteCloudStorage(nombreArchivo: string): Promise<void> {
+  public deleteCloudStorage(nombreArchivo: string): Promise<any> {
     return this.storage.ref(nombreArchivo).delete().pipe(take(1)).toPromise();
   }
 
   // Base de datos: Peticiones
-  public getPublicationById(id: string, url = 'publications') {
+  public getPublicationById(id: string, url: string = 'publications'): Promise<Publication> {
     return this.db.object<Publication>(`${url}/${id}`).valueChanges().pipe(take(1)).toPromise();
   }
 
-  public createPublication(publication: Publication) {
-    publication.date = firebase.default.database.ServerValue.TIMESTAMP;
+  public createPublication(publication: Publication): Promise<[void, void]> {
+    if (!publication.date) publication.date = firebase.default.database.ServerValue.TIMESTAMP as number;
     return Promise.all([
       this.db.object(`publications/${publication.id}`).update(publication),
-      this.db.object(`users/${publication.idAutor}/idPublications/${publication.id}`).set(publication.id),
+      this.db.object(`users/${publication.idAutor}/myPublications/${publication.id}`).set(publication.id),
     ]);
   }
 
-  public updatePublication(publication: Publication) {
+  public updatePublication(publication: Publication): Promise<void> {
     return this.db.object(`publications/${publication.id}`).update(publication);
   }
 
-  public async deletePublication(publication: Publication) {
+  public async deletePublication(publication: Publication): Promise<any> {
     // Eliminación de los id favorites de los usuarios
-    const users = await this.db
-      .object(`favorites/${publication.id}`)
+    const arrayUsersId = await this.db
+      .list<string>(`favorites/${publication.id}/users`)
       .valueChanges()
       .pipe(take(1))
       .toPromise()
       .catch((e) => this.utilsService.errorHandling(e));
 
-    const arrayUsersId = this.utilsService.getArrayFromObject(users);
+    if (!arrayUsersId) return null;
 
     const userPromises = arrayUsersId.map((id: string) =>
-      this.db.object(`users/${id}/idFavorites/${publication.id}`).remove()
+      this.db.object(`users/${id}/myFavorites/${publication.id}`).remove()
     );
 
     // Eliminación de la carpeta del storage
-    const promiseStorage = await this.storage.ref(`publications/${publication.id}`).listAll().toPromise();
+    const promisesStorage = await this.storage.ref(`publications/${publication.id}`).listAll().toPromise();
 
-    const promiseDeleteItems = promiseStorage.items.map((item) => item.delete());
+    const promiseDeleteItems = promisesStorage.items.map((item) => item.delete());
+
+    if (publication.state === State.available) {
+      return Promise.all([
+        this.db.object(`publications/${publication.id}`).remove(),
+        this.db.object(`favorites/${publication.id}`).remove(),
+        Promise.all(userPromises),
+        Promise.all(promiseDeleteItems),
+        this.db.object(`users/${publication.idAutor}/myPublications/${publication.id}`).remove(),
+      ]);
+    } else {
+      return Promise.all([
+        this.db.object(`history/${publication.id}`).remove(),
+        this.db.object(`favorites/${publication.id}`).remove(),
+        Promise.all(userPromises),
+        Promise.all(promiseDeleteItems),
+        this.db.object(`users/${publication.idAutor}/myHistory/${publication.id}`).remove(),
+      ]);
+    }
+  }
+
+  public async updatePublicationState(publication: Publication): Promise<any> {
+    publication.state = State.adopted;
+
+    const arrayUsersId = await this.db
+      .list<string>(`favorites/${publication.id}/users`)
+      .valueChanges()
+      .pipe(take(1))
+      .toPromise()
+      .catch((e) => this.utilsService.errorHandling(e));
+
+    if (!arrayUsersId) return null;
+
+    const userPromises = arrayUsersId.map((id: string) =>
+      this.db.object(`users/${id}/myFavorites/${publication.id}/state`).set(publication.state)
+    );
 
     return Promise.all([
-      this.db.object(`publications/${publication.id}`).remove(),
-      this.db.object(`favorites/${publication.id}`).remove(),
+      this.db.object<Publication>(`publications/${publication.id}`).remove(),
+      this.db.object<Publication>(`history/${publication.id}`).set(publication),
+      this.db.object(`users/${publication.idAutor}/myPublications/${publication.id}`).remove(),
+      this.db.object(`users/${publication.idAutor}/myHistory/${publication.id}`).set(publication.id),
       Promise.all(userPromises),
-      Promise.all(promiseDeleteItems),
-      this.db.object(`users/${publication.idAutor}/idPublications/${publication.id}`).remove(),
     ]);
   }
 
   //   public async getPublicationsDeprecated(options: any): Promise<any> {
-
   //     const { filterKey, filterValue, idLastItem, limitItems } = options;
-
   //     console.log('Opciones: ', options);
-
   //     if (!filterKey) {
   //       // Paginación sin filtros: Sólo por claves !
   //       if (!idLastItem) {

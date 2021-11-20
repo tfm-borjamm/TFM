@@ -1,6 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { Role } from 'src/app/user/enums/role.enum';
+import { User } from 'src/app/user/models/user.model';
+import { AuthService } from 'src/app/user/services/auth.service';
+import { UserService } from 'src/app/user/services/user.service';
+import { State } from '../../enums/state.enum';
 import { Publication } from '../../models/publication.model';
+import { FavoriteService } from '../../services/favorite.service';
 import { PublicationService } from '../../services/publication.service';
 
 @Component({
@@ -8,32 +16,111 @@ import { PublicationService } from '../../services/publication.service';
   templateUrl: './publication-details.component.html',
   styleUrls: ['./publication-details.component.scss'],
 })
-export class PublicationDetailsComponent implements OnInit {
+export class PublicationDetailsComponent implements OnInit, OnDestroy {
   public actualURL: string;
-
-  public phoneNumber: string = '+34615111611';
-  public emailPhone: string = 'borjamm@uoc.edu';
 
   public publication: Publication;
   public id: string;
 
+  public autor: User;
+  public currentUser: User;
+
+  public isFavorite: boolean = false;
+  public isAutor: boolean = false;
+  public isCopyFavorite: boolean = false;
+  public isAdmin: boolean = false;
+  public isClient: boolean = false;
+  public isAdopted: boolean = false;
+
+  public state: string;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private publicationService: PublicationService
+    private publicationService: PublicationService,
+    private favoriteService: FavoriteService,
+    private utilsService: UtilsService,
+    private location: Location,
+    private userService: UserService, // User service
+    private authService: AuthService // Auth service
   ) {
     this.activatedRoute.params.forEach((params) => {
-      this.id = params.id;
+      this.id = params.id ?? '';
+      this.state = params.state ?? '';
     });
   }
 
   async ngOnInit(): Promise<void> {
     this.actualURL = encodeURI(document.location.href);
+    const url = this.state === State.adopted ? 'history' : 'publications';
 
-    this.publication = await this.publicationService.getPublicationById(this.id ?? '');
-    if (!this.publication) {
-      this.router.navigate(['no-results']);
-      return;
+    this.publication = await this.publicationService.getPublicationById(this.id, url);
+    // if (!this.publication) {
+    //   this.router.navigate(['no-results']);
+    //   return;
+    // }
+
+    this.publication.images = this.utilsService.getArrayFromObject(this.publication.images);
+    this.isAdopted = this.publication.state === State.adopted;
+
+    this.autor = await this.userService.getUserById(this.publication.idAutor);
+    this.currentUser = await this.authService.getCurrentUserLogged();
+
+    // Usuario actual:
+    // const id = (await this.authService.getCurrentUserUID()) ?? '';
+    // this.currentUser = await this.userService.getUserById(id);
+
+    if (this.currentUser && this.autor) {
+      this.isAdmin = this.currentUser.role === Role.admin;
+      this.isAutor = this.autor.id === this.currentUser.id;
+      this.isClient = this.currentUser.role === Role.client;
+    } else {
+      this.isAutor = false;
+      this.isAdmin = false;
+    }
+
+    if (this.currentUser && !this.isAutor) {
+      const favoritesCurrentUser = this.utilsService.getArrayFromObject(this.currentUser?.myFavorites);
+      this.isFavorite = favoritesCurrentUser.map((favorite) => favorite.id).includes(this.publication.id);
+      this.isCopyFavorite = this.isFavorite;
+    }
+  }
+
+  getTelephoneComplete(): string {
+    const code = this.autor.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
+    return code + this.autor.telephone;
+  }
+
+  onChangeFavorite() {
+    this.isFavorite = !this.isFavorite;
+  }
+
+  onEditPublication() {
+    this.router.navigate([`/publication/item/${this.publication.id}`]);
+  }
+
+  onDeletePublication() {
+    // Eliminar publicación
+    this.publicationService
+      .deletePublication(this.publication)
+      .then(() => {
+        console.log('Publicación eliminada correctamente');
+        this.location.back();
+      })
+      .catch((e) => this.utilsService.errorHandling(e));
+  }
+
+  onMarkToAdopted() {
+    if (window.confirm('¿Estas seguro?')) {
+      this.publicationService
+        .updatePublicationState(this.publication)
+        .then((p) => {
+          console.log('Marcado como adoptado', p);
+          this.publication.state = State.adopted;
+        })
+        .catch((e) => this.utilsService.errorHandling(e));
+    } else {
+      console.log('Cancelado por el usuario');
     }
   }
 
@@ -42,7 +129,34 @@ export class PublicationDetailsComponent implements OnInit {
   }
 
   copyLinkToClipboard(): void {
-    navigator.clipboard.writeText(this.actualURL);
+    navigator.clipboard
+      .writeText(this.actualURL)
+      .then(() => console.log('Se ha copiado correctamente'))
+      .catch((e) => this.utilsService.errorHandling(e));
+  }
+
+  ngOnDestroy() {
+    console.log('Se destruye el componente');
+    const isClientCurrentUser = this.currentUser && this.currentUser.role === Role.client;
+    const isChangeFavorite = this.isFavorite !== this.isCopyFavorite;
+    if (isClientCurrentUser && isChangeFavorite) {
+      console.log('Se procede a cambiar favorito');
+      if (this.isFavorite) {
+        this.favoriteService
+          .setFavorite(this.currentUser.id, this.publication)
+          .then((a) => {
+            console.log('Se ha añadido a favoritos', a);
+          })
+          .catch((e) => this.utilsService.errorHandling(e));
+      } else {
+        this.favoriteService
+          .removeFavorite(this.currentUser.id, this.publication.id)
+          .then((a) => {
+            console.log('Se ha eliminado de favoritos', a);
+          })
+          .catch((e) => this.utilsService.errorHandling(e));
+      }
+    }
   }
 
   // Este método tiene pinta de que se irá a utilsService

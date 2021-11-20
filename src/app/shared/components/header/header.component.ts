@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    console.log(this.translateService);
+    // console.log(this.translateService);
     const lang = this.translateService.store.currentLang.toUpperCase();
     // const langValue = this.languages.includes(lang) ? lang : 'ES';
     this.language = new FormControl(lang, [Validators.required]);
@@ -45,12 +45,18 @@ export class HeaderComponent implements OnInit {
   onLanguage(language: string) {
     console.log('LANGUAGE: ', language);
     this.translateService.use(language.toLowerCase());
+    console.log('Idioma cambiado satisfactoriamente');
   }
 
   onLogout(): void {
     console.log('Sesión cerrada');
     // this.utilsService.clearLocalStorage();
     this.authService.logout();
-    this.router.navigate(['publication']);
+    // this.router.navigate(['publication']);
+    // if (this.router.url == '/publication/list') {
+    //   // window.location.reload();
+    // } else {
+    this.router.navigate(['publication/list']);
+    // }
   }
 }

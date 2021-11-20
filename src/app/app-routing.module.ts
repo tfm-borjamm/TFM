@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NoResultsComponent } from './shared/components/no-results/no-results.component';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'publication/list', pathMatch: 'full' },
@@ -16,11 +16,11 @@ const routes: Routes = [
     path: 'consult',
     loadChildren: () => import('./consult/consult.module').then((m) => m.ConsultModule),
   },
-  { path: '**', component: NoResultsComponent },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

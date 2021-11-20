@@ -28,6 +28,7 @@
   "response": "Response",
   "answer": "Answer",
   "received": "Received",
+  "unread": "Received",
   "answered": "Answered",
   "home": "Home",
   "contact": "Contact",
@@ -66,7 +67,7 @@
   "filters": "Filters",
   "profile": "Profile",
   "publications_admin": "These are all the publications that exist in the application",
-  "in_adoption": "In adoption",
+  "available": "In adoption",
   "adopted": "Adopted",
   "author": "Author",
   "type": "Type",
@@ -76,7 +77,10 @@
   "register_description": "We need a series of extra data to complete the registration correctly",
   "reset_password": "Reset password",
   "reset_description": "Enter the email address of your account and we will send you a link to reset your password",
-  "clients": "Clients",
-  "professionals": "Professionals",
-  "users_admin": "These are all the users registered in the application"
+  "client": "Clients",
+  "professional": "Professionals",
+  "users_admin": "These are all the users registered in the application",
+  "unknown": "Unknown",
+  "yes": "Yes",
+  "no": "No"
 }

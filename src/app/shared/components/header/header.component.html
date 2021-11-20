@@ -2,7 +2,8 @@
   <!-- // *ngIf="user?.role != 'admin'" -->
   <nav class="navigation">
     <div class="navigation__container" *ngIf="!user || (user && user.role !== 'admin')">
-      <p class="navigation__logo">Cats&Dogs</p>
+      <!-- <p class="navigation__logo">Cats&Dogs</p> -->
+      <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">Cats&Dogs</a>
     </div>
 
     <!-- Selector de idiomas [ES, EN] -->

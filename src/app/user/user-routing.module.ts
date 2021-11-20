@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { LoginComponent } from './components/login/login.component';
@@ -41,6 +42,14 @@ const routes: Routes = [
     component: UserAdminComponent,
     canActivate: [AuthGuard],
   },
+
+  {
+    path: 'register/admin',
+    component: RegisterComponent,
+    canActivate: [AuthGuard],
+  },
+
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

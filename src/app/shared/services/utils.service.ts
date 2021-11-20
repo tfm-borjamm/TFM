@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { take } from 'rxjs/operators';
 import { Consult } from 'src/app/consult/models/consult.model';
+import { User } from 'src/app/user/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,12 @@ export class UtilsService {
       switch (error.code) {
         case 'auth/user-not-found':
           console.error('El usuario no se encuentra registrado en la aplicación');
+          // console.log(
+          //   'Si ha introducido bien el correo electrónico de la cuenta, le habrá llegado un correo electrónico para restablecer la contraseña'
+          // );
+          break;
+        case 'auth/network-request-failed':
+          console.error('No tiene conexión a internet');
           break;
         case 'auth/email-already-in-use':
           console.error('El email introducido ya se encuentra registrado en la aplicación');
@@ -60,7 +67,23 @@ export class UtilsService {
     return this.http.get<{ timestamp: number }>(url).pipe(take(1)).toPromise();
   }
 
-  sendEmail(consult: Consult): Promise<any> {
+  deleteUser(id: string): Promise<any> {
+    const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/delete-user';
+    const body = {
+      id: id,
+    };
+    return this.http.post<any>(url, JSON.stringify(body)).toPromise();
+  }
+
+  createUser(user: { email: string; password: string }): Promise<any> {
+    const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/create-user';
+    const body = {
+      user: user,
+    };
+    return this.http.post<any>(url, JSON.stringify(body)).toPromise();
+  }
+
+  sendEmail(consult: Consult): Promise<{ message: string; error?: string }> {
     const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/send-email';
     const body = {
       email_dest: consult.email,

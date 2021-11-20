@@ -13,10 +13,7 @@ export class ConsultService {
   constructor(private db: AngularFireDatabase, private utilsService: UtilsService) {}
 
   async createConsult(consult: Consult): Promise<void> {
-    // consult.creation_date = firebase.default.database.ServerValue.TIMESTAMP as number;
-    const timestamp = (await this.utilsService.getServerTimeStamp()).timestamp;
-    consult.creation_date = timestamp;
-    return this.db.object<Consult>(`consults/${consult.id}`).update(consult);
+    return this.db.object<Consult>(`consults/${consult.id}`).set(consult);
   }
 
   getAllConsults(): Promise<Consult[]> {
