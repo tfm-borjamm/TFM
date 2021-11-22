@@ -9,7 +9,7 @@
   </div>
 
   <div (click)="onDetailsPublication()">
-    <img class="card__image" [src]="carrouselImages" />
+    <img class="card__image" [src]="image | imagePublication" (error)="image = ''" />
     <p>{{ publication.id }}</p>
     <p>{{ publication.name }}</p>
     <p>{{ publication.date | date }}</p>

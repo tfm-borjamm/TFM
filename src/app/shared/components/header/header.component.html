@@ -33,7 +33,7 @@
         <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">Inicio</a>
       </li>
       <li class="navigation__item" *ngIf="user && user.role === 'professional'">
-        <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/my-publications">Mis publicaciones</a>
+        <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/my-publications" (click)="resetMenuTabs()">Mis publicaciones</a>
       </li>
       <li class="navigation__item" *ngIf="user && user.role === 'client'">
         <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/favorites">Favoritos</a>

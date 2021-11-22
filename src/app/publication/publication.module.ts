@@ -11,6 +11,7 @@ import { PublicationListComponent } from './components/publication-list/publicat
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { ImagePublicationPipe } from './pipes/image-publication.pipe';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SharedModule } from '../shared/shared.module';
     PublicationFormComponent,
     PublicationItemComponent,
     PublicationListComponent,
+    ImagePublicationPipe,
   ],
   imports: [
     CommonModule,

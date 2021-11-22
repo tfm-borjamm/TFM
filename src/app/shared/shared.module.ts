@@ -10,6 +10,10 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuTabsComponent } from './components/menu-tabs/menu-tabs.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ShareButtonsComponent } from './components/share-buttons/share-buttons.component';
+import { ContactButtonsComponent } from './components/contact-buttons/contact-buttons.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { SocialButtonsBottomSheetComponent } from './components/social-buttons-bottom-sheet/social-buttons-bottom-sheet.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +24,10 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     SidenavComponent,
     MenuTabsComponent,
     PageNotFoundComponent,
+    ShareButtonsComponent,
+    ContactButtonsComponent,
+    ConfirmationDialogComponent,
+    SocialButtonsBottomSheetComponent,
   ],
   imports: [CommonModule, TranslateModule, RouterModule, FormsModule, ReactiveFormsModule], // No Translate Module
   exports: [
@@ -30,6 +38,10 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     NoResultsComponent,
     LoadingComponent,
     MenuTabsComponent,
+    ShareButtonsComponent,
+    ContactButtonsComponent,
+    ConfirmationDialogComponent,
+    SocialButtonsBottomSheetComponent,
   ],
 })
 export class SharedModule {}

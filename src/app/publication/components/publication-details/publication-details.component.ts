@@ -17,7 +17,7 @@ import { PublicationService } from '../../services/publication.service';
   styleUrls: ['./publication-details.component.scss'],
 })
 export class PublicationDetailsComponent implements OnInit, OnDestroy {
-  public actualURL: string;
+  public shareLink: string;
 
   public publication: Publication;
   public id: string;
@@ -51,7 +51,11 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.actualURL = encodeURI(document.location.href);
+    // this.shareLink = encodeURI(document.location.href);
+    // console.log(
+    //   `Location Href : ${document.location.href} \n Location path: ${document.location.origin} Route url: ${this.router.url}`
+    // );
+
     const url = this.state === State.adopted ? 'history' : 'publications';
 
     this.publication = await this.publicationService.getPublicationById(this.id, url);
@@ -59,6 +63,8 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     //   this.router.navigate(['no-results']);
     //   return;
     // }
+
+    this.shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
 
     this.publication.images = this.utilsService.getArrayFromObject(this.publication.images);
     this.isAdopted = this.publication.state === State.adopted;
@@ -86,10 +92,10 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTelephoneComplete(): string {
-    const code = this.autor.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
-    return code + this.autor.telephone;
-  }
+  // getTelephoneComplete(): string {
+  //   const code = this.autor.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
+  //   return code + this.autor.telephone;
+  // }
 
   onChangeFavorite() {
     this.isFavorite = !this.isFavorite;
@@ -124,16 +130,26 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  encode(message: string): string {
-    return encodeURI(message);
+  onContactAutor() {
+    // Open to dialog
+    console.log('Contactar con el autor', this.autor);
   }
 
-  copyLinkToClipboard(): void {
-    navigator.clipboard
-      .writeText(this.actualURL)
-      .then(() => console.log('Se ha copiado correctamente'))
-      .catch((e) => this.utilsService.errorHandling(e));
-  }
+  // encode(message: string): string {
+  //   return encodeURI(message);
+  // }
+
+  // copyLinkToClipboard(): void {
+  //   navigator.clipboard
+  //     .writeText(this.actualURL)
+  //     .then(() => console.log('Se ha copiado correctamente'))
+  //     .catch((e) => this.utilsService.errorHandling(e));
+  // }
+
+  // encodeShareLink() : string {
+  //   // this.router.navigate([`publication/${this.publication.state}/details/${this.publication.id}`]);
+  //   return encodeURI('')
+  // }
 
   ngOnDestroy() {
     console.log('Se destruye el componente');

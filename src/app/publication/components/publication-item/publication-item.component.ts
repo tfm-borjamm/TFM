@@ -27,6 +27,7 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   public detectedChangeFavorite: boolean = false;
 
   public carrouselImages: { id: string; url: string }[] = [];
+  public image: string;
   constructor(
     private router: Router,
     private utilsService: UtilsService,
@@ -48,7 +49,8 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
     }
 
     // Primera imagen!
-    this.carrouselImages = this.utilsService.getArrayFromObject(this.publication?.images)[0]?.url ?? '';
+    this.carrouselImages = this.utilsService.getArrayFromObject(this.publication?.images) ?? [];
+    this.image = this.carrouselImages[0]?.url;
   }
 
   isPageFavorites(): boolean {
@@ -99,6 +101,9 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
 
   onSharePublication(): void {
     // Compartir publicación
+    // Open the dialog
+    const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
+    console.log('Link a compartir: ', shareLink);
   }
 
   onDeletePublication(): void {

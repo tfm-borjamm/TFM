@@ -24,7 +24,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +47,10 @@ export class HeaderComponent implements OnInit {
     console.log('LANGUAGE: ', language);
     this.translateService.use(language.toLowerCase());
     console.log('Idioma cambiado satisfactoriamente');
+  }
+
+  resetMenuTabs() {
+    this.utilsService.removeLocalStorage('menu');
   }
 
   onLogout(): void {

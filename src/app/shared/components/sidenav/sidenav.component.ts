@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/user/models/user.model';
 import { AuthService } from 'src/app/user/services/auth.service';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -10,9 +11,13 @@ import { AuthService } from 'src/app/user/services/auth.service';
 export class SidenavComponent implements OnInit {
   @Input() public user: User;
 
-  constructor() {}
+  constructor(private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     console.log('SIDENAV ACTIVADO');
+  }
+
+  resetMenuTabs() {
+    this.utilsService.removeLocalStorage('menu');
   }
 }
