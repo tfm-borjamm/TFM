@@ -102,15 +102,6 @@ export class UserService {
       return Promise.all([this.db.object<User>(`users/${user.id}`).remove(), Promise.all(favoritesUser)]);
     }
   }
-
-  testFavorite() {
-    // return this.db.list(`favorites/${'-Morp8YC-gKNCAUycGtl'}/users`).valueChanges().pipe(take(1)).toPromise();
-    return Promise.all([
-      this.db.object(`favorites/${'-Morp8YC-gKNCAUycGtl'}`).valueChanges().pipe(take(1)).toPromise(),
-      this.db.object(`favorites/${'-MosCwP-RbyZsEmmiNz-'}`).valueChanges().pipe(take(1)).toPromise(),
-      this.db.object(`favorites/${'-MosCwP-sdsd-'}`).valueChanges().pipe(take(1)).toPromise(),
-    ]);
-  }
 }
 
 // createUserRRSS() {

@@ -5,13 +5,13 @@
 
 <app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadPublications($event)"></app-menu-tabs>
 
-<button (click)="onCreatePublication()">Crear publicación</button>
+<button (click)="onCreatePublication()">Publicar</button>
 <button (click)="showFilter = !showFilter">Filtros</button>
 
 <div *ngIf="showFilter">Componente Filtros!</div>
 <!-- Pendiente -->
 
-<app-share-buttons [shareLinkRelative]="'publication/available/details/-Msjdhsjdsjdh'"></app-share-buttons>
+<!-- <app-share-buttons [shareLinkRelative]="'publication/available/details/-Msjdhsjdsjdh'"></app-share-buttons> -->
 
 <table>
   <tr>

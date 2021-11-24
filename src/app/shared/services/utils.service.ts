@@ -24,6 +24,11 @@ export class UtilsService {
     return codes.map((prefix: any) => prefix.code + ' (' + prefix.dial_code + ')').sort();
   }
 
+  getTelephoneComplete(user: User): string {
+    const code = user.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
+    return code + user.telephone;
+  }
+
   async errorHandling(e: any) {
     // Tiparlo de la mejor manera...
     let error = e;
@@ -35,6 +40,11 @@ export class UtilsService {
           // console.log(
           //   'Si ha introducido bien el correo electrónico de la cuenta, le habrá llegado un correo electrónico para restablecer la contraseña'
           // );
+          break;
+        case 'auth/popup-closed-by-user':
+          console.error(
+            'Ha cerrado la ventana para iniciar sesión a través de un proveedor externo y no se ha podido completar el proceso correctamente. Vuelve a intentarlo'
+          );
           break;
         case 'auth/network-request-failed':
           console.error('No tiene conexión a internet');

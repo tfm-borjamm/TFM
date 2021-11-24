@@ -20,10 +20,10 @@
     <th></th>
   </tr>
   <tr *ngFor="let user of users">
-    <td>{{ user.name }}</td>
-    <td>{{ user.email }}</td>
-    <td>{{ user.telephone }}</td>
-    <td>{{ user.province }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.name }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.email }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.telephone }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.province }}</td>
     <!-- <td *ngIf="user.role === 'client'">{{ user.myFavorites }}</td>
     <td *ngIf="user.role === 'professional'">{{ user.myPublications }}</td> -->
     <td>
@@ -37,5 +37,3 @@
 <ng-template #noFound>
   <div>No se han encontrado resultados</div>
 </ng-template>
-
-<button (click)="test()">test</button>

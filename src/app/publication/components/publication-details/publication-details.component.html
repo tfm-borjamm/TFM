@@ -1,5 +1,10 @@
 <div *ngIf="publication">
-  <button (click)="onContactAutor()">Contactar</button>
+  <!-- <img src="#" alt=""> -->
+
+  <div *ngIf="this.autor">
+    <h4 *ngIf="this.autor" (click)="onProfileAuthor(this.autor.id)">{{ this.autor.name }}</h4>
+    <button (click)="onContactAuthor()">Contactar</button>
+  </div>
 
   <!-- <p>Compartir</p>
   <app-share-buttons [shareLinkRelative]="shareLink"></app-share-buttons> -->
@@ -19,10 +24,14 @@
     </li>
   </ul>
 
-  <button (click)="onChangeFavorite()" *ngIf="isClient && isFavorite">Corazon rellenado</button>
-  <button (click)="onChangeFavorite()" *ngIf="isClient && !isFavorite">Corazon sin rellenar</button>
+  <div class="buttons">
+    <button (click)="onSharePublication()">Compartir</button>
+    <button (click)="onChangeFavorite(-1)" *ngIf="isClient && isFavorite">Corazon rellenado</button>
+    <button (click)="onChangeFavorite(+1)" *ngIf="isClient && !isFavorite">Corazon sin rellenar</button>
+    <span *ngIf="isClient">{{ countFavorites }}</span>
+  </div>
 
-  <div *ngIf="isAutor || isAdmin">
+  <div *ngIf="isAuthor || isAdmin">
     <button (click)="onDeletePublication()">Eliminar</button>
     <button *ngIf="!isAdopted" (click)="onEditPublication()">Editar</button>
     <button *ngIf="!isAdopted" (click)="onMarkToAdopted()">Marcar como adoptado</button>

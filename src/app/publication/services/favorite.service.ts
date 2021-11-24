@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { take } from 'rxjs/operators';
 import { Publication } from '../models/publication.model';
 
 @Injectable({
@@ -7,6 +8,10 @@ import { Publication } from '../models/publication.model';
 })
 export class FavoriteService {
   constructor(private db: AngularFireDatabase) {}
+
+  public getFavorites(id: string) : Promise<string[]> {
+    return this.db.list<string>(`favorites/${id}/users`).valueChanges().pipe(take(1)).toPromise();
+  }
 
   public setFavorite(idUser: string, publication: Publication): Promise<any> {
     return Promise.all([

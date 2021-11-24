@@ -26,13 +26,15 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
   public currentUser: User;
 
   public isFavorite: boolean = false;
-  public isAutor: boolean = false;
+  public isAuthor: boolean = false;
   public isCopyFavorite: boolean = false;
   public isAdmin: boolean = false;
   public isClient: boolean = false;
   public isAdopted: boolean = false;
 
   public state: string;
+
+  public countFavorites: number = 0;
 
   constructor(
     private router: Router,
@@ -59,6 +61,7 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     const url = this.state === State.adopted ? 'history' : 'publications';
 
     this.publication = await this.publicationService.getPublicationById(this.id, url);
+
     // if (!this.publication) {
     //   this.router.navigate(['no-results']);
     //   return;
@@ -78,26 +81,23 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
 
     if (this.currentUser && this.autor) {
       this.isAdmin = this.currentUser.role === Role.admin;
-      this.isAutor = this.autor.id === this.currentUser.id;
+      this.isAuthor = this.autor.id === this.currentUser.id;
       this.isClient = this.currentUser.role === Role.client;
     } else {
-      this.isAutor = false;
+      this.isAuthor = false;
       this.isAdmin = false;
     }
 
-    if (this.currentUser && !this.isAutor) {
+    if (this.currentUser && !this.isAuthor) {
       const favoritesCurrentUser = this.utilsService.getArrayFromObject(this.currentUser?.myFavorites);
       this.isFavorite = favoritesCurrentUser.map((favorite) => favorite.id).includes(this.publication.id);
       this.isCopyFavorite = this.isFavorite;
+      this.countFavorites = (await this.favoriteService.getFavorites(this.id)).length;
     }
   }
 
-  // getTelephoneComplete(): string {
-  //   const code = this.autor.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
-  //   return code + this.autor.telephone;
-  // }
-
-  onChangeFavorite() {
+  onChangeFavorite(count: number) {
+    this.countFavorites += count;
     this.isFavorite = !this.isFavorite;
   }
 
@@ -130,7 +130,15 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onContactAutor() {
+  onSharePublication(): void {
+    console.log('Compartir publicación');
+  }
+
+  onProfileAuthor(id: string): void {
+    this.router.navigate(['user', 'profile', id]);
+  }
+
+  onContactAuthor() {
     // Open to dialog
     console.log('Contactar con el autor', this.autor);
   }

@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RegisterSocialComponent } from './components/register-social/register-social.component';
 import { RegisterComponent } from './components/register/register.component';
 import { UserAdminComponent } from './components/user-admin/user-admin.component';
+import { UserFormComponent } from './components/user-form/user-form.component';
 import { NotAuthGuard } from './guards/not-auth.guard';
 
 const routes: Routes = [
@@ -35,6 +36,11 @@ const routes: Routes = [
   {
     path: 'profile/:id',
     component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'profile-form/:id',
+    component: UserFormComponent,
     canActivate: [AuthGuard],
   },
   {

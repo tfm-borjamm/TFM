@@ -10,6 +10,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { UserAdminComponent } from './components/user-admin/user-admin.component';
+import { UserFormComponent } from './components/user-form/user-form.component';
+import { CountPipe } from './pipes/count.pipe';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { UserAdminComponent } from './components/user-admin/user-admin.component
     RegisterSocialComponent,
     ProfileComponent,
     UserAdminComponent,
+    UserFormComponent,
+    CountPipe,
   ],
   imports: [CommonModule, UserRoutingModule, FormsModule, ReactiveFormsModule, SharedModule],
 })

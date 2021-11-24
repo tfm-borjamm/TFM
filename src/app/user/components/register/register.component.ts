@@ -114,19 +114,24 @@ export class RegisterComponent implements OnInit {
 
       let response;
       let id;
+      let added_date;
+
       if (this.currentUserId) {
         console.log('Administrador...');
         response = await this.utilsService
           .createUser({ email, password })
           .catch((e) => this.utilsService.errorHandling(e));
+
         if (response) {
-          id = response.id;
+          id = response.user.uid;
+          added_date = new Date(response.user.metadata.creationTime).getTime();
         }
       } else {
         console.log('No registrado...');
         response = await this.authService.register(email, password).catch((e) => this.utilsService.errorHandling(e));
         if (response) {
           id = response.user.uid;
+          added_date = response.user.metadata.createdAt;
         }
       }
 
@@ -140,6 +145,7 @@ export class RegisterComponent implements OnInit {
         this.user.code = this.registerForm.value.code;
         this.user.telephone = this.registerForm.value.telephone;
         this.user.cp = this.registerForm.value.cp;
+        this.user.added_date = added_date;
 
         this.userService
           .createUser(this.user)

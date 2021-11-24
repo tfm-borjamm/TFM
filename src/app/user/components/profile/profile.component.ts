@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
@@ -9,137 +9,73 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { Role } from '../../enums/role.enum';
+import { Route } from '@angular/compiler/src/core';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
-export class ProfileComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
+export class ProfileComponent implements OnInit, OnDestroy {
   public user: User;
-  public editForm: FormGroup;
-  public id: string;
+  public currentUser: User;
+  public userID: string;
+  public subscription: Subscription;
 
-  public role: FormControl;
-  public email: FormControl;
-  public name: FormControl;
-  public street: FormControl;
-  public cp: FormControl;
-  public code: FormControl;
-  public telephone: FormControl;
-  public province: FormControl;
-
-  public codes: string[] = [];
-  public provinces: string[] = provinces;
+  public isAdminUser: boolean;
+  public isProfessionalUser: boolean;
+  public isClientUser: boolean;
+  public isCurrentUser: boolean = true;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private utilsService: UtilsService,
-    private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private location: Location
+    private utilsService: UtilsService,
+    private router: Router
   ) {
-    this.activatedRoute.params.forEach((params) => {
-      this.id = params.id;
+    this.subscription = this.activatedRoute.params.subscribe((params) => {
+      this.userID = params.id;
     });
   }
 
   async ngOnInit(): Promise<void> {
-    this.user = await this.getUser(); // Proteger que nadie pueda editar un usuario si no es el administrador
-    if (!this.user) {
-      this.router.navigate(['user-not-found']);
-      return;
+    // 1º comprobar si entramos al perfil de un usuario o si a nuestro perfil
+    let currentUID = await this.authService.getCurrentUserUID().catch((e) => this.utilsService.errorHandling(e));
+    currentUID = currentUID ? currentUID : null;
+    if (this.userID) this.isCurrentUser = this.userID === currentUID; // El perfil es mio desde details
+
+    if (this.userID && !this.isCurrentUser) {
+      const user = await this.userService.getUserById(this.userID).catch((e) => this.utilsService.errorHandling(e));
+      const current = await this.userService.getUserById(currentUID).catch((e) => this.utilsService.errorHandling(e));
+      this.user = user ? user : null;
+      this.currentUser = current ? current : null;
+      this.isAdminUser = this.currentUser.role === Role.admin;
+    } else {
+      const user = await this.userService.getUserById(currentUID).catch((e) => this.utilsService.errorHandling(e));
+      this.user = user ? user : null;
+      this.isClientUser = this.user.role === Role.client;
     }
 
-    this.codes = this.utilsService.setFormatPhonesCodes(codes);
-
-    this.name = new FormControl(this.user.name, [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(55),
-      Validators.pattern(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/),
-    ]);
-    this.email = new FormControl({ value: this.user.email, disabled: true }, [
-      Validators.required,
-      Validators.email,
-      checkEmail(),
-    ]);
-    this.role = new FormControl({ value: this.user.role, disabled: true }, [Validators.required]);
-    this.street = new FormControl(this.user.street, [Validators.required]);
-    this.province = new FormControl(this.user.province, [Validators.required]);
-    this.code = new FormControl(this.user.code ?? '', [Validators.required]);
-    this.telephone = new FormControl(this.user.telephone, [Validators.required, Validators.maxLength(12)]);
-    this.cp = new FormControl(this.user.cp, [Validators.required]);
-    this.editForm = this.createForm();
+    this.user.telephone = this.utilsService.getTelephoneComplete(this.user);
   }
 
-  createForm(): FormGroup {
-    return this.formBuilder.group({
-      email: this.email,
-      role: this.role,
-      name: this.name,
-      street: this.street,
-      cp: this.cp,
-      code: this.code,
-      telephone: this.telephone,
-      province: this.province,
-    });
+  // getTelephoneComplete(): string {
+  //   const code = this.user.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
+  //   return code + this.user.telephone;
+  // }
+
+  onContactUser() {
+    console.log('Disparador del bottom sheet');
   }
 
-  async getUser(): Promise<User> {
-    const id = this.id ?? (await this.authService.getCurrentUserUID());
-    const user = await this.userService.getUserById(id);
-    if (!user) return null;
-    return user;
+  onEditUser() {
+    this.router.navigate(['user', 'profile-form', this.user.id]);
   }
 
-  onDeleteUser() {
-    // Método para eliminar un usuario
-    this.userService
-      .deleteUser(this.user)
-      .then(async (a) => {
-        console.log('Se ha eliminado correctamente el usuario', a);
-        const response = await this.utilsService
-          .deleteUser(this.user.id)
-          .catch((e) => this.utilsService.errorHandling(e));
-        if (response) {
-          console.log('Respuesta: ', response);
-        }
-      })
-      .catch((e) => this.utilsService.errorHandling(e));
-  }
-
-  onEdit() {
-    // Actualizar los campos del usuario en la base de datos
-    if (this.editForm.valid) {
-      // email: this.id ? this.user.email : this.editForm.value.email,
-      this.btnForm.nativeElement.disabled = true;
-      const user: User = {
-        id: this.user.id,
-        email: this.user.email,
-        name: this.editForm.value.name,
-        street: this.editForm.value.street,
-        cp: this.editForm.value.cp,
-        code: this.editForm.value.code,
-        telephone: this.editForm.value.telephone,
-        province: this.editForm.value.province,
-        role: this.user.role,
-      };
-
-      this.userService
-        .updateUser(user)
-        .then(() => {
-          console.log('Información guardada correctamente');
-          this.btnForm.nativeElement.disabled = false;
-          if (this.id) this.location.back(); // is admin editing user
-        })
-        .catch((e) => {
-          this.btnForm.nativeElement.disabled = false;
-          this.utilsService.errorHandling(e);
-        });
-    }
+  ngOnDestroy() {
+    if (!this.subscription.closed) this.subscription.unsubscribe();
   }
 }

@@ -8,6 +8,7 @@ export class User {
   telephone: string;
   province: string;
   role: string;
+  added_date: number;
   // idPublications?: { [id: string]: { id: string; type: string; province: string; filter: string }[] };
   // idFavorites?: { [id: string]: { id: string; type: string; province: string; filter: string }[] };
   // myPublications?: { [id: string]: { id: string; type: string; province: string; filter: string }[] };

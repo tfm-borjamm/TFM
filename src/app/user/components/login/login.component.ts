@@ -65,10 +65,13 @@ export class LoginComponent implements OnInit {
     const isNewUser = userAuth?.additionalUserInfo?.isNewUser;
     if (isNewUser) {
       console.info('El usuario es nuevo en la plataforma');
+      const date: string = userAuth.user.metadata.creationTime;
+
       const user: any = {
         id: userAuth.user.uid,
         email: userAuth.user.email,
         name: userAuth.user.displayName,
+        added_date: new Date(date).getTime(),
       };
       this.userService
         .createUser(user)

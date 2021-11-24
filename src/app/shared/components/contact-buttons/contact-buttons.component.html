@@ -2,8 +2,8 @@
 <!-- bottom sheet -->
 <div *ngIf="author">
   <p>Contactar</p>
-  <a href="tel:{{ getTelephoneComplete() }}" target="_blank" rel="noopener noreferrer">Phone</a>
-  <a href="sms:{{ getTelephoneComplete() }}&body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">SMS</a>
-  <a href="https://wa.me/{{ getTelephoneComplete() }}?text={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+  <a href="tel:{{ author.telephone }}" target="_blank" rel="noopener noreferrer">Phone</a>
+  <a href="sms:{{ author.telephone }}&body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">SMS</a>
+  <a href="https://wa.me/{{ author.telephone }}?text={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
   <a href="mailto:{{ author.email }}?body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">Email</a>
 </div>

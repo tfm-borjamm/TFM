@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/user/models/user.model';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-contact-buttons',
@@ -8,13 +9,10 @@ import { User } from 'src/app/user/models/user.model';
 })
 export class ContactButtonsComponent implements OnInit {
   @Input() public author: User;
-  constructor() {}
+  constructor(private utilsService: UtilsService) {}
 
-  ngOnInit(): void {}
-
-  getTelephoneComplete(): string {
-    const code = this.author.code.split(' ')[1].replace(/[{()}]/g, ''); // Numbercode
-    return code + this.author.telephone;
+  ngOnInit(): void {
+    this.author.telephone = this.utilsService.getTelephoneComplete(this.author);
   }
 
   encode(message: string): string {

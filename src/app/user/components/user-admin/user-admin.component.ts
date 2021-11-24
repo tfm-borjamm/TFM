@@ -89,7 +89,7 @@ export class UserAdminComponent implements OnInit, OnDestroy {
 
   onEditUser(id: string) {
     // Método para editar un usuario
-    this.router.navigate([`user/profile/${id}`]);
+    this.router.navigate([`user/profile-form/${id}`]);
   }
 
   onCreateUser() {
@@ -97,13 +97,10 @@ export class UserAdminComponent implements OnInit, OnDestroy {
     this.router.navigate(['user/register/admin']);
   }
 
-  async test() {
-    const favorites = await this.userService.testFavorite();
-    console.log(
-      '--->',
-      favorites.filter((x) => x)
-    );
+  onViewProfile(id: string) {
+    this.router.navigate(['user', 'profile', id]);
   }
+
   ngOnDestroy(): void {
     // if (!this.subscriptionTab.closed) {
     //   console.log('Destruimos el subscribe');

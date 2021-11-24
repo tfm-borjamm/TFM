@@ -1,85 +1,60 @@
-<main class="main" *ngIf="user">
-  <div class="main__container">
-    <h1 class="main__title" *ngIf="!id">Perfil</h1>
-    <h1 class="main__title" *ngIf="id">Editar usuario</h1>
-    <form class="main__form" [formGroup]="editForm" (ngSubmit)="onEdit()">
-      <ul class="main__list">
-        <li class="main__item">
-          <label class="main__label" for="name">Nombre (*)</label>
-          <input class="main__input" type="text" id="name" [formControl]="name" placeholder="Nombre" />
-          <div class="errors" *ngIf="editForm.get('name').errors && (editForm.get('name').touched || editForm.get('name').dirty)">
-            <span class="errors__msg" *ngIf="editForm.get('name').errors.required">Este campo es obligatorio</span>
-            <span class="errors__msg" *ngIf="editForm.get('name').errors.minlength">Este campo debe tener mínimo 3 caracteres</span>
-            <span class="errors__meg" *ngIf="editForm.get('name').errors.maxlength">Este campo no debe tener más de 55 caracteres</span>
-            <span class="errors__msg" *ngIf="editForm.get('name').errors.pattern">Este campo no debe tener espacios ni caracteres especiales</span>
-          </div>
-        </li>
+<div *ngIf="user">
+  <h1 *ngIf="isCurrentUser">Mi perfil</h1>
+  <div>
+    <!-- Icon user -->
+    <!-- <img src="#" alt="Profile's image" /> -->
+    <!-- place icon -->
+    <p>{{ user.cp }}, {{ user.province }}</p>
+    <p>{{ user.street }}</p>
 
-        <li class="main__item">
-          <label class="main__label" for="email">Email (*)</label>
-          <input class="main__input" type="email" id="email" [formControl]="email" placeholder="Email" />
-        </li>
-
-        <li class="main__item">
-          <label class="main__label" for="role">Role (*)</label>
-          <input class="main__input" type="role" id="role" [formControl]="role" placeholder="role" />
-        </li>
-
-        <li class="main__item">
-          <label class="main__label" for="code">Prefijo (*)</label>
-          <select class="main__select" id="code" [formControl]="code" [value]="editForm.value.code">
-            <option value="" disabled selected>Selecciona un prefijo</option>
-            <option *ngFor="let code of codes" value="{{ code }}" [selected]="editForm.value.code === code ? true : false">
-              {{ code }}
-            </option>
-          </select>
-          <div class="errors" *ngIf="editForm.get('code').errors && (editForm.get('code').touched || editForm.get('code').dirty)">
-            <span class="errors__msg" *ngIf="editForm.get('code').errors.required">Este campo es obligatorio</span>
-          </div>
-        </li>
-
-        <li class="main__item">
-          <label class="main__label" for="telephone">Teléfono (*)</label>
-          <input class="main__input" type="text" id="telephone" [formControl]="telephone" placeholder="Teléfono" />
-          <div class="errors" *ngIf="editForm.get('telephone').errors && (editForm.get('telephone').touched || editForm.get('telephone').dirty)">
-            <span class="errors__msg" *ngIf="editForm.get('telephone').errors.required">Este campo es obligatorio</span>
-            <span class="errors__msg" *ngIf="editForm.get('telephone').errors.maxlength">Este campo no debe tener más de 12 caracteres</span>
-          </div>
-        </li>
-
-        <li class="main__item">
-          <label class="main__label" for="province">Provincia (*)</label>
-          <select class="main__select" id="province" [formControl]="province" [value]="editForm.value.province">
-            <option value="" disabled selected>Selecciona una provincia</option>
-            <option *ngFor="let province of provinces" value="{{ province }}" [selected]="editForm.value.province === province ? true : false">
-              {{ province }}
-            </option>
-          </select>
-          <div class="errors" *ngIf="editForm.get('province').errors && (editForm.get('province').touched || editForm.get('province').dirty)">
-            <span class="errors__msg" *ngIf="editForm.get('province').errors.required">Este campo es obligatorio</span>
-          </div>
-        </li>
-
-        <li class="main__item">
-          <label class="main__label" for="cp">Código postal (*)</label>
-          <input class="main__input" type="number" id="cp" [formControl]="cp" placeholder="Código postal" />
-          <div class="errors" *ngIf="editForm.get('cp').errors && (editForm.get('cp').touched || editForm.get('cp').dirty)">
-            <span class="errors__msg" *ngIf="editForm.get('cp').errors.required">Este campo es obligatorio</span>
-          </div>
-        </li>
-
-        <li class="main__item">
-          <label class="main__label" for="street">Dirección (*)</label>
-          <input class="main__input" type="text" id="street" [formControl]="street" placeholder="Dirección" />
-          <div class="errors" *ngIf="editForm.get('street').errors && (editForm.get('street').touched || editForm.get('street').dirty)">
-            <span class="errors__msg" *ngIf="editForm.get('street').errors.required">Este campo es obligatorio</span>
-          </div>
-        </li>
-
-        <li class="main__item main__item--fb-100">
-          <button #btnForm type="submit" class="main__button" [disabled]="editForm.invalid">Guardar</button>
-        </li>
-      </ul>
-    </form>
+    <!-- calendar icon -->
+    <p>Se unió el {{ user.added_date | date: "medium" }}</p>
+    <button *ngIf="!isCurrentUser" (click)="onContactUser()">Contactar</button>
   </div>
-</main>
+
+  <ul>
+    <button *ngIf="isCurrentUser || isAdminUser" (click)="onEditUser()">Cambiar</button>
+    <li>
+      <div>
+        <h5>Nombre</h5>
+        <p>{{ user.name }}</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h5>Correo electrónico</h5>
+        <p>{{ user.email }}</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h5>Teléfono</h5>
+        <p>{{ user.telephone }}</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h5>Role</h5>
+        <p>{{ user.role }}</p>
+      </div>
+    </li>
+    <li *ngIf="!isClientUser">
+      <div>
+        <h5>Número de mascotas que ha subido a la plataforma</h5>
+        <p>{{ user.myPublications | count: user.myHistory }}</p>
+      </div>
+    </li>
+    <li *ngIf="!isClientUser">
+      <div>
+        <h5>Número de mascotas que ha subido y han sido adoptadas</h5>
+        <p>{{ user.myHistory | count }}</p>
+      </div>
+    </li>
+    <li *ngIf="isClientUser">
+      <div>
+        <h5>Número de publicaciones guardados en favoritos</h5>
+        <p>{{ user.myPublications | count }}</p>
+      </div>
+    </li>
+  </ul>
+</div>
