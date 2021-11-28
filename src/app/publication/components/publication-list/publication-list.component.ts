@@ -148,7 +148,7 @@ export class PublicationListComponent implements OnInit {
     this.getPublications({ start: false });
   }
 
-  private async getPublications(settings: settings = { start: true }) {
+  async getPublications(settings: settings = { start: true }) {
     console.log('LOG GET-PUBLICATIONS', settings);
 
     let options;

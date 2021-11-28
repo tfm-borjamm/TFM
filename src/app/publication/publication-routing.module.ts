@@ -6,33 +6,39 @@ import { PublicationAdminComponent } from './components/publication-admin/public
 import { PublicationDetailsComponent } from './components/publication-details/publication-details.component';
 import { PublicationFormComponent } from './components/publication-form/publication-form.component';
 import { PublicationListComponent } from './components/publication-list/publication-list.component';
-import { ExistPublicationGuard } from './guards/exist-publication.guard';
+import { HavePermissionsGuard } from './guards/have-permissions.guard';
+import { IsClientGuard } from './guards/is-client.guard';
+import { IsOwnerGuard } from './guards/is-owner.guard';
+import { IsProfessionalGuard } from './guards/is-professional.guard';
+import { PublicationResolver } from './resolvers/publication.resolver';
 
 const routes: Routes = [
   // Rutas públicas de todos los usuarios:
   { path: 'list', component: PublicationListComponent },
-  { path: ':state/details/:id', component: PublicationDetailsComponent, canActivate: [ExistPublicationGuard] },
+  { path: ':state/details/:id', component: PublicationDetailsComponent, resolve: { publication: PublicationResolver } },
   {
     path: 'item',
     component: PublicationFormComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, HavePermissionsGuard],
   },
   {
     path: 'item/:id',
     component: PublicationFormComponent,
-    canActivate: [AuthGuard, ExistPublicationGuard],
+    canActivate: [AuthGuard, IsOwnerGuard],
+    resolve: { publication: PublicationResolver },
   },
   {
     path: 'favorites',
     component: PublicationListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, IsClientGuard],
   },
   {
     path: 'my-publications',
     component: PublicationListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, IsProfessionalGuard],
   },
 
+  // Pasar al módulo de dashboard!
   {
     path: 'admin',
     component: PublicationAdminComponent,

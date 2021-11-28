@@ -46,10 +46,15 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     private userService: UserService, // User service
     private authService: AuthService // Auth service
   ) {
-    this.activatedRoute.params.forEach((params) => {
-      this.id = params.id ?? '';
-      this.state = params.state ?? '';
-    });
+    console.log(this.activatedRoute.snapshot.data);
+
+    this.publication = this.activatedRoute.snapshot.data.publication;
+    // this.activatedRoute.params.forEach((params) => {
+    //   // this.id = params.id ?? '';
+    //   // this.state = params.state ?? '';
+    //   this.publication = params.publication;
+    //   console.log('--->', params);
+    // });
   }
 
   async ngOnInit(): Promise<void> {
@@ -58,9 +63,9 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     //   `Location Href : ${document.location.href} \n Location path: ${document.location.origin} Route url: ${this.router.url}`
     // );
 
-    const url = this.state === State.adopted ? 'history' : 'publications';
+    // const url = this.state === State.adopted ? 'history' : 'publications';
 
-    this.publication = await this.publicationService.getPublicationById(this.id, url);
+    // this.publication = await this.publicationService.getPublicationById(this.id, url);
 
     // if (!this.publication) {
     //   this.router.navigate(['no-results']);

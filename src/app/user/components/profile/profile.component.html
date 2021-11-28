@@ -1,5 +1,5 @@
 <div *ngIf="user">
-  <h1 *ngIf="isCurrentUser">Mi perfil</h1>
+  <h1 *ngIf="isCurrentUser">{{ "profile" | translate }}</h1>
   <div>
     <!-- Icon user -->
     <!-- <img src="#" alt="Profile's image" /> -->
@@ -8,7 +8,7 @@
     <p>{{ user.street }}</p>
 
     <!-- calendar icon -->
-    <p>Se unió el {{ user.added_date | date: "medium" }}</p>
+    <p>Se unió el {{ user.added_date | amLocale: translateService.currentLang | amDateFormat: "LL" }}</p>
     <button *ngIf="!isCurrentUser" (click)="onContactUser()">Contactar</button>
   </div>
 

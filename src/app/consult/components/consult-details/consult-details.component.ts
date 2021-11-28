@@ -23,29 +23,29 @@ export class ConsultDetailsComponent implements OnInit {
 
   public showForm: boolean;
   constructor(
-    private router: Router,
+    // private router: Router,
     private activatedRoute: ActivatedRoute,
     private consultService: ConsultService,
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
     private location: Location
   ) {
-    this.activatedRoute.params.forEach((params) => {
-      // Params desde el routing
-      console.log('params', params);
-      this.id = params.id;
-    });
+    this.consult = this.activatedRoute.snapshot.data.consult;
+    // this.activatedRoute.params.forEach((params) => {
+    //   // Params desde el routing
+    //   console.log('params', params);
+    //   this.id = params.id;
+    // });
   }
 
   async ngOnInit(): Promise<void> {
-    this.consult = await this.consultService.getConsultById(this.id ?? '');
-    if (!this.consult) {
-      this.router.navigate(['no-results']);
-      return;
-    }
+    // this.consult = await this.consultService.getConsultById(this.id ?? '');
+    // if (!this.consult) {
+    //   this.router.navigate(['page-not-found']);
+    //   return;
+    // }
 
     this.loadForm();
-
     this.showForm = Boolean(this.consult.admin);
   }
 

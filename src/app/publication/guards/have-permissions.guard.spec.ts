@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ExistPublicationGuard } from './exist-publication.guard';
+import { HavePermissionsGuard } from './have-permissions.guard';
 
-describe('ExistPublicationGuard', () => {
-  let guard: ExistPublicationGuard;
+describe('HavePermissionsGuard', () => {
+  let guard: HavePermissionsGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(ExistPublicationGuard);
+    guard = TestBed.inject(HavePermissionsGuard);
   });
 
   it('should be created', () => {

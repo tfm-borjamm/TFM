@@ -12,6 +12,7 @@ import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Role } from '../../enums/role.enum';
 import { Route } from '@angular/compiler/src/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
@@ -34,11 +35,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private utilsService: UtilsService,
-    private router: Router
+    private router: Router,
+    public translateService: TranslateService
   ) {
-    this.subscription = this.activatedRoute.params.subscribe((params) => {
-      this.userID = params.id;
-    });
+    this.user = this.activatedRoute.snapshot.data.user;
+    if (this.user) this.userID = this.user.id;
+    // this.subscription = this.activatedRoute.params.subscribe((params) => {
+    //   this.userID = params.id;
+    // });
   }
 
   async ngOnInit(): Promise<void> {
@@ -48,9 +52,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (this.userID) this.isCurrentUser = this.userID === currentUID; // El perfil es mio desde details
 
     if (this.userID && !this.isCurrentUser) {
-      const user = await this.userService.getUserById(this.userID).catch((e) => this.utilsService.errorHandling(e));
+      // const user = await this.userService.getUserById(this.userID).catch((e) => this.utilsService.errorHandling(e));
+      // this.user = user ? user : null;
       const current = await this.userService.getUserById(currentUID).catch((e) => this.utilsService.errorHandling(e));
-      this.user = user ? user : null;
       this.currentUser = current ? current : null;
       this.isAdminUser = this.currentUser.role === Role.admin;
     } else {
@@ -76,6 +80,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (!this.subscription.closed) this.subscription.unsubscribe();
+    // if (!this.subscription.closed) this.subscription.unsubscribe();
   }
 }

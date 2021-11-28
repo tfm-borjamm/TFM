@@ -5,6 +5,7 @@ import { User } from './user/models/user.model';
 import { AuthService } from './user/services/auth.service';
 import { UserService } from './user/services/user.service';
 import { Role } from './user/enums/role.enum';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,8 @@ export class AppComponent {
   public user: User;
   public loadInfomation: boolean = false;
   public firstTime: boolean;
+
+  public subscriptionCurrentUser: Subscription;
   constructor(
     private translate: TranslateService,
     private authService: AuthService,
@@ -34,19 +37,19 @@ export class AppComponent {
     this.translate.use(this.translate.getBrowserLang());
     console.log('Idioma: ', this.translate.getDefaultLang());
 
-    this.authService.getCurrentUser().subscribe(async (user: firebase.default.User) => {
+    this.subscriptionCurrentUser = this.authService.getCurrentUser().subscribe(async (user: firebase.default.User) => {
       this.loadInfomation = false;
       if (user) {
         this.user = await this.userService.getUserById(user.uid);
-        if (this.user.role) {
-          if (this.user.role === Role.admin) {
-            this.router.navigate(['user/admin']);
-          } else {
-            this.router.navigate(['publication/list']);
-          }
-        } else {
-          this.router.navigate(['user/register-social']);
-        }
+        // if (this.user.role) {
+        //   if (this.user.role === Role.admin) {
+        //     // this.router.navigate(['user/admin']);
+        //   } else {
+        //     // this.router.navigate(['publication/list']);
+        //   }
+        // } else {
+        //   // this.router.navigate(['user/register-social']);
+        // }
       } else {
         this.user = null;
         // if (!this.firstTime)
@@ -57,5 +60,12 @@ export class AppComponent {
       this.loadInfomation = true;
       // this.firstTime = false;
     });
+  }
+
+  ngOnDestroy(): void {
+    if (!this.subscriptionCurrentUser.closed) {
+      console.log('Esta abierto el subscribe!');
+      this.subscriptionCurrentUser.unsubscribe();
+    }
   }
 }

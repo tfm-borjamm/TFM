@@ -14,6 +14,7 @@ import { ShareButtonsComponent } from './components/share-buttons/share-buttons.
 import { ContactButtonsComponent } from './components/contact-buttons/contact-buttons.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { SocialButtonsBottomSheetComponent } from './components/social-buttons-bottom-sheet/social-buttons-bottom-sheet.component';
+import { MomentModule } from 'ngx-moment';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { SocialButtonsBottomSheetComponent } from './components/social-buttons-b
   imports: [CommonModule, TranslateModule, RouterModule, FormsModule, ReactiveFormsModule], // No Translate Module
   exports: [
     TranslateModule,
+    MomentModule,
     HeaderComponent,
     FooterComponent,
     SidenavComponent,

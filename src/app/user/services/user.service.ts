@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -14,15 +15,11 @@ import { User } from '../models/user.model';
 })
 export class UserService {
   constructor(
-    private afAuth: AngularFireAuth,
     private db: AngularFireDatabase,
     private utilsService: UtilsService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private http: HttpClient
   ) {}
-
-  getAllUsers(): Observable<User[]> {
-    return this.db.list<User>(`users`).valueChanges();
-  }
 
   getUsersAdmin(role: string): Promise<User[]> {
     const query = (ref: firebase.default.database.Reference) => ref.orderByChild('role').equalTo(role);
@@ -38,10 +35,6 @@ export class UserService {
   }
 
   async updateUser(user: any): Promise<any> {
-    // if (!emailEquals) {
-    //   const usr = await this.afAuth.currentUser;
-    //   const update = await usr.updateEmail(user.email).catch((e) => this.utilsService.errorHandling(e));
-    // }
     return this.db.object(`users/${user.id}`).update(user);
   }
 
@@ -102,17 +95,20 @@ export class UserService {
       return Promise.all([this.db.object<User>(`users/${user.id}`).remove(), Promise.all(favoritesUser)]);
     }
   }
-}
 
-// createUserRRSS() {
-// if(user.rol == "C") {
-//   return this.db.object(`users/${id}/details`).update(user);
-// }else{
-//   return Promise.all([
-//     this.db.object(`users/${id}/details`).set(user),
-//     this.db.object(`users/${id}/idEmployees/${employee.id}`).set(employee.id),
-//     this.db.object(`business/${id}`).set(id),
-//     this.db.object(`employees/${employee.id}`).set(employee)
-//   ]);
-// }
-// }
+  getAllUsers(): Promise<any> {
+    return this.http
+      .get<any>('https://tfm-borjamm-default-rtdb.europe-west1.firebasedatabase.app/users.json?shallow=true')
+      .toPromise();
+  }
+
+  getUserLastSevenDays(currenTime: number): Promise<User[]> {
+    const TIMESTAMP_SEVEN_DAYS = 86400000 * 7;
+    const query = (ref: firebase.default.database.Reference) =>
+      ref
+        .orderByChild('added_date')
+        .startAt(currenTime - TIMESTAMP_SEVEN_DAYS)
+        .endAt(currenTime);
+    return this.db.list<User>('users', query).valueChanges().pipe(take(1)).toPromise();
+  }
+}

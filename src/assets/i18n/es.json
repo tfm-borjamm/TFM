@@ -82,5 +82,9 @@
   "users_admin": "Estos son todos los usuarios registrados en la aplicación",
   "unknown": "Desconocido",
   "yes": "Si",
-  "no": "No"
+  "no": "No",
+
+  "new_users_last_seven_days": "Nuevos usuarios en los últimos 7 días",
+  "new_consults_last_seven_days": "Nuevas consultas en los últimos 7 días",
+  "new_publications_last_seven_days": "Nuevas publicaciones en los últimos 7 días"
 }

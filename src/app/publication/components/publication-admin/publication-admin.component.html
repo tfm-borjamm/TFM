@@ -1,17 +1,24 @@
-<!-- <p>publication-admin works!</p>
-<p>No hay filtros, lo máximo si acaso (por nombre de propietario mediante buscador)</p> -->
+<!-- <p>publication-admin works!</p> -->
 <h1>{{ "publications" | translate }}</h1>
 <p>{{ "publications_admin" | translate }}</p>
 
 <app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadPublications($event)"></app-menu-tabs>
 
 <button (click)="onCreatePublication()">Publicar</button>
-<button (click)="showFilter = !showFilter">Filtros</button>
 
-<div *ngIf="showFilter">Componente Filtros!</div>
-<!-- Pendiente -->
+<button (click)="showFilter = !showFilter">Filtros <span class="filterSelected" *ngIf="filterPublication.value.province || filterPublication.value.type"></span></button>
 
-<!-- <app-share-buttons [shareLinkRelative]="'publication/available/details/-Msjdhsjdsjdh'"></app-share-buttons> -->
+<div *ngIf="showFilter">
+  <select [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
+    <option value="" selected>Todos</option>
+    <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
+  </select>
+
+  <select [formControl]="type" [value]="filterPublication.value.type" (ngModelChange)="onChangeFilter({ filter: 'type', value: $event })">
+    <option value="" selected>Todos</option>
+    <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type }}</option>
+  </select>
+</div>
 
 <table>
   <tr>

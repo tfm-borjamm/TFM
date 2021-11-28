@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { provinces } from 'src/app/shared/helpers/provinces';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { UserService } from 'src/app/user/services/user.service';
 import { State } from '../../enums/state.enum';
 import { Publication } from '../../models/publication.model';
 import { PublicationService } from '../../services/publication.service';
+import { Type } from '../../enums/type.enum';
 
 @Component({
   selector: 'app-publication-admin',
@@ -14,26 +16,99 @@ import { PublicationService } from '../../services/publication.service';
 })
 export class PublicationAdminComponent implements OnInit, OnDestroy {
   public publications: Publication[];
+  public publicationsCopy: Publication[];
 
   public showFilter: boolean = false;
 
   public defaultTab = State.available;
   public tabs = Object.values(State);
 
+  public filterPublication: FormGroup;
+  public province: FormControl;
+  public type: FormControl;
+
+  public paramType: string = null;
+  public paramProvince: string = null;
+
+  public types: string[] = Object.values(Type);
+  public provinces: string[] = provinces;
+
   constructor(
     private publicationService: PublicationService,
     private router: Router,
+    private formBuilder: FormBuilder,
     private utilsService: UtilsService,
-    private userService: UserService // private activatedRoute: ActivatedRoute,
-  ) {}
+    private userService: UserService
+  ) {
+    const filterPublications = this.utilsService.getLocalStorage('filterPublications');
+    const params = filterPublications;
+    if (params) {
+      const isTypeOK = Object.values(Type).includes(params?.type);
+      const isProvinceOK = provinces.includes(params?.province);
+      this.paramType = isTypeOK ? params?.type : '';
+      this.paramProvince = isProvinceOK ? params?.province : '';
+    }
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadForm();
+  }
 
   async loadPublications(tabMenu: string): Promise<void> {
-    console.log('tabMenu', tabMenu);
-
     const publications = await this.publicationService.getPublicationsAdmin(tabMenu);
     this.publications = await this.replaceIdsToNameAutor(publications);
+    this.publicationsCopy = this.publications;
+    this.onChangeFilter();
+  }
+
+  onChangeFilter(selected?: any) {
+    const search: any = {
+      type: this.filterPublication.value.type,
+      province: this.filterPublication.value.province,
+    };
+
+    if (selected) {
+      const { filter, value } = selected;
+      search[filter] = value;
+    }
+
+    console.log(search, this.paramProvince, this.paramType);
+
+    if (search.type && search.province) {
+      this.publications = this.publicationsCopy.filter(
+        ({ type, province }) => type.includes(search.type) && province.includes(search.province)
+      );
+      this.utilsService.setLocalStorage('filterPublications', {
+        type: search.type,
+        province: search.province,
+      });
+    } else if (search.type) {
+      this.publications = this.publicationsCopy.filter(({ type }) => type.includes(search.type));
+      this.utilsService.setLocalStorage('filterPublications', {
+        type: search.type,
+      });
+    } else if (search.province) {
+      this.publications = this.publicationsCopy.filter(({ province }) => province.includes(search.province));
+      this.utilsService.setLocalStorage('filterPublications', {
+        province: search.province,
+      });
+    } else {
+      this.publications = this.publicationsCopy;
+      this.utilsService.removeLocalStorage('filterPublications');
+    }
+  }
+
+  loadForm() {
+    this.type = new FormControl(this.paramType ?? '', [Validators.required]);
+    this.province = new FormControl(this.paramProvince ?? '', [Validators.required]);
+    this.filterPublication = this.createForm();
+  }
+
+  createForm(): FormGroup {
+    return this.formBuilder.group({
+      type: this.type,
+      province: this.province,
+    });
   }
 
   onCreatePublication() {

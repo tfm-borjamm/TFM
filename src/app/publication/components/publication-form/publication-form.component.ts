@@ -79,18 +79,26 @@ export class PublicationFormComponent implements OnInit {
     private location: Location
   ) {
     // Editar o Crear
-    this.activatedRoute.params.forEach((params) => (this.publicationID = params['id']));
+    // this.activatedRoute.params.forEach((params) => (this.publicationID = params['id']));
   }
 
   async ngOnInit(): Promise<void> {
     // this.route.params.forEach((params) => (publicationID = params['id']));
 
     // Si vamos a editar una publicación
+
     this.user = await this.authService.getCurrentUserLogged();
-    if (this.publicationID) {
-      this.publication = await this.publicationService.getPublicationById(this.publicationID);
-      // this.user = await this.authService.getCurrentUserLogged();
+    const publicationParam = this.activatedRoute.snapshot.data.publication;
+    console.log('--->', publicationParam);
+
+    if (publicationParam) {
+      // this.publication = await this.publicationService.getPublicationById(this.publicationID);
+      this.publication = publicationParam;
+      this.publicationID = this.publication.id;
       this.isAutor = this.publication.idAutor === this.user.id;
+
+      // this.user = await this.authService.getCurrentUserLogged();
+
       // this.isAdmin = this.user.role === Role.admin;
 
       // if (!this.publication) {

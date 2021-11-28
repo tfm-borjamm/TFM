@@ -16,7 +16,8 @@ export class PublicationService {
   constructor(
     private db: AngularFireDatabase,
     private storage: AngularFireStorage,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private http: HttpClient
   ) {}
 
   public async getPublications(options: any): Promise<Publication[]> {
@@ -165,114 +166,25 @@ export class PublicationService {
     ]);
   }
 
-  //   public async getPublicationsDeprecated(options: any): Promise<any> {
-  //     const { filterKey, filterValue, idLastItem, limitItems } = options;
-  //     console.log('Opciones: ', options);
-  //     if (!filterKey) {
-  //       // Paginación sin filtros: Sólo por claves !
-  //       if (!idLastItem) {
-  //         return this.db
-  //           .list('/publications', (ref) => ref.orderByKey().limitToFirst(limitItems))
-  //           .valueChanges()
-  //           .pipe(take(1))
-  //           .toPromise();
-  //       } else {
-  //         return this.db
-  //           .list('/publications', (ref) => ref.orderByKey().startAfter(idLastItem).limitToFirst(limitItems))
-  //           .valueChanges()
-  //           .pipe(take(1))
-  //           .toPromise();
-  //       }
-  //     } else {
-  //       if (!idLastItem) {
-  //         return (
-  //           this.db
-  //             .list('/publications', (ref) =>
-  //               ref
-  //                 .orderByChild(filterKey)
-  //                 .startAt(filterValue)
-  //                 .endBefore(`${filterValue}\uf8ff`)
-  //                 .limitToFirst(limitItems)
-  //             ) // Cuando quiero empezar desde el principio
-  //             // .list('/publications', (ref) => ref.orderByChild(filterKey).equalTo(filterValue).limitToFirst(limitItems)) // Cuando quiero empezar desde el principio
-  //             .valueChanges()
-  //             .pipe(take(1))
-  //             .toPromise()
-  //         );
-  //       } else {
-  //         return (
-  //           this.db
-  //             .list('/publications', (ref) =>
-  //               ref
-  //                 .orderByChild(filterKey)
-  //                 .startAfter(filterValue, idLastItem)
-  //                 .endBefore(`${filterValue}\uf8ff`)
-  //                 .limitToFirst(limitItems)
-  //             ) // Cuando quiero empezar a partir el siguiente
-  //             // .list('/publications', (ref) => ref.orderByChild(filterKey).equalTo(filterValue).limitToFirst(limitItems))
-  //             .valueChanges()
-  //             .pipe(take(1))
-  //             .toPromise()
-  //         );
-  //       }
-  //     }
+  getAllPublications(): Promise<any[]> {
+    return this.http
+      .get<any>('https://tfm-borjamm-default-rtdb.europe-west1.firebasedatabase.app/publications.json?shallow=true')
+      .toPromise();
+  }
 
-  //     // return (
-  //     //   this.db
-  //     //     // .list('/publications', (ref) => ref.orderByChild('province').equalTo('PROVINCIA_A', '6').limitToFirst(15))
-  //     //     // .list('/publications', (ref) => ref.orderByChild('province').startAt('PROVINCIA_A', '15').limitToFirst(5)) // Cuando quiero empezar a partir de la key
-  //     //     // El starAt me ordena primero las que coinciden y luego me pone las que no al final, para pillarlas con startAfter
-  //     //     .valueChanges()
-  //     //     .pipe(take(1))
-  //     //     .toPromise()
-  //     //   // \uf8ff
-  //     // );
-  //   }
+  getAllPublicationsHistory(): Promise<any[]> {
+    return this.http
+      .get<any>('https://tfm-borjamm-default-rtdb.europe-west1.firebasedatabase.app/history.json?shallow=true')
+      .toPromise();
+  }
 
-  // // return this.db.list<TravelGroupModel>('travel_groups', ref => ref.orderByChild('details/location/id').equalTo(locationID)).valueChanges();
-
-  //   // public getCountPublications() {
-  //   //   const url = 'https://tfm-borjamm-default-rtdb.europe-west1.firebasedatabase.app/publications.json?shallow=true';
-  //   //   return this.httpClient.get(url).toPromise();
-  //   // }
-
-  //   // getUserById(id: string) {
-  //   //   return Promise.all([
-  //   //     this.db.object(`users/clientes/${id}`).valueChanges().pipe(take(1)).toPromise(),
-  //   //     this.db.object(`users/protectoras/${id}`).valueChanges().pipe(take(1)).toPromise(),
-  //   //     this.db.object(`users/admin/${id}`).valueChanges().pipe(take(1)).toPromise(),
-  //   //   ]).catch((e) => console.error('ERRRRRR', e));
-  //   // }
-
-  //   // return this.db.list<any>('publications').valueChanges().pipe(take(1)).toPromise();
-
-  //   // const refBase = this.db.database.ref('publications');
-  //   // const refFilter = refBase.orderByChild('type').equalTo('TIPO_B').limitToFirst(5);
-  //   // return refFilter.once('value', (s) => s);
-
-  //   // Inicio => filters : "tipo_provincia" // tipo // provincia
-  //   // Favoritos o Publicaciones => id // filters : "tipo_provincia" // tipo // provincia
-  //   // return this.db
-  //   //   .list('/users', (ref) => ref.orderByKey().startAt(start).limitToFirst(3))
-  //   //   .valueChanges()
-  //   //   .pipe(take(1))
-  //   //   .toPromise();
-  //   // return this.db.database.ref('users').limitToFirst(1).get();
-  //   // return this.db
-  //   //   .object<Publication>(`publications`)
-  //   //   .valueChanges()
-  //   //   .pipe(take(1))
-  //   //   .toPromise();
-
-  // // public listAllCloudStorage(directorio: string) {
-  //   //   return this.storage.ref(directorio).listAll().pipe(take(1)).toPromise();
-  //   // }
-
-  //   // public getAllPublication(): Observable<Publication[]> {
-  //   //   return this.db.list<Publication>(`publications`).valueChanges();
-  //   // }
-
-  //   // public getPublications(): Promise<Publication> {
-  //   //   return this.db.object<Publication>('publications').valueChanges().pipe(take(1)).toPromise();
-  //   // }
+  getPublicationsLastSevenDays(currenTime: number): Promise<Publication[]> {
+    const TIMESTAMP_SEVEN_DAYS = 86400000 * 7;
+    const query = (ref: firebase.default.database.Reference) =>
+      ref
+        .orderByChild('date')
+        .startAt(currenTime - TIMESTAMP_SEVEN_DAYS)
+        .endAt(currenTime);
+    return this.db.list<Publication>('publications', query).valueChanges().pipe(take(1)).toPromise();
+  }
 }

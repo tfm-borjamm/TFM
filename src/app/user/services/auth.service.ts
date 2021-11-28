@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import * as firebase from 'firebase/compat/app';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
@@ -40,8 +40,8 @@ export class AuthService {
 
   async getCurrentUserLogged(): Promise<User> {
     const uid = await this.getCurrentUserUID();
-    const user = await this.userService.getUserById(uid ?? '');
-    return user;
+    const user = await this.userService.getUserById(uid ?? '').catch((e) => this.utilsService.errorHandling(e));
+    return user ? user : null;
   }
 
   // Autenticación mediante redes sociales (Facebook o Google)!

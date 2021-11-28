@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.canvas {
+  position: relative;
+  flex-basis: 100%;
+  max-width: 550px;
+  margin: 5px;
+}
+
+.count {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.count__item {
+  border: 2px solid black;
+  padding: 2rem;
+}
+
+.count__number {
+  font-weight: bold;
+  font-size: 40px;
+  margin: 0;
+}

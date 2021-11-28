@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
         .then(() => {
           this.loginForm.reset();
           console.log('Inicio de sesión correcto');
-          // this.router.navigate(['/publication/list']);
+          this.router.navigate(['/publication/list']);
         })
         .catch((e) => {
           this.btnForm.nativeElement.disabled = false;
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
       // if (user?.role === Role.admin) {
       //   this.router.navigate(['/publication/admin']);
       // } else {
-      // this.router.navigate(['/publication/list']);
+      this.router.navigate(['/publication/list']);
       // }
     }
   }

@@ -1,0 +1,66 @@
+<div class="count">
+  <div class="count__item">
+    {{ "favorites" | translate }}:
+    <span class="count__number"> {{ countFavorites }}</span>
+  </div>
+
+  <div class="count__item">
+    {{ "publications" | translate }}:
+    <span class="count__number"> {{ countPublications }}</span>
+  </div>
+
+  <div class="count__item">
+    {{ "users" | translate }}:
+    <span class="count__number">{{ countUsers }}</span>
+  </div>
+
+  <div class="count__item">
+    {{ "consults" | translate }}:
+    <span class="count__number"> {{ countConsults }}</span>
+  </div>
+</div>
+
+<select type="submit" [ngModel]="lineChartType" (ngModelChange)="lineChartType = $event">
+  <option *ngFor="let option of ['bar', 'line']">{{ option }}</option>
+</select>
+
+<div class="container">
+  <div class="canvas">
+    <canvas
+      baseChart
+      [datasets]="lineChartDataPublications"
+      [labels]="lineChartLabels"
+      [options]="lineChartOptions"
+      [colors]="lineChartColorsPublications"
+      [legend]="lineChartLegend"
+      [chartType]="lineChartType"
+    >
+    </canvas>
+  </div>
+
+  <div class="canvas">
+    <canvas
+      baseChart
+      [datasets]="lineChartDataUsers"
+      [labels]="lineChartLabels"
+      [options]="lineChartOptions"
+      [colors]="lineChartColorsUsers"
+      [legend]="lineChartLegend"
+      [chartType]="lineChartType"
+    >
+    </canvas>
+  </div>
+
+  <div class="canvas">
+    <canvas
+      baseChart
+      [datasets]="lineChartDataConsults"
+      [labels]="lineChartLabels"
+      [options]="lineChartOptions"
+      [colors]="lineChartColorsConsults"
+      [legend]="lineChartLegend"
+      [chartType]="lineChartType"
+    >
+    </canvas>
+  </div>
+</div>

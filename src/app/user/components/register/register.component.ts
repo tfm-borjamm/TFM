@@ -131,7 +131,7 @@ export class RegisterComponent implements OnInit {
         response = await this.authService.register(email, password).catch((e) => this.utilsService.errorHandling(e));
         if (response) {
           id = response.user.uid;
-          added_date = response.user.metadata.createdAt;
+          added_date = parseInt(response.user.metadata.createdAt);
         }
       }
 

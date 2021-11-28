@@ -42,17 +42,18 @@ export class UserFormComponent implements OnInit {
     private router: Router,
     private location: Location
   ) {
-    this.activatedRoute.params.forEach((params) => {
-      this.id = params.id;
-    });
+    this.user = this.activatedRoute.snapshot.data.user;
+    // this.activatedRoute.params.forEach((params) => {
+    //   this.id = params.id;
+    // });
   }
 
   async ngOnInit(): Promise<void> {
-    this.user = await this.getUser(); // Proteger que nadie pueda editar un usuario si no es el administrador
-    if (!this.user) {
-      this.router.navigate(['user-not-found']);
-      return;
-    }
+    // this.user = await this.getUser(); // Proteger que nadie pueda editar un usuario si no es el administrador
+    // if (!this.user) {
+    //   this.router.navigate(['user-not-found']);
+    //   return;
+    // }
 
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
 
@@ -89,12 +90,12 @@ export class UserFormComponent implements OnInit {
     });
   }
 
-  async getUser(): Promise<User> {
-    const id = this.id ?? (await this.authService.getCurrentUserUID());
-    const user = await this.userService.getUserById(id);
-    if (!user) return null;
-    return user;
-  }
+  // async getUser(): Promise<User> {
+  //   const id = this.id ?? (await this.authService.getCurrentUserUID());
+  //   const user = await this.userService.getUserById(id);
+  //   if (!user) return null;
+  //   return user;
+  // }
 
   onDeleteUser() {
     // Método para eliminar un usuario

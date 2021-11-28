@@ -34,7 +34,7 @@ export class MenuTabsComponent implements OnInit, OnDestroy {
       if (!isValueCorrect) this.utilsService.setLocalStorage('menu', { tab: this.tabValue });
     }
 
-    console.log('tabs', this.tabValue, tab1, tab2);
+    // console.log('tabs', this.tabValue, tab1, tab2);
 
     this.subscriptionTab = this.tab$.subscribe((tab: string) => {
       console.log('Se ha cambiado el filter a: ', tab);
