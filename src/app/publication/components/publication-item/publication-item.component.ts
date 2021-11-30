@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { Role } from 'src/app/user/enums/role.enum';
-import { User } from 'src/app/user/models/user.model';
-import { State } from '../../enums/state.enum';
-import { Publication } from '../../models/publication.model';
-import { FavoriteService } from '../../services/favorite.service';
-import { PublicationService } from '../../services/publication.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { User } from 'src/app/shared/models/user.model';
+import { PublicationState } from '../../../shared/enums/publication-state';
+import { Publication } from '../../../shared/models/publication.model';
+import { FavoriteService } from '../../../services/favorite.service';
+import { PublicationService } from '../../../services/publication.service';
 
 @Component({
   selector: 'app-publication-item',
@@ -18,7 +18,7 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   @Input() public currentUser: User;
   @Output() public onChangePublication = new EventEmitter();
 
-  public isAutor: boolean = false;
+  public isAuthor: boolean = false;
   public isClient: boolean = false;
   public isFavorite: boolean = false;
   public isAdmin: boolean = false;
@@ -37,10 +37,10 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.currentUser) {
-      this.isAutor = this.currentUser.id === this.publication.idAutor;
+      this.isAuthor = this.currentUser.id === this.publication.idAuthor;
       this.isAdmin = this.currentUser.role === Role.admin;
       this.isClient = this.currentUser.role === Role.client;
-      this.isAdopted = this.publication.state === State.adopted;
+      this.isAdopted = this.publication.state === PublicationState.adopted;
       if (this.isClient) {
         const favorites = this.utilsService.getArrayFromObject(this.currentUser.myFavorites);
         this.isFavorite = favorites.map((favorite) => favorite.id).includes(this.publication.id);
@@ -84,7 +84,7 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
       .catch((e) => this.utilsService.errorHandling(e));
   }
 
-  onMarkToAdopted() {
+  onMarkAsAdopted() {
     // this.publication = null;
     if (window.confirm('¿Estas seguro?')) {
       this.publicationService
@@ -103,18 +103,22 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
     // Compartir publicación
     // Open the dialog
     const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
-    console.log('Link a compartir: ', shareLink);
+    window.alert('Link a compartir: ' + shareLink);
   }
 
   onDeletePublication(): void {
-    console.log('Eliminar publicación: ', this.publication.id);
-    this.publicationService
-      .deletePublication(this.publication)
-      .then((a) => {
-        console.log('Se ha eliminado la publicación correctamente', a);
-        this.onChangePublication.emit(this.publication.id);
-      })
-      .catch((e) => this.utilsService.errorHandling(e));
+    if (window.confirm('¿Estas seguro?')) {
+      console.log('Eliminar publicación: ', this.publication.id);
+      this.publicationService
+        .deletePublication(this.publication)
+        .then((a) => {
+          console.log('Se ha eliminado la publicación correctamente', a);
+          this.onChangePublication.emit(this.publication.id);
+        })
+        .catch((e) => this.utilsService.errorHandling(e));
+    } else {
+      console.log('Cancelado por el usuario');
+    }
   }
 
   ngOnDestroy() {

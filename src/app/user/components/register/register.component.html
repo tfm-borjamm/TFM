@@ -1,12 +1,12 @@
 <main class="main">
   <div class="main__container">
-    <h1 class="main__title" *ngIf="!currentUserId">Registrarse</h1>
-    <h1 class="main__title" *ngIf="currentUserId">Nuevo usuario</h1>
+    <h1 class="main__title" *ngIf="!currentUserId">{{ "register" | translate }}</h1>
+    <h1 class="main__title" *ngIf="currentUserId">{{ "new_user" | translate }}</h1>
     <form class="main__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <ul class="main__list">
         <li class="main__item">
-          <label class="main__label" for="name">Nombre (*)</label>
-          <input class="main__input" type="text" id="name" [formControl]="name" placeholder="Nombre" />
+          <label class="main__label" for="name">{{ "name" | translate }} (*)</label>
+          <input class="main__input" type="text" id="name" [formControl]="name" placeholder="{{ 'name' | translate }}" />
           <div class="errors" *ngIf="registerForm.get('name').errors && (registerForm.get('name').touched || registerForm.get('name').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('name').errors.required">Este campo es obligatorio</span>
             <span class="errors__msg" *ngIf="registerForm.get('name').errors.minlength">Este campo debe tener mínimo 3 caracteres</span>
@@ -15,35 +15,39 @@
           </div>
         </li>
         <li class="main__item">
-          <label class="main__label" for="email">Email (*)</label>
-          <input class="main__input" type="email" id="email" [formControl]="email" placeholder="Email" />
+          <label class="main__label" for="email">{{ "email" | translate }} (*)</label>
+          <input class="main__input" type="email" id="email" [formControl]="email" placeholder="{{ 'email' | translate }}" />
           <div class="errors" *ngIf="registerForm.get('email').errors && (registerForm.get('email').touched || registerForm.get('email').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('email').errors.required">Este campo es obligatorio</span>
-            <span class="errors__msg" *ngIf="!registerForm.get('email').errors.required && (registerForm.get('email').errors.email || registerForm.get('email').errors.emailValidator)"
+            <span
+              class="errors__msg"
+              *ngIf="!registerForm.get('email').errors.required && (registerForm.get('email').errors.email || registerForm.get('email').errors.emailValidator)"
               >El email no tiene un formato válido</span
             >
           </div>
         </li>
         <li class="main__item">
-          <label class="main__label" for="cp">Código postal (*)</label>
-          <input class="main__input" type="text" id="cp" [formControl]="cp" placeholder="Código postal" />
+          <label class="main__label" for="cp">{{ "postal_code" | translate }} (*)</label>
+          <input class="main__input" type="text" id="cp" [formControl]="cp" placeholder="{{ 'postal_code' | translate }}" />
           <div class="errors" *ngIf="registerForm.get('cp').errors && (registerForm.get('cp').touched || registerForm.get('cp').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('cp').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.pattern">Este campo sólo puede contener números</span>
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.maxlength || registerForm.get('cp').errors.minlength">Este campo debe tener 5 dígitos</span>
           </div>
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="street">Dirección (*)</label>
-          <input class="main__input" type="text" id="street" [formControl]="street" placeholder="Dirección" />
+          <label class="main__label" for="street">{{ "street" | translate }} (*)</label>
+          <input class="main__input" type="text" id="street" [formControl]="street" placeholder="{{ 'street' | translate }}" />
           <div class="errors" *ngIf="registerForm.get('street').errors && (registerForm.get('street').touched || registerForm.get('street').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('street').errors.required">Este campo es obligatorio</span>
           </div>
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="code">Prefijo (*)</label>
+          <label class="main__label" for="code">{{ "code" | translate }} (*)</label>
           <select class="main__select" id="code" [formControl]="code" [value]="registerForm.value.code">
-            <option value="" disabled selected>Selecciona un prefijo</option>
+            <option value="" disabled selected>{{ "select_a_code" | translate }}</option>
             <option *ngFor="let code of codes" value="{{ code }}" [selected]="registerForm.value.code === code ? true : false">
               {{ code }}
             </option>
@@ -54,19 +58,22 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="telephone">Teléfono (*)</label>
-          <input class="main__input" type="text" id="telephone" [formControl]="telephone" placeholder="Teléfono" />
+          <label class="main__label" for="telephone">{{ "telephone" | translate }} (*)</label>
+          <input class="main__input" type="text" id="telephone" [formControl]="telephone" placeholder="{{ 'telephone' | translate }}" />
           <div class="errors" *ngIf="registerForm.get('telephone').errors && (registerForm.get('telephone').touched || registerForm.get('telephone').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.required">Este campo es obligatorio</span>
-            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.maxlength">Este campo no debe tener más de 12 caracteres</span>
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.pattern">Este campo sólo puede contener dígitos</span>
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.maxlength || registerForm.get('telephone').errors.minlength"
+              >Este campo debe tener 9 dígitos</span
+            >
           </div>
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="role">Tipo de usuario (*)</label>
+          <label class="main__label" for="role">{{ "account_type" | translate }} (*)</label>
           <select class="main__select" id="role" [formControl]="role" [value]="registerForm.value.role">
-            <option value="" disabled selected>Selecciona el tipo</option>
-            <option *ngFor="let role of roles" value="{{ role }}" [selected]="registerForm.value.role === role">{{ role }}</option>
+            <option value="" disabled selected>{{ "select_a_role" | translate }}</option>
+            <option *ngFor="let role of roles" value="{{ role }}" [selected]="registerForm.value.role === role">{{ role | translate }}</option>
           </select>
           <div class="errors" *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
             <span class="errors__msg" *ngIf="registerForm.get('role').errors.required">Este campo es obligatorio</span>
@@ -74,9 +81,9 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="province">Provincia (*)</label>
+          <label class="main__label" for="province">{{ "province" | translate }} (*)</label>
           <select class="main__select" id="province" [formControl]="province" [value]="registerForm.value.province">
-            <option value="" disabled selected>Selecciona una provincia</option>
+            <option value="" disabled selected>{{ "select_a_province" | translate }}</option>
             <option *ngFor="let province of provinces" value="{{ province }}" [selected]="registerForm.value.province === province ? true : false">{{ province }}</option>
           </select>
           <div class="errors" *ngIf="registerForm.get('province').errors && (registerForm.get('province').touched || registerForm.get('province').dirty)">
@@ -85,17 +92,20 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="password">Contraseña (*)</label>
-          <input class="main__input" type="password" id="password" [formControl]="password" placeholder="Contraseña" />
-          <div class="errors" *ngIf="registerForm.get('passwords.password').errors && (registerForm.get('passwords.password').touched || registerForm.get('passwords.password').dirty)">
+          <label class="main__label" for="password">{{ "password" | translate }} (*)</label>
+          <input class="main__input" type="password" id="password" [formControl]="password" placeholder="{{ 'password' | translate }}" />
+          <div
+            class="errors"
+            *ngIf="registerForm.get('passwords.password').errors && (registerForm.get('passwords.password').touched || registerForm.get('passwords.password').dirty)"
+          >
             <span class="errors__msg" *ngIf="registerForm.get('passwords.password').errors?.required">Este campo es obligatorio</span>
             <span class="errors__msg" *ngIf="registerForm.get('passwords.password').errors?.minlength">Este campo debe tener mínimo 8 caracteres</span>
           </div>
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="repeat_password">Confirme la contraseña (*)</label>
-          <input class="main__input" type="password" id="repeat_password" [formControl]="repeat_password" placeholder="Confirme la contraseña" />
+          <label class="main__label" for="repeat_password">{{ "confirm_password" | translate }} (*)</label>
+          <input class="main__input" type="password" id="repeat_password" [formControl]="repeat_password" placeholder="{{ 'confirm_password' | translate }}" />
           <div
             class="errors"
             *ngIf="
@@ -112,8 +122,8 @@
         </li>
 
         <li class="main__item main__item--fb-100">
-          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="!currentUserId">Registrarse</button>
-          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="currentUserId">Crear</button>
+          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="!currentUserId">{{ "register" | translate }}</button>
+          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid" *ngIf="currentUserId">{{ "create_user" | translate }}</button>
         </li>
       </ul>
     </form>

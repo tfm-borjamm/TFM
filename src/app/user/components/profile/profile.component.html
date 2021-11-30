@@ -8,52 +8,52 @@
     <p>{{ user.street }}</p>
 
     <!-- calendar icon -->
-    <p>Se unió el {{ user.added_date | amLocale: translateService.currentLang | amDateFormat: "LL" }}</p>
-    <button *ngIf="!isCurrentUser" (click)="onContactUser()">Contactar</button>
+    <p>{{ "joined_on" | translate }} {{ user.added_date | amLocale: translateService.currentLang | amDateFormat: "LL" }}</p>
+    <button *ngIf="!isCurrentUser" (click)="onContactUser()">{{ "contact" | translate }}</button>
   </div>
 
   <ul>
-    <button *ngIf="isCurrentUser || isAdminUser" (click)="onEditUser()">Cambiar</button>
+    <button *ngIf="isCurrentUser || isAdminUser" (click)="onEditUser()">{{ "change" | translate }}</button>
     <li>
       <div>
-        <h5>Nombre</h5>
+        <h3>{{ "name" | translate }}</h3>
         <p>{{ user.name }}</p>
       </div>
     </li>
     <li>
       <div>
-        <h5>Correo electrónico</h5>
+        <h3>{{ "email" | translate }}</h3>
         <p>{{ user.email }}</p>
       </div>
     </li>
     <li>
       <div>
-        <h5>Teléfono</h5>
+        <h3>{{ "telephone" | translate }}</h3>
         <p>{{ user.telephone }}</p>
       </div>
     </li>
     <li>
       <div>
-        <h5>Role</h5>
-        <p>{{ user.role }}</p>
+        <h3>{{ "account_type" | translate }}</h3>
+        <p>{{ user.role | translate }}</p>
       </div>
     </li>
     <li *ngIf="!isClientUser">
       <div>
-        <h5>Número de mascotas que ha subido a la plataforma</h5>
+        <h3>{{ "number_of_posts_uploaded" | translate }}</h3>
         <p>{{ user.myPublications | count: user.myHistory }}</p>
       </div>
     </li>
     <li *ngIf="!isClientUser">
       <div>
-        <h5>Número de mascotas que ha subido y han sido adoptadas</h5>
+        <h3>{{ "number_of_posts_adopted" | translate }}</h3>
         <p>{{ user.myHistory | count }}</p>
       </div>
     </li>
     <li *ngIf="isClientUser">
       <div>
-        <h5>Número de publicaciones guardados en favoritos</h5>
-        <p>{{ user.myPublications | count }}</p>
+        <h3>{{ "number_of_posts_saved" | translate }}</h3>
+        <p>{{ user.myFavorites | count }}</p>
       </div>
     </li>
   </ul>

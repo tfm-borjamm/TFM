@@ -1,8 +1,20 @@
-.item {
-  border: 2px solid #09d;
-  margin: 2rem 0;
-}
+// .item {
+// border: 2px solid #09d;
+// margin: 2rem 0;
+// }
 
 .last {
-  background-color: red;
+  position: relative;
+}
+.last:before {
+  content: "Último elemento";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 20px;
+  background-color: #000000;
+  font-weight: bold;
+  text-align: center;
+  color: white;
 }

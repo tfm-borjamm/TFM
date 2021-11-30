@@ -1,0 +1,38 @@
+<!-- <nav>
+  <ul>
+    <button (click)="tab$.next('client')">Clientes</button>
+    <button (click)="tab$.next('professional')">Profesionales</button>
+  </ul>
+</nav> -->
+
+<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadUsers($event)"></app-menu-tabs>
+<input type="text" placeholder="{{ 'name' | translate }}" (ngModelChange)="onSearchName($event)" [ngModel]="name" />
+<button (click)="onCreateUser()">{{ "create_user" | translate }}</button>
+<table *ngIf="users && users.length !== 0; else noResults">
+  <tr>
+    <th>{{ "name" | translate }}</th>
+    <th>{{ "email" | translate }}</th>
+    <th>{{ "telephone" | translate }}</th>
+    <th>{{ "province" | translate }}</th>
+    <!-- <th *ngIf="tab === 'client'">Favoritos</th>
+    <th *ngIf="tab === 'professional'">Publicaciones</th> -->
+    <th></th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let user of users">
+    <td (click)="onViewProfile(user.id)">{{ user.name }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.email }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.telephone }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.province }}</td>
+    <!-- <td *ngIf="user.role === 'client'">{{ user.myFavorites }}</td>
+    <td *ngIf="user.role === 'professional'">{{ user.myPublications }}</td> -->
+    <td>
+      <button (click)="onEditUser(user.id)">{{ "edit" | translate }}</button>
+      <button (click)="onDeleteUser(user)">{{ "delete" | translate }}</button>
+    </td>
+  </tr>
+</table>
+
+<ng-template #noResults>
+  <app-no-results></app-no-results>
+</ng-template>

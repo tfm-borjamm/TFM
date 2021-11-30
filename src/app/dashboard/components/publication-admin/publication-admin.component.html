@@ -1,0 +1,63 @@
+<!-- <p>publication-admin works!</p> -->
+<h1>{{ "publications" | translate }}</h1>
+<p>{{ "publications_admin" | translate }}</p>
+
+<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadPublications($event)"></app-menu-tabs>
+
+<button (click)="onCreatePublication()">{{ "to_post" | translate }}</button>
+
+<button (click)="showFilter = !showFilter">
+  {{ "filters" | translate }} <span class="filterSelected" *ngIf="filterPublication.value.province || filterPublication.value.type"></span>
+</button>
+
+<div *ngIf="showFilter">
+  <select [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
+    <option value="" selected>{{ "all" | translate }}</option>
+    <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
+  </select>
+
+  <select [formControl]="type" [value]="filterPublication.value.type" (ngModelChange)="onChangeFilter({ filter: 'type', value: $event })">
+    <option value="" selected>{{ "all" | translate }}</option>
+    <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type | translate }}</option>
+  </select>
+</div>
+
+<table *ngIf="publications && publications.length > 0; else noResults">
+  <tr>
+    <th>{{ "professional_singular" | translate }}</th>
+    <th>{{ "date" | translate }}</th>
+    <th>{{ "type" | translate }}</th>
+    <th>{{ "province" | translate }}</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let publication of publications">
+    <td (click)="onDetailsPublication(publication)">{{ publication.nameAutor }}</td>
+    <td (click)="onDetailsPublication(publication)">{{ publication.date | date: "medium" }}</td>
+    <td (click)="onDetailsPublication(publication)">{{ publication.type | translate }}</td>
+    <td (click)="onDetailsPublication(publication)">{{ publication.province }}</td>
+
+    <td *ngIf="publication.state !== 'available'">
+      <button (click)="onDeletePublication(publication)">{{ "delete" | translate }}</button>
+    </td>
+
+    <td *ngIf="publication.state === 'available'">
+      <button (click)="onDeletePublication(publication)">{{ "delete" | translate }}</button>
+    </td>
+    <td *ngIf="publication.state === 'available'">
+      <button (click)="onSharePublication(publication)">{{ "share" | translate }}</button>
+    </td>
+    <td *ngIf="publication.state === 'available'">
+      <button (click)="onEditPublication(publication.id)">{{ "edit" | translate }}</button>
+    </td>
+    <td *ngIf="publication.state === 'available'">
+      <button (click)="onMarkAsAdopted(publication)">{{ "mark_as_adopted" | translate }}</button>
+    </td>
+  </tr>
+</table>
+
+<ng-template #noResults>
+  <app-no-results></app-no-results>
+</ng-template>

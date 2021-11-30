@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: none;
+  width: 200px;
+  height: 200px;
+  display: block;
+}
+
+select {
+  cursor: pointer;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.errors__msg {
+  display: block;
+  font-weight: bold;
+  color: #ce2b08;
+}
+
+tr > td {
+  cursor: pointer;
+}
+
+tr:hover {
+  background: #e5e7e9;
+}

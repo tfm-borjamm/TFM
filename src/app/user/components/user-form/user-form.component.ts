@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { codes } from 'src/app/user/helpers/codes';
 import { provinces } from 'src/app/shared/helpers/provinces';
-import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
+import { User } from '../../../shared/models/user.model';
+import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { Location } from '@angular/common';
 
@@ -56,12 +56,14 @@ export class UserFormComponent implements OnInit {
     // }
 
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
+    const numbersValidator = /^[0-9]*$/;
+    const fullnameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
 
     this.name = new FormControl(this.user.name, [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(55),
-      Validators.pattern(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/),
+      Validators.pattern(fullnameValidator),
     ]);
     this.email = new FormControl({ value: this.user.email, disabled: true }, [
       Validators.required,
@@ -72,8 +74,18 @@ export class UserFormComponent implements OnInit {
     this.street = new FormControl(this.user.street, [Validators.required]);
     this.province = new FormControl(this.user.province, [Validators.required]);
     this.code = new FormControl(this.user.code ?? '', [Validators.required]);
-    this.telephone = new FormControl(this.user.telephone, [Validators.required, Validators.maxLength(12)]);
-    this.cp = new FormControl(this.user.cp, [Validators.required]);
+    this.telephone = new FormControl(this.user.telephone, [
+      Validators.required,
+      Validators.minLength(9),
+      Validators.maxLength(9),
+      Validators.pattern(numbersValidator),
+    ]);
+    this.cp = new FormControl(this.user.cp, [
+      Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(5),
+      Validators.pattern(numbersValidator),
+    ]);
     this.editForm = this.createForm();
   }
 

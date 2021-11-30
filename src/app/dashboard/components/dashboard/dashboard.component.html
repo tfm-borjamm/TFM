@@ -21,7 +21,7 @@
 </div>
 
 <select type="submit" [ngModel]="lineChartType" (ngModelChange)="lineChartType = $event">
-  <option *ngFor="let option of ['bar', 'line']">{{ option }}</option>
+  <option *ngFor="let option of ['bar', 'line']" value="{{ option }}">{{ option | translate }}</option>
 </select>
 
 <div class="container">

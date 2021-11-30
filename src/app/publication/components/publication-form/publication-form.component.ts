@@ -2,19 +2,19 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { AuthService } from 'src/app/user/services/auth.service';
-import { Publication } from '../../models/publication.model';
-import { PublicationService } from '../../services/publication.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { Publication } from '../../../shared/models/publication.model';
+import { PublicationService } from '../../../services/publication.service';
 import { age } from 'src/app/publication/helpers/age';
 import { confirmation } from 'src/app/publication/helpers/confirmation';
-import { UserService } from 'src/app/user/services/user.service';
+import { UserService } from 'src/app/services/user.service';
 import { Location } from '@angular/common';
 import { Sex } from '../../enums/sex.enum';
 import { Size } from '../../enums/size.enum';
-import { Type } from '../../enums/type.enum';
-import { State } from '../../enums/state.enum';
-import { User } from 'src/app/user/models/user.model';
+import { Type } from '../../../shared/enums/type.enum';
+import { PublicationState } from '../../../shared/enums/publication-state';
+import { User } from 'src/app/shared/models/user.model';
 import { provinces } from 'src/app/shared/helpers/provinces';
 
 @Component({
@@ -65,7 +65,7 @@ export class PublicationFormComponent implements OnInit {
 
   public user: User;
   public isAdmin: boolean = false;
-  public isAutor: boolean = false;
+  public isAuthor: boolean = false;
   public provinces: string[] = provinces;
 
   constructor(
@@ -95,7 +95,7 @@ export class PublicationFormComponent implements OnInit {
       // this.publication = await this.publicationService.getPublicationById(this.publicationID);
       this.publication = publicationParam;
       this.publicationID = this.publication.id;
-      this.isAutor = this.publication.idAutor === this.user.id;
+      this.isAuthor = this.publication.idAuthor === this.user.id;
 
       // this.user = await this.authService.getCurrentUserLogged();
 
@@ -109,7 +109,7 @@ export class PublicationFormComponent implements OnInit {
       // if (!this.publication) {
       //   this.router.navigate(['publication-not-found']);
       //   return;
-      // } else if (!this.isAutor && !this.isAdmin) {
+      // } else if (!this.isAuthor && !this.isAdmin) {
       //   this.location.back();
       //   console.log('No tienes permisos para editar la publicación!!!'); // Poner un guard para evitar esto
       //   return;
@@ -155,7 +155,7 @@ export class PublicationFormComponent implements OnInit {
     this.name = new FormControl(this.publication?.name ? this.publication.name : '', [Validators.required]);
     this.description = new FormControl(this.publication?.description ? this.publication.description : '', [
       Validators.required,
-      Validators.minLength(100),
+      Validators.minLength(50),
     ]);
     this.age = new FormControl(this.publication.age ? this.publication.age : '', [Validators.required]);
     this.size = new FormControl(this.publication.size ? this.publication.size : '', [Validators.required]);
@@ -316,8 +316,8 @@ export class PublicationFormComponent implements OnInit {
 
       let publication: Publication = {
         id: this.publicationID,
-        idAutor: !this.editPublication ? this.user.id : this.publication.idAutor,
-        // idAutor: this.editPublication && this.isAdmin ? this.publication.idAutor : this.user.id,
+        idAuthor: !this.editPublication ? this.user.id : this.publication.idAuthor,
+        // idAuthor: this.editPublication && this.isAdmin ? this.publication.idAuthor : this.user.id,
         name: this.publicationForm.value.name,
         // province: this.editPublication && this.isAdmin ? this.publication.province : this.user.province,
         province: this.publicationForm.value.province,
@@ -335,7 +335,7 @@ export class PublicationFormComponent implements OnInit {
         date: this.editPublication ? this.publication.date : null,
         // Campos extras!
         // countFavorites: this.publication.countFavorites ?? 0,
-        state: this.publication.state ?? State.available,
+        state: this.publication.state ?? PublicationState.available,
         filter: this.publicationForm.value.type + '+' + this.publicationForm.value.province.replaceAll(' ', ''),
       };
 

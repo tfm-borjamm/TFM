@@ -4,12 +4,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { provinces } from 'src/app/shared/helpers/provinces';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { User } from 'src/app/user/models/user.model';
-import { AuthService } from 'src/app/user/services/auth.service';
-import { State } from '../../enums/state.enum';
-import { Type } from '../../enums/type.enum';
-import { PublicationService } from '../../services/publication.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { User } from 'src/app/shared/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { PublicationState } from '../../../shared/enums/publication-state';
+import { Type } from '../../../shared/enums/type.enum';
+import { PublicationService } from '../../../services/publication.service';
+import { Publication } from 'src/app/shared/models/publication.model';
 
 interface filterSelected {
   filter: string;
@@ -48,8 +49,8 @@ export class PublicationListComponent implements OnInit {
   public paramProvince: string = null;
 
   public user: User;
-  public defaultTab = State.available;
-  public tabs = Object.values(State);
+  public defaultTab = PublicationState.available;
+  public tabs = Object.values(PublicationState);
 
   constructor(
     private publicationService: PublicationService,
@@ -209,7 +210,7 @@ export class PublicationListComponent implements OnInit {
         url: this.currentURL.includes('/publication/favorites') ? `users/${this.user.id}/myFavorites` : this.queryDB, // Favoritos: users/${id_user}/myFavorites
       };
       const idPublications = await this.publicationService.getPublicationsID(options); // [{id: '', state: null | ''}, ... ]
-      console.log('IDs', idPublications, this.queryDB);
+      // console.log('IDs', idPublications, this.queryDB);
       let queryDB: string = null;
       if (this.queryDB.includes('myHistory')) {
         queryDB = 'history';
@@ -220,8 +221,8 @@ export class PublicationListComponent implements OnInit {
       const promisesPublications = idPublications.map((idx) => {
         if (typeof idx === 'string') return this.publicationService.getPublicationById(idx, queryDB);
         const { id, state } = idx;
-        console.log('Estamos en favorito porque no es una string', id, state);
-        const url = state === State.adopted ? 'history' : 'publications';
+        // console.log('Estamos en favorito porque no es una string', id, state);
+        const url = state === PublicationState.adopted ? 'history' : 'publications';
         return this.publicationService.getPublicationById(id, url);
       });
 
@@ -261,14 +262,19 @@ export class PublicationListComponent implements OnInit {
     // const checked = (event.target as HTMLInputElement).checked;
     // this.queryDB = checked ? 'users/myHistory' : 'users/myPublications';
     this.publications = [];
-    this.queryDB = tab === State.adopted ? `users/${this.user.id}/myHistory` : `users/${this.user.id}/myPublications`;
+    this.queryDB =
+      tab === PublicationState.adopted ? `users/${this.user.id}/myHistory` : `users/${this.user.id}/myPublications`;
     this.idLastItem = null;
     this.finished = false;
     this.getPublications();
   }
 
-  trackByFn(index: number) {
-    return index;
+  // trackByFn(index: number) {
+  //   return index;
+  // }
+
+  trackByFn(index: number, item: Publication) {
+    return item.id;
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,29 @@
+<!-- <p>consult-admin works!</p> -->
+<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadConsults($event)"></app-menu-tabs>
+<table *ngIf="consults && consults.length > 0; else noResults">
+  <tr>
+    <th>{{ "name" | translate }}</th>
+    <th>{{ "subject" | translate }}</th>
+    <th>{{ "message" | translate }}</th>
+    <th>{{ "date" | translate }}</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr class="consult" *ngFor="let consult of consults" [ngClass]="{ unread: consult.state === 'unread', answered: consult.state === 'answered' }">
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.name }}</td>
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.subject }}</td>
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.message }}</td>
+    <td (click)="onDetailsConsult(consult.id)">{{ consult.creation_date | date: "medium" }}</td>
+
+    <td>
+      <button (click)="onDeleteConsult(consult.id)">{{ "delete" | translate }}</button>
+    </td>
+    <td *ngIf="consult.state === 'unread'">
+      <button (click)="onMarkAsRead(consult.id)">{{ "mark_as_read" | translate }}</button>
+    </td>
+  </tr>
+</table>
+
+<ng-template #noResults>
+  <app-no-results></app-no-results>
+</ng-template>

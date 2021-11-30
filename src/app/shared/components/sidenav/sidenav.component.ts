@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'src/app/user/models/user.model';
-import { AuthService } from 'src/app/user/services/auth.service';
-import { UtilsService } from '../../services/utils.service';
+import { User } from 'src/app/shared/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-sidenav',

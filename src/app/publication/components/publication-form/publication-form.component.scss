@@ -1,14 +1,16 @@
-.main__container-img {
+.container__media {
   display: flex;
-  //   justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
 }
 
-.main__fileImg {
+.container__image {
   margin: 0 5px;
-  width: 300px;
+  width: 200px;
   height: 200px;
   object-fit: cover;
   object-position: center;
+}
+
+.container__close {
+  cursor: pointer;
 }

@@ -1,26 +1,33 @@
 <main>
   <div *ngIf="currentURL.includes('/publication/list')">
-    <select class="main__select" id="size" [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
-      <option value="" selected>Todos</option>
+    <p>{{ "province" | translate }}</p>
+    <select
+      class="main__select"
+      id="size"
+      [formControl]="province"
+      [value]="filterPublication.value.province"
+      (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })"
+    >
+      <option value="" selected>{{ "all" | translate }}</option>
       <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
     </select>
-
+    <p>{{ "type" | translate }}</p>
     <select class="main__select" id="size" [formControl]="type" [value]="filterPublication.value.type" (ngModelChange)="onChangeFilter({ filter: 'type', value: $event })">
-      <option value="" selected>Todos</option>
-      <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type }}</option>
+      <option value="" selected>{{ "all" | translate }}</option>
+      <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type | translate }}</option>
     </select>
   </div>
 
   <div *ngIf="!currentURL.includes('/publication/list')">
     <div *ngIf="currentURL.includes('/publication/favorites')">
-      <h1>Tus favoritos</h1>
-      <p>Estas son las mascotas que más te gustan</p>
+      <h1>{{ "your_favorites" | translate }}</h1>
+      <p>{{ "favorites_description" | translate }}</p>
     </div>
 
     <div *ngIf="currentURL.includes('/publication/my-publications')">
-      <h1>Tus publicaciones</h1>
-      <p>Estas son todas las publicaciones que has subido a la plataforma</p>
-      <button (click)="onCreatePublication()">Publicar</button>
+      <h1>{{ "your_publications" | translate }}</h1>
+      <p>{{ "publications_description" | translate }}</p>
+      <button (click)="onCreatePublication()">{{ "to_post" | translate }}</button>
       <!-- <div>
         <input type="checkbox" (change)="onChange($event)" />
         <span>MI HISTORIAL</span>
@@ -36,7 +43,7 @@
 
     <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div>
     <app-loading *ngIf="!finished"></app-loading>
-    <div *ngIf="finished">Eso son todos los datos de la BD</div>
+    <!-- <div *ngIf="finished">Eso son todos los datos de la BD</div> -->
   </div>
 
   <ng-template #noResults>

@@ -1,0 +1,12 @@
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+  margin: 0.5rem;
+  object-fit: cover;
+}

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { UtilsService } from '../../services/utils.service';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-menu-tabs',

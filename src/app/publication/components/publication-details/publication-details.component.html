@@ -1,40 +1,66 @@
 <div *ngIf="publication">
   <!-- <img src="#" alt=""> -->
-
-  <div *ngIf="this.autor">
-    <h4 *ngIf="this.autor" (click)="onProfileAuthor(this.autor.id)">{{ this.autor.name }}</h4>
-    <button (click)="onContactAuthor()">Contactar</button>
+  <h1>{{ "professional_singular" | translate }}</h1>
+  <div *ngIf="this.author">
+    <h4 *ngIf="this.author" (click)="onProfileAuthor(this.author.id)">{{ this.author.name }}</h4>
+    <button (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
   </div>
 
   <!-- <p>Compartir</p>
   <app-share-buttons [shareLinkRelative]="shareLink"></app-share-buttons> -->
 
   <h1>{{ "publication" | translate }}</h1>
-  <ul>
-    <li>{{ publication.id }}</li>
-    <li>{{ publication.name }}</li>
-    <li>{{ publication.type }}</li>
-    <li>{{ publication.province }}</li>
-    <li>
-      <ul>
-        <li *ngFor="let image of publication.images">
-          <img style="width: 200px; object-fit: cover" [src]="image.url | imagePublication" alt="Imagen de la mascota" (error)="image.url = ''" />
-        </li>
-      </ul>
+
+  <ul class="images">
+    <li *ngFor="let image of publication.images">
+      <img class="image" [src]="image.url | imagePublication" alt="{{ 'pet_image' | translate }}" (error)="image.url = ''" />
     </li>
   </ul>
 
+  <!-- <li>{{ publication.id }}</li> -->
+
+  <h4>{{ "name" | translate }}</h4>
+  <p>{{ publication.name }}</p>
+  <h4>{{ "date" | translate }}</h4>
+  <p>{{ publication.date | date }}</p>
+  <h4>{{ "description" | translate }}</h4>
+  <p>{{ publication.description }}</p>
+  <h4>{{ "province" | translate }}</h4>
+  <p>{{ publication.province }}</p>
+  <h4>{{ "breed" | translate }}</h4>
+  <p>{{ publication.breed }}</p>
+
+  <h4>{{ "type" | translate }}</h4>
+  <p>{{ publication.type | translate }}</p>
+  <h4>{{ "state" | translate }}</h4>
+  <p>{{ publication.state | translate }}</p>
+  <h4>{{ "size" | translate }}</h4>
+  <p>{{ publication.size | translate }}</p>
+  <h4>{{ "sex" | translate }}</h4>
+  <p>{{ publication.sex | translate }}</p>
+  <h4>{{ "age" | translate }}</h4>
+  <p>{{ publication.age | translate }}</p>
+  <h4>{{ "chip" | translate }}</h4>
+  <p>{{ publication.chip | translate }}</p>
+  <h4>{{ "vaccinate" | translate }}</h4>
+  <p>{{ publication.vaccinate | translate }}</p>
+  <h4>{{ "sterile" | translate }}</h4>
+  <p>{{ publication.sterile | translate }}</p>
+  <h4>{{ "dewormed" | translate }}</h4>
+  <p>{{ publication.dewormed | translate }}</p>
+
   <div class="buttons">
-    <button (click)="onSharePublication()">Compartir</button>
+    <button (click)="onSharePublication()">{{ "share" | translate }}</button>
     <button (click)="onChangeFavorite(-1)" *ngIf="isClient && isFavorite">Corazon rellenado</button>
     <button (click)="onChangeFavorite(+1)" *ngIf="isClient && !isFavorite">Corazon sin rellenar</button>
+    <h4 *ngIf="isClient">{{ "favorites" | translate }}:</h4>
     <span *ngIf="isClient">{{ countFavorites }}</span>
   </div>
 
   <div *ngIf="isAuthor || isAdmin">
-    <button (click)="onDeletePublication()">Eliminar</button>
-    <button *ngIf="!isAdopted" (click)="onEditPublication()">Editar</button>
-    <button *ngIf="!isAdopted" (click)="onMarkToAdopted()">Marcar como adoptado</button>
+    <button (click)="onDeletePublication()">{{ "delete" | translate }}</button>
+    <button *ngIf="!isAdopted" (click)="onEditPublication()">{{ "edit" | translate }}</button>
+    <button *ngIf="!isAdopted" (click)="onMarkAsAdopted()">{{ "mark_as_adopted" | translate }}</button>
   </div>
 </div>
 
@@ -48,12 +74,12 @@
     <button (click)="copyLinkToClipboard()">Copy link</button>
   </div> -->
 
-<!-- <div *ngIf="autor">
+<!-- <div *ngIf="author">
     <p>Contactar</p>
     <a href="tel:{{ getTelephoneComplete() }}" target="_blank" rel="noopener noreferrer">Phone</a>
     <a href="sms:{{ getTelephoneComplete() }}&body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">SMS</a>
     <a href="https://wa.me/{{ getTelephoneComplete() }}?text={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-    <a href="mailto:{{ autor.email }}?body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">Email</a>
+    <a href="mailto:{{ author.email }}?body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">Email</a>
   </div> -->
 
 <!-- <a href="https://www.facebook.com/sharer/sharer.php?u={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Facebook </a>

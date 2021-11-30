@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
-import { Role } from '../../enums/role.enum';
+import { Role } from '../../../shared/enums/role.enum';
 
 @Component({
   selector: 'app-login',

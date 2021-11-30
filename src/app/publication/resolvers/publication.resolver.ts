@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { State } from '../enums/state.enum';
-import { Publication } from '../models/publication.model';
-import { PublicationService } from '../services/publication.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { PublicationState } from '../../shared/enums/publication-state';
+import { Publication } from '../../shared/models/publication.model';
+import { PublicationService } from '../../services/publication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class PublicationResolver implements Resolve<Publication> {
     const statePublication = route.params['state'];
     const idPublication = route.params['id'];
 
-    const isAdopted = statePublication === State.adopted;
+    const isAdopted = statePublication === PublicationState.adopted;
     const url = isAdopted ? 'history' : 'publications';
 
     const publication = await this.publicationService.getPublicationById(idPublication, url).catch((e) => {

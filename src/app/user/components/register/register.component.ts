@@ -1,13 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { codes } from 'src/app/user/helpers/codes';
 import { provinces } from 'src/app/shared/helpers/provinces';
-import { Role } from '../../enums/role.enum';
-import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
+import { Role } from '../../../shared/enums/role.enum';
+import { User } from '../../../shared/models/user.model';
+import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { confirmPassword } from '../../validations/confirmPassword.validator';
 import { Location } from '@angular/common';
@@ -50,21 +50,33 @@ export class RegisterComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
+    const numbersValidator = /^[0-9]*$/;
+    const fullnameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
 
     this.url = this.router.url;
     this.name = new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(55),
-      Validators.pattern(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/),
+      Validators.pattern(fullnameValidator),
     ]);
     this.email = new FormControl('', [Validators.required, Validators.email, checkEmail()]);
     this.street = new FormControl('', [Validators.required]);
     this.province = new FormControl('', [Validators.required]);
     this.role = new FormControl('', [Validators.required]);
     this.code = new FormControl('', [Validators.required]);
-    this.telephone = new FormControl('', [Validators.required, Validators.maxLength(12)]);
-    this.cp = new FormControl('', [Validators.required]);
+    this.telephone = new FormControl('', [
+      Validators.required,
+      Validators.minLength(9),
+      Validators.maxLength(9),
+      Validators.pattern(numbersValidator),
+    ]);
+    this.cp = new FormControl('', [
+      Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(5),
+      Validators.pattern(numbersValidator),
+    ]);
     this.password = new FormControl('', [Validators.required, Validators.minLength(8)]);
     this.repeat_password = new FormControl('', [Validators.required, Validators.minLength(8)]);
 

@@ -3,22 +3,22 @@
 <!-- Formulario para editar o añadir una publicación -->
 <main class="main" *ngIf="publicationForm">
   <div class="main__container">
-    <h1 class="main__title">Publicación</h1>
+    <h1 class="main__title">{{ "publication" | translate }}</h1>
     <form class="main__form" [formGroup]="publicationForm" (ngSubmit)="onSubmit()">
       <ul class="main__list">
         <li class="main__item">
-          <label class="main__label" for="name">Nombre (*)</label>
-          <input class="main__input" type="name" id="name" [formControl]="name" placeholder="Nombre" />
+          <label class="main__label" for="name">{{ "name" | translate }} (*)</label>
+          <input class="main__input" type="name" id="name" [formControl]="name" placeholder="{{ 'name' | translate }}" />
           <div class="errors" *ngIf="publicationForm.get('name').errors && (publicationForm.get('name').touched || publicationForm.get('name').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('name').errors.required">Este campo es obligatorio</span>
           </div>
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="size">Tamaño (*)</label>
+          <label class="main__label" for="size">{{ "size" | translate }} (*)</label>
           <select class="main__select" id="size" [formControl]="size" [value]="publicationForm.value.size">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let size of sizes" value="{{ size }}" [selected]="publicationForm.value.size === size">{{ size }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let size of sizes" value="{{ size }}" [selected]="publicationForm.value.size === size">{{ size | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('size').errors && (publicationForm.get('size').touched || publicationForm.get('size').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('size').errors.required">Este campo es obligatorio</span>
@@ -26,10 +26,10 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="type">Tipo de animal (*)</label>
+          <label class="main__label" for="type">{{ "pet_type" | translate }} (*)</label>
           <select class="main__select" id="type" [formControl]="type" [value]="publicationForm.value.type">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let type of types" value="{{ type }}" [selected]="publicationForm.value.type === type">{{ type }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let type of types" value="{{ type }}" [selected]="publicationForm.value.type === type">{{ type | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('type').errors && (publicationForm.get('type').touched || publicationForm.get('type').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('type').errors.required">Este campo es obligatorio</span>
@@ -37,10 +37,10 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="sex">Sexo (*)</label>
+          <label class="main__label" for="sex">{{ "sex" | translate }} (*)</label>
           <select class="main__select" id="sex" [formControl]="sex" [value]="publicationForm.value.sex">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let sex of sexs" value="{{ sex }}" [selected]="publicationForm.value.sex === sex">{{ sex }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let sex of sexs" value="{{ sex }}" [selected]="publicationForm.value.sex === sex">{{ sex | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('sex').errors && (publicationForm.get('sex').touched || publicationForm.get('sex').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('sex').errors.required">Este campo es obligatorio</span>
@@ -48,9 +48,9 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="province">Provincia (*)</label>
+          <label class="main__label" for="province">{{ "province" | translate }} (*)</label>
           <select class="main__select" id="province" [formControl]="province" [value]="publicationForm.value.province">
-            <option value="" disabled selected>Selecciona una provincia</option>
+            <option value="" disabled selected>{{ "select_a_province" | translate }}</option>
             <option *ngFor="let province of provinces" value="{{ province }}" [selected]="publicationForm.value.province === province ? true : false">{{ province }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('province').errors && (publicationForm.get('province').touched || publicationForm.get('province').dirty)">
@@ -59,10 +59,12 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="vaccinate">Vacunado (*)</label>
+          <label class="main__label" for="vaccinate">{{ "vaccinate" | translate }} (*)</label>
           <select class="main__select" id="vaccinate" [formControl]="vaccinate" [value]="publicationForm.value.vaccinate">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let vaccinate of vaccinates" value="{{ vaccinate }}" [selected]="publicationForm.value.vaccinate === vaccinate ? true : false">{{ vaccinate | translate }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let vaccinate of vaccinates" value="{{ vaccinate }}" [selected]="publicationForm.value.vaccinate === vaccinate ? true : false">
+              {{ vaccinate | translate }}
+            </option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('vaccinate').errors && (publicationForm.get('vaccinate').touched || publicationForm.get('vaccinate').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('vaccinate').errors.required">Este campo es obligatorio</span>
@@ -70,10 +72,10 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="sterile">Esterilizado (*)</label>
+          <label class="main__label" for="sterile">{{ "sterile" | translate }} (*)</label>
           <select class="main__select" id="sterile" [formControl]="sterile" [value]="publicationForm.value.sterile">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let sterile of steriles" value="{{ sterile }}" [selected]="publicationForm.value.sterile === sterile ? true : false">{{ sterile }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let sterile of steriles" value="{{ sterile }}" [selected]="publicationForm.value.sterile === sterile ? true : false">{{ sterile | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('sterile').errors && (publicationForm.get('sterile').touched || publicationForm.get('sterile').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('sterile').errors.required">Este campo es obligatorio</span>
@@ -81,18 +83,20 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="breed">Raza (*)</label>
-          <input class="main__input" type="breed" id="breed" [formControl]="breed" placeholder="Raza" />
+          <label class="main__label" for="breed">{{ "breed" | translate }} (*)</label>
+          <input class="main__input" type="breed" id="breed" [formControl]="breed" placeholder="{{ 'breed' | translate }}" />
           <div class="errors" *ngIf="publicationForm.get('breed').errors && (publicationForm.get('breed').touched || publicationForm.get('breed').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('breed').errors.required">Este campo es obligatorio</span>
           </div>
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="dewormed">Desparacitado (*)</label>
+          <label class="main__label" for="dewormed">{{ "dewormed" | translate }} (*)</label>
           <select class="main__select" id="dewormed" [formControl]="dewormed" [value]="publicationForm.value.dewormed">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let dewormed of dewormeds" value="{{ dewormed }}" [selected]="publicationForm.value.dewormed === dewormed ? true : false">{{ dewormed }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let dewormed of dewormeds" value="{{ dewormed }}" [selected]="publicationForm.value.dewormed === dewormed ? true : false">
+              {{ dewormed | translate }}
+            </option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('dewormed').errors && (publicationForm.get('dewormed').touched || publicationForm.get('dewormed').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('dewormed').errors.required">Este campo es obligatorio</span>
@@ -100,10 +104,10 @@
         </li>
 
         <li class="main__item">
-          <label class="main__label" for="chip">Con chip (*)</label>
+          <label class="main__label" for="chip">{{ "chip" | translate }} (*)</label>
           <select class="main__select" id="chip" [formControl]="chip" [value]="publicationForm.value.chip">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let chip of chips" value="{{ chip }}" [selected]="publicationForm.value.chip === chip ? true : false">{{ chip }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let chip of chips" value="{{ chip }}" [selected]="publicationForm.value.chip === chip ? true : false">{{ chip | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('chip').errors && (publicationForm.get('chip').touched || publicationForm.get('chip').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('chip').errors.required">Este campo es obligatorio</span>
@@ -113,7 +117,7 @@
         <!-- <li class="main__item">
           <label class="main__label" for="chip">Con chip (*)</label>
           <select class="main__select" id="chip" [formControl]="chip" [value]="publicationForm.value.chip">
-            <option value="" disabled selected>Seleccione una opción</option>
+            <option value="" disabled selected>{{"select_a_option" | translate}}</option>
             <option *ngFor="let chip of chips" value="{{ chip.id }}" [selected]="publicationForm.value.chip === chip.id">{{ chip.value }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('chip').errors && (publicationForm.get('chip').touched || publicationForm.get('chip').dirty)">
@@ -122,10 +126,10 @@
         </li> -->
 
         <li class="main__item">
-          <label class="main__label" for="age">Edad (*)</label>
+          <label class="main__label" for="age">{{ "age" | translate }} (*)</label>
           <select class="main__select" id="age" [formControl]="age" [value]="publicationForm.value.age">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option *ngFor="let age of ages" value="{{ age }}" [selected]="publicationForm.value.age === age ? true : false">{{ age }}</option>
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let age of ages" value="{{ age }}" [selected]="publicationForm.value.age === age ? true : false">{{ age | translate }}</option>
           </select>
           <div class="errors" *ngIf="publicationForm.get('age').errors && (publicationForm.get('age').touched || publicationForm.get('age').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('age').errors.required">Este campo es obligatorio</span>
@@ -133,13 +137,13 @@
         </li>
 
         <li class="main__item main__item--description">
-          <label class="main__label" for="image">Imagen (*)</label>
+          <label class="main__label" for="image">{{ "image" | translate }} (*)</label>
           <!-- <input #input class="main__file" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple /> -->
           <input [formControl]="image" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple />
-          <div class="main__container-img" *ngIf="files.length !== 0">
+          <div class="container__media" *ngIf="files.length !== 0">
             <div *ngFor="let file of files">
-              <img class="main__fileImg" src="{{ file.url || file.src }}" alt="Preimagen" />
-              <span (click)="deleteImage(file)">cruz</span>
+              <img class="container__image" src="{{ file.url || file.src }}" alt="Preimagen" />
+              <span class="container__close" (click)="deleteImage(file)">cruz</span>
             </div>
           </div>
           <div *ngIf="publicationForm.get('image').touched || publicationForm.get('image').dirty">
@@ -156,16 +160,16 @@
           </li> -->
 
         <li class="main__item main__item--description">
-          <label class="main__label" for="description">Descripción (*)</label>
+          <label class="main__label" for="description">{{ "description" | translate }} (*)</label>
           <textarea class="main__textarea" name="description" id="description" [formControl]="description" cols="100" rows="10"></textarea>
           <div class="errors" *ngIf="publicationForm.get('description').errors && (publicationForm.get('description').touched || publicationForm.get('description').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('description').errors.required">Este campo es obligatorio</span>
-            <span class="errors__msg" *ngIf="publicationForm.get('description').errors.minlength">Debe contener mínimo 100 caracteres</span>
+            <span class="errors__msg" *ngIf="publicationForm.get('description').errors.minlength">Debe contener mínimo 50 caracteres</span>
           </div>
         </li>
 
         <li class="main__item main__item--fb-100">
-          <button class="main__button btn btn-info" type="submit" [disabled]="publicationForm.invalid || files.length === 0">Publicar</button>
+          <button class="main__button btn btn-info" type="submit" [disabled]="publicationForm.invalid || files.length === 0">{{ "to_post" | translate }}</button>
         </li>
       </ul>
     </form>

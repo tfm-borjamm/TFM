@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'src/app/user/models/user.model';
-import { UtilsService } from '../../services/utils.service';
+import { User } from 'src/app/shared/models/user.model';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-contact-buttons',

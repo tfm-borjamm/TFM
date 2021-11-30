@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
+import { Role } from '../shared/enums/role.enum';
 import { AuthGuard } from '../shared/guards/auth.guard';
-import { PublicationAdminComponent } from './components/publication-admin/publication-admin.component';
+import { RoleGuard } from '../shared/guards/role.guard';
 import { PublicationDetailsComponent } from './components/publication-details/publication-details.component';
 import { PublicationFormComponent } from './components/publication-form/publication-form.component';
 import { PublicationListComponent } from './components/publication-list/publication-list.component';
-import { HavePermissionsGuard } from './guards/have-permissions.guard';
-import { IsClientGuard } from './guards/is-client.guard';
 import { IsOwnerGuard } from './guards/is-owner.guard';
-import { IsProfessionalGuard } from './guards/is-professional.guard';
 import { PublicationResolver } from './resolvers/publication.resolver';
 
 const routes: Routes = [
@@ -19,7 +17,8 @@ const routes: Routes = [
   {
     path: 'item',
     component: PublicationFormComponent,
-    canActivate: [AuthGuard, HavePermissionsGuard],
+    data: { role: [Role.professional, Role.admin] },
+    canActivate: [AuthGuard, RoleGuard],
   },
   {
     path: 'item/:id',
@@ -30,19 +29,14 @@ const routes: Routes = [
   {
     path: 'favorites',
     component: PublicationListComponent,
-    canActivate: [AuthGuard, IsClientGuard],
+    data: { role: Role.client },
+    canActivate: [AuthGuard, RoleGuard],
   },
   {
     path: 'my-publications',
     component: PublicationListComponent,
-    canActivate: [AuthGuard, IsProfessionalGuard],
-  },
-
-  // Pasar al módulo de dashboard!
-  {
-    path: 'admin',
-    component: PublicationAdminComponent,
-    canActivate: [AuthGuard],
+    data: { role: Role.professional },
+    canActivate: [AuthGuard, RoleGuard],
   },
 
   { path: '**', component: PageNotFoundComponent },

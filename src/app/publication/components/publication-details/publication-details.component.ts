@@ -1,15 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { Role } from 'src/app/user/enums/role.enum';
-import { User } from 'src/app/user/models/user.model';
-import { AuthService } from 'src/app/user/services/auth.service';
-import { UserService } from 'src/app/user/services/user.service';
-import { State } from '../../enums/state.enum';
-import { Publication } from '../../models/publication.model';
-import { FavoriteService } from '../../services/favorite.service';
-import { PublicationService } from '../../services/publication.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { User } from 'src/app/shared/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { PublicationState } from '../../../shared/enums/publication-state';
+import { Publication } from '../../../shared/models/publication.model';
+import { FavoriteService } from '../../../services/favorite.service';
+import { PublicationService } from '../../../services/publication.service';
 
 @Component({
   selector: 'app-publication-details',
@@ -22,7 +22,7 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
   public publication: Publication;
   public id: string;
 
-  public autor: User;
+  public author: User;
   public currentUser: User;
 
   public isFavorite: boolean = false;
@@ -49,6 +49,7 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     console.log(this.activatedRoute.snapshot.data);
 
     this.publication = this.activatedRoute.snapshot.data.publication;
+    this.id = this.publication.id;
     // this.activatedRoute.params.forEach((params) => {
     //   // this.id = params.id ?? '';
     //   // this.state = params.state ?? '';
@@ -75,18 +76,18 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     this.shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
 
     this.publication.images = this.utilsService.getArrayFromObject(this.publication.images);
-    this.isAdopted = this.publication.state === State.adopted;
+    this.isAdopted = this.publication.state === PublicationState.adopted;
 
-    this.autor = await this.userService.getUserById(this.publication.idAutor);
+    this.author = await this.userService.getUserById(this.publication.idAuthor);
     this.currentUser = await this.authService.getCurrentUserLogged();
 
     // Usuario actual:
     // const id = (await this.authService.getCurrentUserUID()) ?? '';
     // this.currentUser = await this.userService.getUserById(id);
 
-    if (this.currentUser && this.autor) {
+    if (this.currentUser && this.author) {
       this.isAdmin = this.currentUser.role === Role.admin;
-      this.isAuthor = this.autor.id === this.currentUser.id;
+      this.isAuthor = this.author.id === this.currentUser.id;
       this.isClient = this.currentUser.role === Role.client;
     } else {
       this.isAuthor = false;
@@ -98,11 +99,13 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
       this.isFavorite = favoritesCurrentUser.map((favorite) => favorite.id).includes(this.publication.id);
       this.isCopyFavorite = this.isFavorite;
       this.countFavorites = (await this.favoriteService.getFavorites(this.id)).length;
+      console.log('-->', this.countFavorites, this.id);
     }
   }
 
   onChangeFavorite(count: number) {
     this.countFavorites += count;
+    if (this.countFavorites < 0) this.countFavorites = 0;
     this.isFavorite = !this.isFavorite;
   }
 
@@ -116,18 +119,19 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
       .deletePublication(this.publication)
       .then(() => {
         console.log('Publicación eliminada correctamente');
+        this.publication = null;
         this.location.back();
       })
       .catch((e) => this.utilsService.errorHandling(e));
   }
 
-  onMarkToAdopted() {
+  onMarkAsAdopted() {
     if (window.confirm('¿Estas seguro?')) {
       this.publicationService
         .updatePublicationState(this.publication)
         .then((p) => {
           console.log('Marcado como adoptado', p);
-          this.publication.state = State.adopted;
+          this.publication.state = PublicationState.adopted;
         })
         .catch((e) => this.utilsService.errorHandling(e));
     } else {
@@ -137,6 +141,8 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
 
   onSharePublication(): void {
     console.log('Compartir publicación');
+    const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
+    window.alert('Link a compartir: ' + shareLink);
   }
 
   onProfileAuthor(id: string): void {
@@ -145,7 +151,8 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
 
   onContactAuthor() {
     // Open to dialog
-    console.log('Contactar con el autor', this.autor);
+    console.log('Contactar con el autor', this.author);
+    window.alert('Contactar con el autor\n - Email: ' + this.author.email + '\n - Teléfono: ' + this.author.telephone);
   }
 
   // encode(message: string): string {
@@ -166,8 +173,10 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('Se destruye el componente');
+    if (!this.publication) return;
     const isClientCurrentUser = this.currentUser && this.currentUser.role === Role.client;
     const isChangeFavorite = this.isFavorite !== this.isCopyFavorite;
+    console.log('No entra aquí');
     if (isClientCurrentUser && isChangeFavorite) {
       console.log('Se procede a cambiar favorito');
       if (this.isFavorite) {

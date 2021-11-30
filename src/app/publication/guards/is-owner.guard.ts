@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Role } from 'src/app/user/enums/role.enum';
-import { AuthService } from 'src/app/user/services/auth.service';
-import { PublicationService } from '../services/publication.service';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { PublicationService } from '../../services/publication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,26 +14,27 @@ export class IsOwnerGuard implements CanActivate {
   constructor(
     private publicationService: PublicationService,
     private authService: AuthService,
-    private router: Router
+    private userService: UserService,
+    private router: Router,
+    private utilsService: UtilsService
   ) {}
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    // return true;
-
-    return this.authService.getCurrentUserLogged().then(async (user) => {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    try {
       const id = route.params['id'];
-      if (!id) {
-        this.router.navigate(['page-not-found']);
-        return false;
+      const uid = await this.authService.getCurrentUserUID();
+      if (id && uid) {
+        const publication = await this.publicationService.getPublicationById(id);
+        const role = await this.userService.getRoleUserById(uid);
+        if (publication && role) {
+          return publication.idAuthor === uid || role === Role.admin ? true : this.router.navigate(['page-not-found']);
+        }
       }
-      const publication = await this.publicationService.getPublicationById(id);
-      if (!publication) {
-        this.router.navigate(['page-not-found']);
-        return false;
-      }
-      return publication.idAutor === user.id ? true : this.router.navigate(['page-not-found']);
-    });
+      this.router.navigate(['page-not-found']);
+      return false;
+    } catch (e) {
+      this.router.navigate(['page-not-found']);
+      this.utilsService.errorHandling(e);
+      return false;
+    }
   }
 }

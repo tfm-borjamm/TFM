@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { UtilsService } from 'src/app/shared/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { checkEmail } from 'src/app/shared/validations/checkEmail.validator';
-import { State } from '../../enums/state.enum';
-import { Consult } from '../../models/consult.model';
-import { ConsultService } from '../../services/consult.service';
+import { ConsultState } from '../../../shared/enums/consult-state.enum';
+import { Consult } from '../../../shared/models/consult.model';
+import { ConsultService } from '../../../services/consult.service';
 
 @Component({
   selector: 'app-consult-form',
@@ -34,7 +34,7 @@ export class ConsultFormComponent implements OnInit {
       Validators.pattern(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/),
     ]);
     this.email = new FormControl('', [Validators.required, Validators.email, checkEmail()]);
-    this.subject = new FormControl('', [Validators.required, Validators.maxLength(55)]);
+    this.subject = new FormControl('', [Validators.required, Validators.maxLength(50)]);
     this.message = new FormControl('', [Validators.required, Validators.maxLength(500)]);
     this.contactForm = this.createForm();
   }
@@ -55,11 +55,11 @@ export class ConsultFormComponent implements OnInit {
       if (servertime) {
         const consult: Consult = {
           id: this.utilsService.generateID(),
-          name: this.contactForm.value.name.toLowerCase(),
+          name: this.contactForm.value.name,
           email: this.contactForm.value.email.toLowerCase(),
-          subject: this.contactForm.value.subject.toLowerCase(),
-          message: this.contactForm.value.message.toLowerCase(),
-          state: State.unread,
+          subject: this.contactForm.value.subject,
+          message: this.contactForm.value.message,
+          state: ConsultState.unread,
           creation_date: servertime.timestamp,
         };
 

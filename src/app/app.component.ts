@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { User } from './user/models/user.model';
-import { AuthService } from './user/services/auth.service';
-import { UserService } from './user/services/user.service';
-import { Role } from './user/enums/role.enum';
+import { User } from './shared/models/user.model';
+import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
+import { Role } from './shared/enums/role.enum';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -41,24 +41,10 @@ export class AppComponent {
       this.loadInfomation = false;
       if (user) {
         this.user = await this.userService.getUserById(user.uid);
-        // if (this.user.role) {
-        //   if (this.user.role === Role.admin) {
-        //     // this.router.navigate(['user/admin']);
-        //   } else {
-        //     // this.router.navigate(['publication/list']);
-        //   }
-        // } else {
-        //   // this.router.navigate(['user/register-social']);
-        // }
       } else {
         this.user = null;
-        // if (!this.firstTime)
-        //   this.router
-        //     .navigateByUrl('/user/login', { skipLocationChange: true })
-        //     .then(() => this.router.navigate(['/']));
       }
       this.loadInfomation = true;
-      // this.firstTime = false;
     });
   }
 

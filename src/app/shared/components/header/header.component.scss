@@ -1,3 +1,7 @@
 .header {
-  background-color: lightskyblue;
+  border: 2px solid;
+}
+
+.navigation__link.logout:hover {
+  cursor: pointer;
 }
