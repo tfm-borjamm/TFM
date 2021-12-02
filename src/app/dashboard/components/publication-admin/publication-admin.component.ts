@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { provinces } from 'src/app/shared/helpers/provinces';
-import { UtilsService } from 'src/app/services/utils.service';
-import { UserService } from 'src/app/services/user.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { UserService } from 'src/app/shared/services/user.service';
 import { PublicationState } from '../../../shared/enums/publication-state';
 import { Publication } from '../../../shared/models/publication.model';
-import { PublicationService } from '../../../services/publication.service';
+import { PublicationService } from '../../../shared/services/publication.service';
 import { Type } from '../../../shared/enums/type.enum';
 
 @Component({

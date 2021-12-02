@@ -1,13 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { codes } from 'src/app/user/helpers/codes';
 import { provinces } from 'src/app/shared/helpers/provinces';
 import { Role } from '../../../shared/enums/role.enum';
 import { User } from '../../../shared/models/user.model';
-import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../shared/services/auth.service';
+import { UserService } from '../../../shared/services/user.service';
 import { Location } from '@angular/common';
 
 @Component({

@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { Publication } from '../../../shared/models/publication.model';
-import { PublicationService } from '../../../services/publication.service';
+import { PublicationService } from '../../../shared/services/publication.service';
 import { age } from 'src/app/publication/helpers/age';
 import { confirmation } from 'src/app/publication/helpers/confirmation';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/shared/services/user.service';
 import { Location } from '@angular/common';
 import { Sex } from '../../enums/sex.enum';
 import { Size } from '../../enums/size.enum';

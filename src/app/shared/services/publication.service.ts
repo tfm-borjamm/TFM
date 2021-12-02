@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { take } from 'rxjs/operators';
-import { UtilsService } from 'src/app/services/utils.service';
-import { Publication } from '../shared/models/publication.model';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { Publication } from '../models/publication.model';
 import * as firebase from 'firebase/compat/app';
-import { PublicationState } from '../shared/enums/publication-state';
+import { PublicationState } from '../enums/publication-state';
 
 @Injectable({
   providedIn: 'root',

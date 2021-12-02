@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Role } from 'src/app/shared/enums/role.enum';
-import { AuthService } from 'src/app/services/auth.service';
-import { UserService } from 'src/app/services/user.service';
-import { UtilsService } from 'src/app/services/utils.service';
-import { PublicationService } from '../../services/publication.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserService } from 'src/app/shared/services/user.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { PublicationService } from '../../shared/services/publication.service';
 
 @Injectable({
   providedIn: 'root',

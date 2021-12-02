@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { UtilsService } from 'src/app/services/utils.service';
-import { AuthService } from '../../../services/auth.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { AuthService } from '../../../shared/services/auth.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 
 @Component({

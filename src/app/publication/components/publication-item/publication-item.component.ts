@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { User } from 'src/app/shared/models/user.model';
 import { PublicationState } from '../../../shared/enums/publication-state';
 import { Publication } from '../../../shared/models/publication.model';
-import { FavoriteService } from '../../../services/favorite.service';
-import { PublicationService } from '../../../services/publication.service';
+import { FavoriteService } from '../../../shared/services/favorite.service';
+import { PublicationService } from '../../../shared/services/publication.service';
 
 @Component({
   selector: 'app-publication-item',

@@ -3,8 +3,8 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import * as firebase from 'firebase/compat/app';
 import { Observable } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { UtilsService } from 'src/app/services/utils.service';
-import { User } from '../shared/models/user.model';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { User } from '../models/user.model';
 import { UserService } from './user.service';
 
 @Injectable({

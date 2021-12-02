@@ -4,13 +4,13 @@ import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import * as moment from 'moment';
 import { Color, Label } from 'ng2-charts';
 import { Consult } from 'src/app/shared/models/consult.model';
-import { ConsultService } from 'src/app/services/consult.service';
+import { ConsultService } from 'src/app/shared/services/consult.service';
 import { Publication } from 'src/app/shared/models/publication.model';
-import { FavoriteService } from 'src/app/services/favorite.service';
-import { PublicationService } from 'src/app/services/publication.service';
-import { UtilsService } from 'src/app/services/utils.service';
+import { FavoriteService } from 'src/app/shared/services/favorite.service';
+import { PublicationService } from 'src/app/shared/services/publication.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { User } from 'src/app/shared/models/user.model';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-dashboard',

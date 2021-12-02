@@ -2,10 +2,10 @@ import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { ConsultState } from '../../../shared/enums/consult-state.enum';
 import { Consult } from '../../../shared/models/consult.model';
-import { ConsultService } from '../../../services/consult.service';
+import { ConsultService } from '../../../shared/services/consult.service';
 
 @Component({
   selector: 'app-consult-details',

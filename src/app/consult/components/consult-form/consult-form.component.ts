@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { checkEmail } from 'src/app/shared/validations/checkEmail.validator';
 import { ConsultState } from '../../../shared/enums/consult-state.enum';
 import { Consult } from '../../../shared/models/consult.model';
-import { ConsultService } from '../../../services/consult.service';
+import { ConsultService } from '../../../shared/services/consult.service';
 
 @Component({
   selector: 'app-consult-form',

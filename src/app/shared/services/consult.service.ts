@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import * as firebase from 'firebase/compat/app';
 import { take } from 'rxjs/operators';
-import { UtilsService } from 'src/app/services/utils.service';
-import { ConsultState } from '../shared/enums/consult-state.enum';
-import { Consult } from '../shared/models/consult.model';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { ConsultState } from '../enums/consult-state.enum';
+import { Consult } from '../models/consult.model';
 
 @Injectable({
   providedIn: 'root',

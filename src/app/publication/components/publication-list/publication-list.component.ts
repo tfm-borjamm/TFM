@@ -4,12 +4,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { provinces } from 'src/app/shared/helpers/provinces';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { User } from 'src/app/shared/models/user.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { PublicationState } from '../../../shared/enums/publication-state';
 import { Type } from '../../../shared/enums/type.enum';
-import { PublicationService } from '../../../services/publication.service';
+import { PublicationService } from '../../../shared/services/publication.service';
 import { Publication } from 'src/app/shared/models/publication.model';
 
 interface filterSelected {

@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { PublicationState } from '../../shared/enums/publication-state';
 import { Publication } from '../../shared/models/publication.model';
-import { PublicationService } from '../../services/publication.service';
+import { PublicationService } from '../../shared/services/publication.service';
 
 @Injectable({
   providedIn: 'root',

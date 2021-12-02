@@ -1,15 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { User } from 'src/app/shared/models/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserService } from 'src/app/shared/services/user.service';
 import { PublicationState } from '../../../shared/enums/publication-state';
 import { Publication } from '../../../shared/models/publication.model';
-import { FavoriteService } from '../../../services/favorite.service';
-import { PublicationService } from '../../../services/publication.service';
+import { FavoriteService } from '../../../shared/services/favorite.service';
+import { PublicationService } from '../../../shared/services/publication.service';
 
 @Component({
   selector: 'app-publication-details',

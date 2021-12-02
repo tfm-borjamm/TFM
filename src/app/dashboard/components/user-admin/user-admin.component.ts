@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from '../../../shared/enums/role.enum';
 import { User } from '../../../shared/models/user.model';
-import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../shared/services/auth.service';
+import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-user-admin',

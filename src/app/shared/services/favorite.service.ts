@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { take } from 'rxjs/operators';
-import { Publication } from '../shared/models/publication.model';
+import { Publication } from '../models/publication.model';
 
 @Injectable({
   providedIn: 'root',

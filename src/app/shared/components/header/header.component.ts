@@ -4,9 +4,9 @@ import { NavigationStart, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { User } from 'src/app/shared/models/user.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { languages } from '../../helpers/languages';
-import { UtilsService } from '../../../services/utils.service';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-header',

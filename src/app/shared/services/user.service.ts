@@ -6,9 +6,9 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { UtilsService } from 'src/app/services/utils.service';
-import { Role } from '../shared/enums/role.enum';
-import { User } from '../shared/models/user.model';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { Role } from '../enums/role.enum';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',

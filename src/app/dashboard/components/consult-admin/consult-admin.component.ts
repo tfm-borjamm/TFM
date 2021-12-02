@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { ConsultState } from '../../../shared/enums/consult-state.enum';
 import { Consult } from '../../../shared/models/consult.model';
-import { ConsultService } from '../../../services/consult.service';
+import { ConsultService } from '../../../shared/services/consult.service';
 
 @Component({
   selector: 'app-consult-admin',

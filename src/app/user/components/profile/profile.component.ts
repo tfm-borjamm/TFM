@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { codes } from 'src/app/user/helpers/codes';
 import { provinces } from 'src/app/shared/helpers/provinces';
 import { User } from '../../../shared/models/user.model';
-import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../shared/services/auth.service';
+import { UserService } from '../../../shared/services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
