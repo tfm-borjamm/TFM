@@ -12,6 +12,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { ImagePublicationPipe } from './pipes/image-publication.pipe';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
+
 @NgModule({
   declarations: [
     PublicationDetailsComponent,
@@ -27,6 +35,13 @@ import { ImagePublicationPipe } from './pipes/image-publication.pipe';
     ReactiveFormsModule,
     SharedModule,
     InfiniteScrollModule,
+    MatCardModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDividerModule,
+    MatCarouselModule.forRoot(),
   ],
 })
 export class PublicationModule {}

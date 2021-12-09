@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{ "confirm" | translate }}</h1>
+<div mat-dialog-content>{{ message | translate }}</div>
+<div mat-dialog-actions align="end">
+  <button mat-button color="primary" (click)="onConfirm()">{{ "im_sure" | translate | uppercase }}</button>
+  <button mat-button color="warn" (click)="onDismiss()">{{ "cancel" | translate | uppercase }}</button>
+</div>

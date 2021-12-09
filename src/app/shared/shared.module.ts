@@ -10,11 +10,17 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuTabsComponent } from './components/menu-tabs/menu-tabs.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { ShareButtonsComponent } from './components/share-buttons/share-buttons.component';
-import { ContactButtonsComponent } from './components/contact-buttons/contact-buttons.component';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { SocialButtonsBottomSheetComponent } from './components/social-buttons-bottom-sheet/social-buttons-bottom-sheet.component';
 import { MomentModule } from 'ngx-moment';
+
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SocialDialogComponent } from './components/social-dialog/social-dialog.component';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -25,12 +31,23 @@ import { MomentModule } from 'ngx-moment';
     SidenavComponent,
     MenuTabsComponent,
     PageNotFoundComponent,
-    ShareButtonsComponent,
-    ContactButtonsComponent,
-    ConfirmationDialogComponent,
-    SocialButtonsBottomSheetComponent,
+    ConfirmDialogComponent,
+    SocialDialogComponent,
   ],
-  imports: [CommonModule, TranslateModule, RouterModule, FormsModule, ReactiveFormsModule], // No Translate Module
+  imports: [
+    CommonModule,
+    TranslateModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatListModule,
+    MatIconModule,
+  ], // No Translate Module
   exports: [
     TranslateModule,
     MomentModule,
@@ -40,10 +57,6 @@ import { MomentModule } from 'ngx-moment';
     NoResultsComponent,
     LoadingComponent,
     MenuTabsComponent,
-    ShareButtonsComponent,
-    ContactButtonsComponent,
-    ConfirmationDialogComponent,
-    SocialButtonsBottomSheetComponent,
   ],
 })
 export class SharedModule {}

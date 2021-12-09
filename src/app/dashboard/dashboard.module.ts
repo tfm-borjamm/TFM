@@ -14,6 +14,18 @@ import { ConsultDetailsComponent } from './components/consult-details/consult-de
 import { PublicationAdminComponent } from './components/publication-admin/publication-admin.component';
 import { UserAdminComponent } from './components/user-admin/user-admin.component';
 
+// Angular material
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { MatSortModule } from '@angular/material/sort';
+
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -22,6 +34,23 @@ import { UserAdminComponent } from './components/user-admin/user-admin.component
     PublicationAdminComponent,
     UserAdminComponent,
   ],
-  imports: [CommonModule, DashboardRoutingModule, ChartsModule, SharedModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    DashboardRoutingModule,
+    ChartsModule,
+    SharedModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatTooltipModule,
+    MatInputModule,
+    MatSortModule,
+  ],
 })
 export class DashboardModule {}

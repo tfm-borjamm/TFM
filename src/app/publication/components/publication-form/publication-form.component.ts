@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { Publication } from '../../../shared/models/publication.model';
 import { PublicationService } from '../../../shared/services/publication.service';
 import { age } from 'src/app/publication/helpers/age';
-import { confirmation } from 'src/app/publication/helpers/confirmation';
+import { confirm, confirmWithUnknow } from 'src/app/publication/helpers/confirmation';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Location } from '@angular/common';
 import { Sex } from '../../enums/sex.enum';
@@ -16,6 +16,7 @@ import { Type } from '../../../shared/enums/type.enum';
 import { PublicationState } from '../../../shared/enums/publication-state';
 import { User } from 'src/app/shared/models/user.model';
 import { provinces } from 'src/app/shared/helpers/provinces';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-publication-form',
@@ -41,14 +42,16 @@ export class PublicationFormComponent implements OnInit {
   public dewormed: FormControl;
   public image: FormControl;
   public province: FormControl;
+  public shipping: FormControl;
   public sexs: any;
   public types: any;
   public sizes: any;
   public ages = age;
-  public vaccinates = confirmation;
-  public steriles = confirmation;
-  public chips: any = confirmation;
-  public dewormeds = confirmation;
+  public vaccinates = confirmWithUnknow;
+  public steriles = confirm;
+  public chips: any = confirm;
+  public shippings: any = confirm;
+  public dewormeds = confirm;
   public publicationID = '';
   // public datosFormulario = new FormData();
   // public file: File;
@@ -76,7 +79,8 @@ export class PublicationFormComponent implements OnInit {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private notificationService: NotificationService
   ) {
     // Editar o Crear
     // this.activatedRoute.params.forEach((params) => (this.publicationID = params['id']));
@@ -164,6 +168,7 @@ export class PublicationFormComponent implements OnInit {
     this.type = new FormControl(this.publication.type ? this.publication.type : '', [Validators.required]);
     this.breed = new FormControl(this.publication.breed ? this.publication.breed : '', [Validators.required]);
     this.sterile = new FormControl(this.publication.sterile ? this.publication.sterile : '', [Validators.required]);
+    this.shipping = new FormControl(this.publication.shipping ? this.publication.shipping : '', [Validators.required]);
     this.vaccinate = new FormControl(this.publication.vaccinate ? this.publication.vaccinate : '', [
       Validators.required,
     ]);
@@ -188,6 +193,7 @@ export class PublicationFormComponent implements OnInit {
       dewormed: this.dewormed,
       image: this.image,
       province: this.province,
+      shipping: this.shipping,
     });
   }
 
@@ -332,6 +338,7 @@ export class PublicationFormComponent implements OnInit {
         sterile: this.publicationForm.value.sterile,
         vaccinate: this.publicationForm.value.vaccinate,
         dewormed: this.publicationForm.value.dewormed,
+        shipping: this.publicationForm.value.shipping,
         date: this.editPublication ? this.publication.date : null,
         // Campos extras!
         // countFavorites: this.publication.countFavorites ?? 0,
@@ -382,7 +389,8 @@ export class PublicationFormComponent implements OnInit {
             // this.utilsService.successToast('Añadido correctamente');
             this.publicationForm.reset();
             this.location.back();
-            console.log('Creado correctamente!');
+            // console.log('Creado correctamente!');
+            this.notificationService.sendNotification('create_success', 'ok');
           })
           .catch((e) => this.utilsService.errorHandling(e));
       } else {
@@ -392,7 +400,8 @@ export class PublicationFormComponent implements OnInit {
             // this.utilsService.successToast('Editado correctamente');
             this.publicationForm.reset();
             this.location.back();
-            console.log('Editado correctamente!');
+            // console.log('Editado correctamente!');
+            this.notificationService.sendNotification('edit_success', 'ok');
           })
           .catch((e) => this.utilsService.errorHandling(e));
       }

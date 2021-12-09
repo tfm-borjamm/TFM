@@ -16,7 +16,7 @@ export class ConsultDetailsComponent implements OnInit {
   @ViewChild('btnForm') btnForm: ElementRef;
 
   public replyForm: FormGroup;
-  public reply: FormControl;
+  public message: FormControl;
 
   public id: string;
   public consult: Consult;
@@ -46,11 +46,11 @@ export class ConsultDetailsComponent implements OnInit {
     // }
 
     this.loadForm();
-    this.showForm = Boolean(this.consult.admin);
+    this.showForm = Boolean(this.consult.reply);
   }
 
   loadForm() {
-    this.reply = new FormControl(this.consult.admin ? { value: this.consult.admin.reply, disabled: true } : '', [
+    this.message = new FormControl(this.consult.reply ? { value: this.consult.reply.message, disabled: true } : '', [
       Validators.required,
     ]);
     this.replyForm = this.createForm();
@@ -58,7 +58,7 @@ export class ConsultDetailsComponent implements OnInit {
 
   createForm(): FormGroup {
     return (this.replyForm = this.formBuilder.group({
-      reply: this.reply,
+      message: this.message,
     }));
   }
 
@@ -85,8 +85,8 @@ export class ConsultDetailsComponent implements OnInit {
       const consult: Consult = {
         ...this.consult,
         state: ConsultState.answered,
-        admin: {
-          reply: this.replyForm.value.reply,
+        reply: {
+          message: this.replyForm.value.message,
           reply_date: null,
         },
       };
@@ -94,14 +94,14 @@ export class ConsultDetailsComponent implements OnInit {
       const servertime = await this.utilsService.getServerTimeStamp().catch((e) => this.utilsService.errorHandling(e));
       if (servertime) {
         const date = servertime.timestamp;
-        consult.admin.reply_date = date;
+        consult.reply.reply_date = date;
         this.consultService
           .updateConsult(consult)
           .then((res) => {
             // Mostramos el mensaje traducido res[1].message!
             console.log('Respuesta del servidor: ', res[1].message);
             this.consult = consult;
-            this.replyForm.controls['reply'].disable();
+            this.replyForm.controls['message'].disable();
           })
           .catch((e) => {
             console.log('Respuesta de error del servidor: ', e[1].message);

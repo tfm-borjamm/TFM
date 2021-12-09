@@ -3,7 +3,7 @@ import { PublicationState } from '../enums/publication-state';
 export class Publication {
   id: string;
   idAuthor: string;
-  nameAutor?: string;
+  nameAuthor?: string;
   name: string;
   type: string;
   size: string;
@@ -12,12 +12,13 @@ export class Publication {
   breed: string;
   description: string;
   sex: string;
+  age: string;
+  date: number;
+  filter: string;
   vaccinate: string;
   sterile: string;
   chip: string;
-  age: string;
-  date: number;
   dewormed: string;
-  filter: string;
+  shipping: string;
   state: PublicationState;
 }

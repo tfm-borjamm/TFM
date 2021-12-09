@@ -1,16 +1,4 @@
-<!-- <p>publication-admin works!</p> -->
-<h1>{{ "publications" | translate }}</h1>
-<p>{{ "publications_admin" | translate }}</p>
-
-<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadPublications($event)"></app-menu-tabs>
-
-<button (click)="onCreatePublication()">{{ "to_post" | translate }}</button>
-
-<button (click)="showFilter = !showFilter">
-  {{ "filters" | translate }} <span class="filterSelected" *ngIf="filterPublication.value.province || filterPublication.value.type"></span>
-</button>
-
-<div *ngIf="showFilter">
+<!-- <div *ngIf="showFilter">
   <select [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
     <option value="" selected>{{ "all" | translate }}</option>
     <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
@@ -20,11 +8,11 @@
     <option value="" selected>{{ "all" | translate }}</option>
     <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type | translate }}</option>
   </select>
-</div>
+</div> -->
 
-<table *ngIf="publications && publications.length > 0; else noResults">
+<!-- <table *ngIf="publications && publications.length > 0; else noResults">
   <tr>
-    <th>{{ "professional_singular" | translate }}</th>
+    <th>{{ "professional" | translate }}</th>
     <th>{{ "date" | translate }}</th>
     <th>{{ "type" | translate }}</th>
     <th>{{ "province" | translate }}</th>
@@ -34,7 +22,7 @@
     <th></th>
   </tr>
   <tr *ngFor="let publication of publications">
-    <td (click)="onDetailsPublication(publication)">{{ publication.nameAutor }}</td>
+    <td (click)="onDetailsPublication(publication)">{{ publication.nameAuthor }}</td>
     <td (click)="onDetailsPublication(publication)">{{ publication.date | date: "medium" }}</td>
     <td (click)="onDetailsPublication(publication)">{{ publication.type | translate }}</td>
     <td (click)="onDetailsPublication(publication)">{{ publication.province }}</td>
@@ -56,8 +44,116 @@
       <button (click)="onMarkAsAdopted(publication)">{{ "mark_as_adopted" | translate }}</button>
     </td>
   </tr>
-</table>
+</table> -->
 
-<ng-template #noResults>
+<!-- <p>publication-admin works!</p> -->
+<h1>{{ "publications" | translate }}</h1>
+<p>{{ "publications_admin" | translate }}</p>
+
+<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadPublications($event)"></app-menu-tabs>
+
+<div align="end">
+  <button mat-button mat-icon-button (click)="onCreatePublication()" matTooltip="{{ 'to_post' | translate }}">
+    <mat-icon>playlist_add</mat-icon>
+  </button>
+  <button mat-button mat-icon-button (click)="showFilter = !showFilter" matTooltip="{{ 'to_filter' | translate }}">
+    <mat-icon>filter_list</mat-icon>
+    <span class="filterSelected" *ngIf="selectedType || selectedProvince"></span>
+  </button>
+</div>
+
+<div class="filters" *ngIf="showFilter">
+  <mat-form-field appearance="fill">
+    <mat-label>{{ "to_filter" | translate }}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="{{ 'to_filter' | translate }}" #input [value]="this.dataSource.filter" />
+    <button *ngIf="this.dataSource.filter" matSuffix mat-icon-button aria-label="Clear" (click)="resetFilter()" matTooltip="{{ 'delete' | translate }}">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div class="filters" *ngIf="showFilter">
+  <p>Filtros</p>
+  <mat-form-field appearance="fill">
+    <mat-label>{{ "province" | translate }}</mat-label>
+    <mat-select [(value)]="selectedProvince" (selectionChange)="onChangeFilter({ filter: 'province', value: $event.value })">
+      <mat-option value="">{{ "all" | translate }}</mat-option>
+      <mat-option *ngFor="let province of provinces" [value]="province">{{ province }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>{{ "type" | translate }}</mat-label>
+    <mat-select [(value)]="selectedType" (selectionChange)="onChangeFilter({ filter: 'type', value: $event.value })">
+      <mat-option value="">{{ "all" | translate }}</mat-option>
+      <mat-option *ngFor="let type of types" [value]="type">{{ type | translate }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="example-container mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <!-- Position Column -->
+    <ng-container matColumnDef="professional">
+      <th mat-header-cell *matHeaderCellDef>{{ "professional" | translate }}</th>
+      <td mat-cell *matCellDef="let publication" (click)="onDetailsPublication(publication)">{{ publication.nameAuthor }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>{{ "type" | translate }}</th>
+      <td mat-cell *matCellDef="let publication" (click)="onDetailsPublication(publication)">{{ publication.type | translate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="province">
+      <th mat-header-cell *matHeaderCellDef>{{ "province" | translate }}</th>
+      <td mat-cell *matCellDef="let publication" (click)="onDetailsPublication(publication)">{{ publication.province }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>{{ "date" | translate }}</th>
+      <td mat-cell *matCellDef="let publication" (click)="onDetailsPublication(publication)">{{ publication.date | date: "medium" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="star" stickyEnd>
+      <th mat-header-cell *matHeaderCellDef class="star"></th>
+      <td mat-cell *matCellDef="let publication" class="star">
+        <button mat-button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" matTooltip="{{ 'more_options' | translate }}">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onDeletePublication(publication)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ "delete" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onSharePublication(publication)" *ngIf="publication.state === 'available'">
+            <mat-icon>share</mat-icon>
+            <span>{{ "share" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onEditPublication(publication.id)" *ngIf="publication.state === 'available'">
+            <mat-icon>edit</mat-icon>
+            <span>{{ "edit" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onMarkAsAdopted(publication)" *ngIf="publication.state === 'available'">
+            <mat-icon>pets</mat-icon>
+            <span>{{ "mark_as_adopted" | translate }}</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell nodata" colspan="5">
+        <app-no-results></app-no-results>
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+</div>
+
+<!-- <ng-template #noResults>
   <app-no-results></app-no-results>
-</ng-template>
+</ng-template> -->

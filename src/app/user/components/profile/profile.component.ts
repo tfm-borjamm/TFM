@@ -1,18 +1,13 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { codes } from 'src/app/user/helpers/codes';
-import { provinces } from 'src/app/shared/helpers/provinces';
 import { User } from '../../../shared/models/user.model';
 import { AuthService } from '../../../shared/services/auth.service';
 import { UserService } from '../../../shared/services/user.service';
-import { checkEmail } from '../../../shared/validations/checkEmail.validator';
-import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Role } from '../../../shared/enums/role.enum';
-import { Route } from '@angular/compiler/src/core';
 import { TranslateService } from '@ngx-translate/core';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Component({
   selector: 'app-profile',
@@ -30,13 +25,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public isClientUser: boolean;
   public isCurrentUser: boolean;
 
+  public telephone: string;
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private utilsService: UtilsService,
     private router: Router,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    private dialogService: DialogService
   ) {
     this.user = this.activatedRoute.snapshot.data.user;
     this.userID = this.user ? this.user.id : null;
@@ -61,7 +59,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       } else {
         this.isClientUser = this.user.role === Role.client;
       }
-      this.user.telephone = this.utilsService.getTelephoneComplete(this.user);
+      this.telephone = this.utilsService.getTelephoneComplete(this.user);
     } catch (e) {
       this.utilsService.errorHandling(e);
     }
@@ -69,7 +67,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onContactUser() {
     console.log('Contactar con: ', this.user);
-    window.alert('Contactar con el autor\n - Email: ' + this.user.email + '\n - Teléfono: ' + this.user.telephone);
+    const options: any = {
+      name: 'contact',
+      author: this.user,
+    };
+    this.dialogService.openButtonsDialog(options);
   }
 
   onEditUser() {

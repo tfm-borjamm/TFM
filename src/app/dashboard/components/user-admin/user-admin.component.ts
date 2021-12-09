@@ -1,4 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from '../../../shared/enums/role.enum';
@@ -13,30 +16,43 @@ import { UserService } from '../../../shared/services/user.service';
 })
 export class UserAdminComponent implements OnInit, OnDestroy {
   public users: User[];
-  public usersV0: User[];
+  // public usersV0: User[];
+  // public name: string = null;
 
-  public name: string = null;
-
-  public defaultTab = Role.client;
-  public tabs = Object.values(Role).splice(1);
+  // public defaultTab = Role.client;
+  // public tabs = Object.values(Role).splice(1);
+  public defaultTab = 'clients';
+  public tabs = ['clients', 'professionals'];
 
   // public currentUserID: string;
 
   public tab: string;
+
+  displayedColumns: string[] = ['name', 'email', 'telephone', 'province', 'star'];
+  dataSource: any = new MatTableDataSource<User>([]);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatSort) sort: MatSort;
+
+  public showFilter: boolean = false;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private utilsService: UtilsService,
     private authService: AuthService
-  ) {}
+  ) {
+    const search = this.utilsService.getLocalStorage('search');
+    const params = search;
+    if (params) {
+      this.dataSource.filter = params.search;
+      // this.showFilter = true;
+    }
+  }
 
   ngOnInit(): void {}
 
   async loadUsers(tabMenu: string): Promise<void> {
-    this.tab = tabMenu;
     // this.currentUserID = await this.authService.getCurrentUserUID();
-    this.users = await this.userService.getUsersAdmin(tabMenu);
 
     // this.users = this.users.filter((user) => {
     //   if (user.role === Role.client) {
@@ -49,8 +65,14 @@ export class UserAdminComponent implements OnInit, OnDestroy {
     //   return user;
     // });
 
-    this.usersV0 = this.users;
-    this.name = '';
+    // this.usersV0 = this.users;
+    // this.name = '';
+
+    this.tab = tabMenu.substring(0, tabMenu.length - 1); // delete plural 's' letter
+    this.users = await this.userService.getUsersAdmin(this.tab);
+    this.dataSource.data = this.users;
+    this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
   }
 
   // filterAdmin(user: User) {
@@ -58,15 +80,26 @@ export class UserAdminComponent implements OnInit, OnDestroy {
   //   return user.id !== 'YXq9Kyyoa6dMAyacb9EIO5OY88g1';
   // }
 
-  onSearchName(searchName: string): void {
+  applyFilter(event: Event): void {
     // Filter name search
-    this.name = searchName.toLowerCase();
-    this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.utilsService.setLocalStorage('search', {
+      search: this.dataSource.filter,
+    });
+
+    // this.name = filterValue.toLowerCase();
+    // this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
   }
 
-  isEqualNames(name1: string, name2: string): boolean {
-    return name1.toLowerCase().includes(name2);
+  resetFilter() {
+    this.dataSource.filter = '';
+    this.utilsService.removeLocalStorage('search');
   }
+
+  // isEqualNames(name1: string, name2: string): boolean {
+  //   return name1.includes(name2);
+  // }
 
   onDeleteUser(user: User) {
     // Método para eliminar un usuario
@@ -97,7 +130,7 @@ export class UserAdminComponent implements OnInit, OnDestroy {
     this.router.navigate(['user/register/admin']);
   }
 
-  onViewProfile(id: string) {
+  onDetailsProfile(id: string) {
     this.router.navigate(['user', 'profile', id]);
   }
 

@@ -114,6 +114,19 @@
           </div>
         </li>
 
+        <li class="main__item">
+          <label class="main__label" for="shipping">{{ "shipping" | translate }} (*)</label>
+          <select class="main__select" id="shipping" [formControl]="shipping" [value]="publicationForm.value.shipping">
+            <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
+            <option *ngFor="let shipping of shippings" value="{{ shipping }}" [selected]="publicationForm.value.shipping === shipping ? true : false">
+              {{ shipping | translate }}
+            </option>
+          </select>
+          <div class="errors" *ngIf="publicationForm.get('shipping').errors && (publicationForm.get('shipping').touched || publicationForm.get('shipping').dirty)">
+            <span class="errors__msg" *ngIf="publicationForm.get('shipping').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
         <!-- <li class="main__item">
           <label class="main__label" for="chip">Con chip (*)</label>
           <select class="main__select" id="chip" [formControl]="chip" [value]="publicationForm.value.chip">

@@ -1,8 +1,9 @@
 <!-- <p>publication-item works!</p> -->
 <!-- CARD MATERIAL -->
-<div *ngIf="publication" class="card">
-  <!-- <li *ngIf="currentUser && isClient && !isFavorite" (click)="onChangeFavorite()">Añadir a favorito</li>
+<!-- <li *ngIf="currentUser && isClient && !isFavorite" (click)="onChangeFavorite()">Añadir a favorito</li>
     <li *ngIf="currentUser && isClient && isFavorite" (click)="onChangeFavorite()">Eliminar de favorito</li> -->
+<!-- <div *ngIf="publication" class="card">
+
   <div *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()">
     <button *ngIf="!isFavorite" (click)="onChangeFavorite()">Icono de corazon sin rellenar</button>
     <button *ngIf="isFavorite" (click)="onChangeFavorite()">Icono de corazon rellenado</button>
@@ -10,7 +11,7 @@
 
   <div (click)="onDetailsPublication()">
     <img class="card__image" [src]="image | imagePublication" (error)="image = ''" />
-    <!-- <p>{{ publication.id }}</p> -->
+    <p>{{ publication.id }}</p>
     <h4>{{ "name" | translate }}</h4>
     <p>{{ publication.name }}</p>
     <h4>{{ "date" | translate }}</h4>
@@ -40,4 +41,67 @@
 
   <button *ngIf="currentUser && isClient && isFavorite && isPageFavorites()" (click)="onDeleteFavorite()">{{ "delete_from_favorites" | translate }}</button>
   <button *ngIf="!isPageMyPublications()" (click)="onSharePublication()">{{ "share" | translate }}</button>
-</div>
+</div> -->
+
+<mat-card class="mat-elevation-z3">
+  <mat-card-actions class="card__favorite" *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()" align="end">
+    <button mat-button mat-icon-button *ngIf="!isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_border' | translate }}">
+      <mat-icon>favorite_border</mat-icon>
+    </button>
+    <button mat-button mat-icon-button *ngIf="isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_not_border' | translate }}">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </mat-card-actions>
+  <img mat-card-image [src]="image | imagePublication" (error)="image = ''" alt="#" />
+  <mat-card-title>{{ publication.name }}</mat-card-title>
+  <mat-card-subtitle>{{ publication.date | date }}</mat-card-subtitle>
+  <!-- <p>{{ publication.type | translate }}</p> -->
+  <mat-card-content (click)="onDetailsPublication()">
+    {{ publication.description }}
+  </mat-card-content>
+  <mat-divider inset></mat-divider>
+  <mat-card-actions align="end">
+    <!-- <button mat-button color="warn" (click)="onDeletePublication()" *ngIf="!isClient && isAdopted">{{ "delete" | translate | uppercase }}</button> -->
+    <button
+      mat-button
+      mat-icon-button
+      *ngIf="currentUser && isClient && isFavorite && isPageFavorites()"
+      (click)="onDeleteFavorite()"
+      matTooltip="{{ 'delete_from_favorites' | translate }}"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-button mat-icon-button *ngIf="!isPageMyPublications()" (click)="onSharePublication()" matTooltip="{{ 'share' | translate }}">
+      <mat-icon>share</mat-icon>
+    </button>
+
+    <button
+      mat-button
+      mat-icon-button
+      *ngIf="currentUser && (isAdmin || isAuthor)"
+      [matMenuTriggerFor]="menu"
+      matTooltip="{{ 'more_options' | translate }}"
+      aria-label="Example icon-button with a menu"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onSharePublication()" *ngIf="isPageMyPublications()">
+        <mat-icon>share</mat-icon>
+        <span>{{ "share" | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="onMarkAsAdopted()" *ngIf="!isAdopted">
+        <mat-icon>pets</mat-icon>
+        <span>{{ "mark_as_adopted" | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="onEditPublication()" *ngIf="!isAdopted">
+        <mat-icon>edit</mat-icon>
+        <span>{{ "edit" | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="onDeletePublication()">
+        <mat-icon>delete</mat-icon>
+        <span>{{ "delete" | translate }}</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>

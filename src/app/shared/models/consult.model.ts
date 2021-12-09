@@ -1,4 +1,5 @@
 import { ConsultState } from '../enums/consult-state.enum';
+import { Reply } from './Reply.model';
 
 export class Consult {
   id: string;
@@ -8,8 +9,9 @@ export class Consult {
   message: string;
   creation_date: number;
   state: ConsultState;
-  admin?: {
-    reply_date: number;
-    reply: string;
-  };
+  reply?: Reply;
+  // admin?: { //admin
+  //   reply_date: number;
+  //   reply: string;
+  // };
 }

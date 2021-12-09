@@ -118,22 +118,22 @@ export class DashboardComponent implements OnInit {
   setColorChart(): void {
     this.lineChartColorsPublications = [
       {
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.4)',
+        borderColor: 'rgba(63, 81, 181, 1)',
+        backgroundColor: 'rgba(63, 81, 181, 0.4)',
       },
     ];
 
     this.lineChartColorsConsults = [
       {
-        borderColor: 'rgba(247, 220, 111, 1)',
-        backgroundColor: 'rgba(247, 220, 111, 0.4)',
+        borderColor: 'rgba(244, 67, 54, 1)',
+        backgroundColor: 'rgba(244, 67, 54, 0.4)',
       },
     ];
 
     this.lineChartColorsUsers = [
       {
-        borderColor: 'rgba(187, 143, 206, 1)',
-        backgroundColor: 'rgba(187, 143, 206, 0.4)',
+        borderColor: 'rgba(255, 64, 129, 1)',
+        backgroundColor: 'rgba(255, 64, 129, 0.4)',
       },
     ];
   }

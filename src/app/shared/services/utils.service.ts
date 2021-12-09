@@ -98,7 +98,7 @@ export class UtilsService {
     const body = {
       email_dest: consult.email,
       question_msg: consult.message,
-      answer_msg: consult.admin.reply,
+      answer_msg: consult.reply.message,
       name: consult.name,
     };
     return this.http.post<any>(url, JSON.stringify(body)).toPromise();

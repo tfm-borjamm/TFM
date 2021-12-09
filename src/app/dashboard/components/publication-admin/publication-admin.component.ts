@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { provinces } from 'src/app/shared/helpers/provinces';
@@ -8,6 +8,10 @@ import { PublicationState } from '../../../shared/enums/publication-state';
 import { Publication } from '../../../shared/models/publication.model';
 import { PublicationService } from '../../../shared/services/publication.service';
 import { Type } from '../../../shared/enums/type.enum';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-publication-admin',
@@ -33,38 +37,89 @@ export class PublicationAdminComponent implements OnInit, OnDestroy {
   public types: string[] = Object.values(Type);
   public provinces: string[] = provinces;
 
+  displayedColumns: string[] = ['professional', 'type', 'province', 'date', 'star'];
+  dataSource: any = new MatTableDataSource<Publication>([]);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatSort) sort: MatSort;
+
+  public selectedType: any = '';
+  public selectedProvince: any = '';
+
   constructor(
     private publicationService: PublicationService,
     private router: Router,
-    private formBuilder: FormBuilder,
     private utilsService: UtilsService,
-    private userService: UserService
+    private userService: UserService,
+    private translateService: TranslateService
   ) {
     const filterPublications = this.utilsService.getLocalStorage('filterPublications');
     const params = filterPublications;
     if (params) {
       const isTypeOK = Object.values(Type).includes(params?.type);
       const isProvinceOK = provinces.includes(params?.province);
-      this.paramType = isTypeOK ? params?.type : '';
-      this.paramProvince = isProvinceOK ? params?.province : '';
+      this.selectedType = isTypeOK ? params?.type : '';
+      this.selectedProvince = isProvinceOK ? params?.province : '';
     }
   }
 
   ngOnInit(): void {
-    this.loadForm();
+    // this.loadForm();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const wordFilter =
+        data.nameAuthor.toLowerCase() +
+        this.translateService.instant(data.type).toLowerCase() +
+        data.province.toLowerCase();
+      console.log('--->', wordFilter);
+
+      return wordFilter.indexOf(filter) != -1;
+    };
+    // this.translateService.onLangChange.subscribe((a) => {
+    //   console.log('-----AAAA', a);
+    //   this.paginator._intl.itemsPerPageLabel = this.translateService.instant('ITEMS_PER_PAGE');
+    //   this.paginator._intl.nextPageLabel = this.translateService.instant('NEXT_PAGE');
+    //   this.paginator._intl.previousPageLabel = this.translateService.instant('PREV_PAGE');
+    //   this.paginator._intl.firstPageLabel = this.translateService.instant('FIRST_PAGE');
+    //   this.paginator._intl.lastPageLabel = this.translateService.instant('LAST_PAGE');
+    // });
   }
 
   async loadPublications(tabMenu: string): Promise<void> {
     const publications = await this.publicationService.getPublicationsAdmin(tabMenu);
-    this.publications = await this.replaceIdsToNameAutor(publications);
+    this.publications = await this.replaceIdsToNameAuthor(publications);
     this.publicationsCopy = this.publications;
     this.onChangeFilter();
+    this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event): void {
+    // Filter name search
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.utilsService.setLocalStorage('searchUsers', {
+      search: this.dataSource.filter,
+    });
+
+    // if (this.dataSource.paginator) {
+    //   this.dataSource.paginator.firstPage();
+    // }
+
+    // this.name = filterValue.toLowerCase();
+    // this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
+  }
+
+  resetFilter() {
+    this.dataSource.filter = '';
+    this.utilsService.removeLocalStorage('searchUsers');
   }
 
   onChangeFilter(selected?: any) {
     const search: any = {
-      type: this.filterPublication.value.type,
-      province: this.filterPublication.value.province,
+      type: this.selectedType,
+      province: this.selectedProvince,
     };
 
     if (selected) {
@@ -72,10 +127,10 @@ export class PublicationAdminComponent implements OnInit, OnDestroy {
       search[filter] = value;
     }
 
-    console.log(search, this.paramProvince, this.paramType);
+    console.log(search);
 
     if (search.type && search.province) {
-      this.publications = this.publicationsCopy.filter(
+      this.dataSource.data = this.publicationsCopy.filter(
         ({ type, province }) => type.includes(search.type) && province.includes(search.province)
       );
       this.utilsService.setLocalStorage('filterPublications', {
@@ -83,33 +138,35 @@ export class PublicationAdminComponent implements OnInit, OnDestroy {
         province: search.province,
       });
     } else if (search.type) {
-      this.publications = this.publicationsCopy.filter(({ type }) => type.includes(search.type));
+      this.dataSource.data = this.publicationsCopy.filter(({ type }) => type.includes(search.type));
       this.utilsService.setLocalStorage('filterPublications', {
         type: search.type,
       });
     } else if (search.province) {
-      this.publications = this.publicationsCopy.filter(({ province }) => province.includes(search.province));
+      this.dataSource.data = this.publicationsCopy.filter(({ province }) => province.includes(search.province));
       this.utilsService.setLocalStorage('filterPublications', {
         province: search.province,
       });
     } else {
-      this.publications = this.publicationsCopy;
+      this.dataSource.data = this.publicationsCopy;
       this.utilsService.removeLocalStorage('filterPublications');
     }
+
+    console.log('this.data', this.dataSource);
   }
 
-  loadForm() {
-    this.type = new FormControl(this.paramType ?? '', [Validators.required]);
-    this.province = new FormControl(this.paramProvince ?? '', [Validators.required]);
-    this.filterPublication = this.createForm();
-  }
+  // loadForm() {
+  //   this.type = new FormControl(this.paramType ?? '', [Validators.required]);
+  //   this.province = new FormControl(this.paramProvince ?? '', [Validators.required]);
+  //   this.filterPublication = this.createForm();
+  // }
 
-  createForm(): FormGroup {
-    return this.formBuilder.group({
-      type: this.type,
-      province: this.province,
-    });
-  }
+  // createForm(): FormGroup {
+  //   return this.formBuilder.group({
+  //     type: this.type,
+  //     province: this.province,
+  //   });
+  // }
 
   onCreatePublication() {
     console.log('Crear publicación');
@@ -163,7 +220,7 @@ export class PublicationAdminComponent implements OnInit, OnDestroy {
     // }
   }
 
-  async replaceIdsToNameAutor(publications: Publication[]): Promise<any[]> {
+  async replaceIdsToNameAuthor(publications: Publication[]): Promise<any[]> {
     const idsDuplicates = publications.map((publication) => publication.idAuthor);
     const ids = this.removeDuplicates(idsDuplicates);
     const promisesUsers = ids.map((id) => this.userService.getUserById(id));
@@ -171,7 +228,7 @@ export class PublicationAdminComponent implements OnInit, OnDestroy {
     publications = publications.map((publication: any) => {
       const user = users.find((user) => publication.idAuthor === user.id);
       if (!user) return publication;
-      publication['nameAutor'] = user.name;
+      publication['nameAuthor'] = user.name;
       return publication;
     });
     return publications;

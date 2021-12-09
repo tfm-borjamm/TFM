@@ -1,16 +1,67 @@
-.consult {
-  background-color: #ddd;
-  padding: 2rem;
+// .consult {
+//   background-color: #ddd;
+//   padding: 2rem;
+// }
+
+// .unread {
+//   background-color: red;
+// }
+
+// .answered {
+//   background-color: green;
+// }
+
+// td {
+//   padding: 0;
+// }
+
+.example-container {
+  max-width: 100%;
+  overflow: auto;
 }
 
-.unread {
+table {
+  width: 100%;
+}
+
+.mat-header-cell:not(.star, .nodata),
+.mat-cell:not(.star, .nodata) {
+  // border: 1px solid red;
+  min-width: 150px;
+  text-align: center;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 1px;
+}
+
+.mat-cell:not(.star, .nodata):first-letter {
+  text-transform: capitalize;
+}
+
+.mat-cell.star {
+  text-align: right;
+}
+
+// .mat-header-cell {
+//   // font-weight: bold;
+//   // color: #000000;
+// }
+
+.filterSelected {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
   background-color: red;
 }
 
-.answered {
-  background-color: green;
+.filters {
+  display: flex;
+  flex-direction: column;
 }
 
-td {
-  padding: 0;
-}
+// ::ng-deep .mat-sort-header-container {
+//   justify-content: center !important;
+// }

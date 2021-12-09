@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { Role } from '../../enums/role.enum';
 import { UtilsService } from '../../services/utils.service';
 
 @Component({
@@ -47,8 +48,8 @@ export class MenuTabsComponent implements OnInit, OnDestroy {
     this.newTabEvent.emit(this.tabValue);
   }
 
-  onChangeButton(tab: string) {
-    this.tab$.next(tab);
+  onChangeButton(tab: any) {
+    this.tab$.next(this.tabs[tab.index]);
   }
 
   ngOnDestroy(): void {

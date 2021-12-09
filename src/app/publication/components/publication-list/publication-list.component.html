@@ -1,5 +1,6 @@
-<main>
-  <div *ngIf="currentURL.includes('/publication/list')">
+<main class="main">
+  <div class="main__filter" *ngIf="currentURL.includes('/publication/list')">
+    <h1>Filtros</h1>
     <p>{{ "province" | translate }}</p>
     <select
       class="main__select"
@@ -18,7 +19,7 @@
     </select>
   </div>
 
-  <div *ngIf="!currentURL.includes('/publication/list')">
+  <div class="main__publication">
     <div *ngIf="currentURL.includes('/publication/favorites')">
       <h1>{{ "your_favorites" | translate }}</h1>
       <p>{{ "favorites_description" | translate }}</p>
@@ -34,21 +35,25 @@
       </div> -->
       <app-menu-tabs *ngIf="user" [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="onChange($event)"></app-menu-tabs>
     </div>
-  </div>
 
-  <div *ngIf="publications && publications.length !== 0; else noResults">
-    <div *ngFor="let publication of publications; trackBy: trackByFn; let last = last" class="item" [ngClass]="{ last: last }">
-      <app-publication-item [publication]="publication" [currentUser]="user" (onChangePublication)="onChangePublication($event)"></app-publication-item>
+    <button mat-stroked-button mat-icon-button>
+      <mat-icon>filter_list</mat-icon>
+    </button>
+
+    <div *ngIf="publications && publications.length !== 0; else noResults" class="list__item">
+      <div *ngFor="let publication of publications; trackBy: trackByFn; let last = last" class="item" [ngClass]="{ last: last }">
+        <app-publication-item [publication]="publication" [currentUser]="user" (onChangePublication)="onChangePublication($event)"></app-publication-item>
+      </div>
+
+      <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div>
+      <app-loading *ngIf="!finished"></app-loading>
+      <!-- <div *ngIf="finished">Eso son todos los datos de la BD</div> -->
     </div>
 
-    <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div>
-    <app-loading *ngIf="!finished"></app-loading>
-    <!-- <div *ngIf="finished">Eso son todos los datos de la BD</div> -->
+    <ng-template #noResults>
+      <app-no-results></app-no-results>
+    </ng-template>
   </div>
-
-  <ng-template #noResults>
-    <app-no-results></app-no-results>
-  </ng-template>
 </main>
 
 <!-- <div *ngIf="publications && publications.length !== 0" class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div> -->

@@ -5,34 +5,113 @@
   </ul>
 </nav> -->
 
-<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadUsers($event)"></app-menu-tabs>
-<input type="text" placeholder="{{ 'name' | translate }}" (ngModelChange)="onSearchName($event)" [ngModel]="name" />
+<!-- <app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadUsers($event)"></app-menu-tabs> -->
+<!-- <input type="text" placeholder="{{ 'name' | translate }}" (ngModelChange)="onSearchName($event)" [ngModel]="name" />
 <button (click)="onCreateUser()">{{ "create_user" | translate }}</button>
 <table *ngIf="users && users.length !== 0; else noResults">
   <tr>
     <th>{{ "name" | translate }}</th>
     <th>{{ "email" | translate }}</th>
     <th>{{ "telephone" | translate }}</th>
-    <th>{{ "province" | translate }}</th>
-    <!-- <th *ngIf="tab === 'client'">Favoritos</th>
+    <th>{{ "province" | translate }}</th> -->
+<!-- <th *ngIf="tab === 'client'">Favoritos</th>
     <th *ngIf="tab === 'professional'">Publicaciones</th> -->
-    <th></th>
+<!-- <th></th>
     <th></th>
   </tr>
   <tr *ngFor="let user of users">
     <td (click)="onViewProfile(user.id)">{{ user.name }}</td>
     <td (click)="onViewProfile(user.id)">{{ user.email }}</td>
     <td (click)="onViewProfile(user.id)">{{ user.telephone }}</td>
-    <td (click)="onViewProfile(user.id)">{{ user.province }}</td>
-    <!-- <td *ngIf="user.role === 'client'">{{ user.myFavorites }}</td>
+    <td (click)="onViewProfile(user.id)">{{ user.province }}</td> -->
+<!-- <td *ngIf="user.role === 'client'">{{ user.myFavorites }}</td>
     <td *ngIf="user.role === 'professional'">{{ user.myPublications }}</td> -->
-    <td>
+<!-- <td>
       <button (click)="onEditUser(user.id)">{{ "edit" | translate }}</button>
       <button (click)="onDeleteUser(user)">{{ "delete" | translate }}</button>
     </td>
   </tr>
-</table>
+</table> -->
 
-<ng-template #noResults>
+<h1>{{ "users" | translate }}</h1>
+<p>{{ "users_admin" | translate }}</p>
+
+<app-menu-tabs [defaultTab]="defaultTab" [tabs]="tabs" (newTabEvent)="loadUsers($event)"></app-menu-tabs>
+
+<div align="end">
+  <button mat-button mat-icon-button (click)="onCreateUser()" matTooltip="{{ 'create_user' | translate }}">
+    <mat-icon>person_add</mat-icon>
+  </button>
+  <button mat-button mat-icon-button (click)="showFilter = !showFilter" matTooltip="{{ 'to_filter' | translate }}">
+    <mat-icon>filter_list</mat-icon>
+    <span class="filterSelected" *ngIf="this.dataSource.filter"></span>
+  </button>
+</div>
+
+<div class="filters" *ngIf="showFilter">
+  <mat-form-field appearance="fill">
+    <mat-label>{{ "to_filter" | translate }}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="{{ 'to_filter' | translate }}" #input [value]="this.dataSource.filter" />
+    <button *ngIf="this.dataSource.filter" matSuffix mat-icon-button aria-label="Clear" (click)="resetFilter()" matTooltip="{{ 'delete' | translate }}">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div class="example-container mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>{{ "name" | translate }}</th>
+      <td mat-cell *matCellDef="let user" (click)="onDetailsProfile(user.id)">{{ user.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>{{ "email" | translate }}</th>
+      <td mat-cell *matCellDef="let user" (click)="onDetailsProfile(user.id)">{{ user.email }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="telephone">
+      <th mat-header-cell *matHeaderCellDef>{{ "telephone" | translate }}</th>
+      <td mat-cell *matCellDef="let user" (click)="onDetailsProfile(user.id)">{{ user.telephone }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="province">
+      <th mat-header-cell *matHeaderCellDef>{{ "province" | translate }}</th>
+      <td mat-cell *matCellDef="let user" (click)="onDetailsProfile(user.id)">{{ user.province }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="star" stickyEnd>
+      <th mat-header-cell *matHeaderCellDef class="star"></th>
+      <td mat-cell *matCellDef="let user" class="star">
+        <button mat-button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" matTooltip="{{ 'more_options' | translate }}">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onEditUser(user.id)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ "edit" | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onDeleteUser(user)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ "delete" | translate }}</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell nodata" colspan="5">
+        <app-no-results></app-no-results>
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+</div>
+
+<!-- <ng-template #noResults>
   <app-no-results></app-no-results>
-</ng-template>
+</ng-template> -->

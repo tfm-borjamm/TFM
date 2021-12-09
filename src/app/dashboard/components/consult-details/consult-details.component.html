@@ -17,9 +17,9 @@
     <ul class="main__list">
       <li class="main__item">
         <!-- <label class="main__label" for="reply">reply (*)</label> -->
-        <textarea class="main__input" type="reply" id="reply" [formControl]="reply" placeholder="{{ 'response' | translate }}"></textarea>
-        <div class="errors" *ngIf="replyForm.get('reply').errors && (replyForm.get('reply').touched || replyForm.get('reply').dirty)">
-          <span class="errors__msg" *ngIf="replyForm.get('reply').errors.required">Este campo es obligatorio</span>
+        <textarea class="main__input" type="message" id="message" [formControl]="message" placeholder="{{ 'response' | translate }}"></textarea>
+        <div class="errors" *ngIf="replyForm.get('message').errors && (replyForm.get('message').touched || replyForm.get('message').dirty)">
+          <span class="errors__msg" *ngIf="replyForm.get('message').errors.required">Este campo es obligatorio</span>
         </div>
       </li>
       <li class="main__item">

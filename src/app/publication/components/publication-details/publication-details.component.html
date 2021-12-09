@@ -1,6 +1,6 @@
 <div *ngIf="publication">
   <!-- <img src="#" alt=""> -->
-  <h1>{{ "professional_singular" | translate }}</h1>
+  <h1>{{ "professional" | translate }}</h1>
   <div *ngIf="this.author">
     <h4 *ngIf="this.author" (click)="onProfileAuthor(this.author.id)">{{ this.author.name }}</h4>
     <button (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
@@ -11,11 +11,30 @@
 
   <h1>{{ "publication" | translate }}</h1>
 
-  <ul class="images">
+  <!-- <ul class="images">
     <li *ngFor="let image of publication.images">
       <img class="image" [src]="image.url | imagePublication" alt="{{ 'pet_image' | translate }}" (error)="image.url = ''" />
     </li>
-  </ul>
+  </ul> -->
+
+  <div class="container__carrousel">
+    <mat-carousel
+      timings="250ms ease-in"
+      [autoplay]="true"
+      color="warn"
+      [loop]="false"
+      [hideArrows]="publication.images.length === 1"
+      [hideIndicators]="publication.images.length === 1"
+      [useMouseWheel]="false"
+      orientation="ltr"
+      [maintainAspectRatio]="false"
+      slideHeight="500px"
+      maxWidth="500px"
+      class="carrousel"
+    >
+      <mat-carousel-slide #matCarouselSlide *ngFor="let image of publication.images; let i = index" [image]="image.url" [hideOverlay]="true"></mat-carousel-slide>
+    </mat-carousel>
+  </div>
 
   <!-- <li>{{ publication.id }}</li> -->
 
@@ -40,14 +59,12 @@
   <p>{{ publication.sex | translate }}</p>
   <h4>{{ "age" | translate }}</h4>
   <p>{{ publication.age | translate }}</p>
-  <h4>{{ "chip" | translate }}</h4>
-  <p>{{ publication.chip | translate }}</p>
-  <h4>{{ "vaccinate" | translate }}</h4>
-  <p>{{ publication.vaccinate | translate }}</p>
-  <h4>{{ "sterile" | translate }}</h4>
-  <p>{{ publication.sterile | translate }}</p>
-  <h4>{{ "dewormed" | translate }}</h4>
-  <p>{{ publication.dewormed | translate }}</p>
+
+  <p translate="{{ 'chip.' + publication.chip }}"></p>
+  <p translate="{{ 'vaccinate.' + publication.vaccinate }}"></p>
+  <p translate="{{ 'sterile.' + publication.sterile }}"></p>
+  <p translate="{{ 'dewormed.' + publication.dewormed }}"></p>
+  <p translate="{{ 'shipping.' + publication.shipping }}"></p>
 
   <div class="buttons">
     <button (click)="onSharePublication()">{{ "share" | translate }}</button>

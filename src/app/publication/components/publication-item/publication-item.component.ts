@@ -7,6 +7,7 @@ import { PublicationState } from '../../../shared/enums/publication-state';
 import { Publication } from '../../../shared/models/publication.model';
 import { FavoriteService } from '../../../shared/services/favorite.service';
 import { PublicationService } from '../../../shared/services/publication.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Component({
   selector: 'app-publication-item',
@@ -32,7 +33,8 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
     private router: Router,
     private utilsService: UtilsService,
     private publicationService: PublicationService,
-    private favoriteService: FavoriteService
+    private favoriteService: FavoriteService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -102,8 +104,13 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   onSharePublication(): void {
     // Compartir publicación
     // Open the dialog
-    const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
-    window.alert('Link a compartir: ' + shareLink);
+    // const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
+    const options = {
+      name: 'share',
+      shareLink: `publication/${this.publication.state}/details/${this.publication.id}`,
+    };
+    this.dialogService.openButtonsDialog(options);
+    // window.alert('Link a compartir: ' + shareLink);
   }
 
   onDeletePublication(): void {

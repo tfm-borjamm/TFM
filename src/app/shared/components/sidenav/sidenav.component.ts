@@ -19,5 +19,6 @@ export class SidenavComponent implements OnInit {
 
   resetMenuTabs() {
     this.utilsService.removeLocalStorage('menu');
+    this.utilsService.removeLocalStorage('search');
   }
 }

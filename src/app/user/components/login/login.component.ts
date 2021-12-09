@@ -6,6 +6,8 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { UserService } from '../../../shared/services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { Role } from '../../../shared/enums/role.enum';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -18,18 +20,30 @@ export class LoginComponent implements OnInit {
   public email: FormControl;
   public password: FormControl;
 
+  public FACEBOOK_ICON = '../../../../assets/images/facebook.svg';
+  public GOOGLE_ICON = '../../../../assets/images/google.svg';
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
     private utilsService: UtilsService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
+    this.addIcons();
+  }
 
   ngOnInit(): void {
     this.email = new FormControl('', [Validators.required, Validators.email, checkEmail()]);
     this.password = new FormControl('', [Validators.required]);
     this.loginForm = this.createForm();
+  }
+
+  addIcons() {
+    this.matIconRegistry.addSvgIcon('facebook', this.domSanitizer.bypassSecurityTrustResourceUrl(this.FACEBOOK_ICON));
+    this.matIconRegistry.addSvgIcon('google', this.domSanitizer.bypassSecurityTrustResourceUrl(this.GOOGLE_ICON));
   }
 
   createForm(): FormGroup {
@@ -46,10 +60,11 @@ export class LoginComponent implements OnInit {
       const password = this.loginForm.value.password;
       this.authService
         .login(email, password)
-        .then(() => {
+        .then((userAuth) => {
           this.loginForm.reset();
           console.log('Inicio de sesión correcto');
-          this.router.navigate(['/publication/list']);
+          // this.router.navigate(['/publication/list']);
+          this.routeNavigateHome(userAuth.user.uid);
         })
         .catch((e) => {
           this.btnForm.nativeElement.disabled = false;
@@ -86,8 +101,18 @@ export class LoginComponent implements OnInit {
       // if (user?.role === Role.admin) {
       //   this.router.navigate(['/publication/admin']);
       // } else {
-      this.router.navigate(['/publication/list']);
+      // this.router.navigate(['/publication/list']);
       // }
+      this.routeNavigateHome(userAuth.user.uid);
+    }
+  }
+
+  async routeNavigateHome(uid: string) {
+    const user = await this.userService.getUserById(uid);
+    if (user?.role === Role.admin) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/publication/list']);
     }
   }
 

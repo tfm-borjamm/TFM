@@ -1,0 +1,52 @@
+<div *ngIf="option === 'contact'; else share">
+  <p>{{ "contact" | translate }}</p>
+  <mat-nav-list class="list-horizontal" (click)="onDismiss()">
+    <a mat-list-item href="tel:{{ author.telephone }}" target="_blank" rel="noopener noreferrer">
+      <mat-icon>phone</mat-icon>
+    </a>
+    <a mat-list-item href="sms:{{ author.telephone }}&body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">
+      <mat-icon>sms</mat-icon>
+    </a>
+    <a mat-list-item href="https://wa.me/{{ author.telephone }}?text={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">
+      <mat-icon svgIcon="whatsapp" aria-hidden="false" aria-label="Whatsapp icon"></mat-icon>
+    </a>
+    <a mat-list-item href="mailto:{{ author.email }}?body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">
+      <mat-icon>email</mat-icon>
+    </a>
+  </mat-nav-list>
+</div>
+
+<ng-template #share>
+  <mat-nav-list class="list" (click)="onDismiss()">
+    <p mat-subheader>{{ "share" | translate }}</p>
+
+    <mat-list-item class="list__item">
+      <mat-icon mat-list-icon svgIcon="facebook" aria-hidden="false" aria-label="Facebook icon"></mat-icon>
+      <a mat-line href="https://www.facebook.com/sharer/sharer.php?u={{ shareLink }}" target="_blank" rel="noopener noreferrer"> Facebook </a>
+    </mat-list-item>
+
+    <mat-list-item class="list__item">
+      <mat-icon mat-list-icon svgIcon="twitter" aria-hidden="false" aria-label="Twitter icon"></mat-icon>
+      <a mat-line href="https://twitter.com/share?&url={{ shareLink }}&text={{ encode('share_link_message' | translate) }}" target="_blank" rel="noopener noreferrer"> Twitter </a>
+    </mat-list-item>
+
+    <mat-list-item class="list__item">
+      <mat-icon mat-list-icon svgIcon="whatsapp" aria-hidden="false" aria-label="Whatsapp icon"></mat-icon>
+      <a mat-line href="https://wa.me/send?text={{ encode('share_link_message' | translate) }}{{ shareLink }}" target="_blank" rel="noopener noreferrer"> Whatsapp </a>
+    </mat-list-item>
+
+    <mat-list-item class="list__item">
+      <mat-icon mat-list-icon>email</mat-icon>
+      <a mat-line href="mailto:?body={{ encode('share_link_message' | translate) }}{{ shareLink }}" target="_blank" rel="noopener noreferrer"> Email </a>
+    </mat-list-item>
+
+    <mat-list-item class="list__item" (click)="copyLinkToClipboard()">
+      <mat-icon mat-list-icon svgIcon="copy" aria-hidden="false" aria-label="Copy link icon"></mat-icon>
+      <span mat-line>Copy link</span>
+    </mat-list-item>
+  </mat-nav-list>
+
+  <!-- <a href="https://t.me/share/url?url={{ shareLink }}&text={{ encode('share_link_message' | translate) }}" target="_blank" rel="noopener noreferrer">Telegram</a>
+  <a href="fb-messenger://share/?link={{ shareLink }}" target="_blank" rel="noopener noreferrer">Messenger</a>
+  <a href="https://facebook.com/share/?link={{ shareLink }}&app_id=123456789">Messenger</a> -->
+</ng-template>

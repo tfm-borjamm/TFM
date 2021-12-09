@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { CountPipe } from './pipes/count.pipe';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,6 @@ import { CountPipe } from './pipes/count.pipe';
     UserFormComponent,
     CountPipe,
   ],
-  imports: [CommonModule, UserRoutingModule, FormsModule, ReactiveFormsModule, SharedModule],
+  imports: [CommonModule, UserRoutingModule, FormsModule, ReactiveFormsModule, SharedModule, MatIconModule],
 })
 export class UserModule {}
