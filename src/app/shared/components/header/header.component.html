@@ -1,37 +1,115 @@
-<header class="header">
-  <!-- // *ngIf="user?.role != 'admin'" -->
-  <nav class="navigation">
-    <!-- <div class="navigation__container" *ngIf="!user || (user && user.role !== 'admin')"> -->
-    <!-- <p class="navigation__logo">Cats&Dogs</p> -->
-    <!-- <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">Cats&Dogs</a> -->
+<mat-toolbar class="mat-elevation-z2">
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button mat-icon-button (click)="snavStateOnChange.emit()" fxShow="true" fxHide.gt-sm="true">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <mat-nav-list fxLayout="row" *ngIf="user?.role !== 'admin'">
+        <a class="logo" mat-list-item class="navigation_home" routerLink="/publication/list">
+          <!-- <img class="navigation__logo" src="./../../../../assets/images/logo.svg" alt="Logo" /> -->
+          <span mat-line>CATS&DOGS</span>
+        </a>
+      </mat-nav-list>
+
+      <mat-form-field class="language" fxHide="true" fxShow.gt-sm="true">
+        <mat-select [formControl]="language" [value]="languagesForm.value.type" (selectionChange)="onLanguage($event)">
+          <mat-select-trigger class="mark">
+            <mat-icon [svgIcon]="language.value" matSuffix></mat-icon>
+            <span>{{ language.value | uppercase }}</span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let language of languages" [value]="language">
+            <mat-icon [svgIcon]="language" matSuffix></mat-icon>
+            <span>{{ language | uppercase }}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="language" fxShow="true" fxHide.gt-sm="true">
+      <mat-select [formControl]="language" [value]="languagesForm.value.type" (selectionChange)="onLanguage($event)">
+        <mat-select-trigger class="mark">
+          <mat-icon [svgIcon]="language.value" matSuffix></mat-icon>
+          <span>{{ language.value | uppercase }}</span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let language of languages" [value]="language">
+          <mat-icon [svgIcon]="language" matSuffix></mat-icon>
+          <span>{{ language | uppercase }}</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-nav-list fxLayout="row" fxHide="true" fxShow.gt-sm="true">
+      <a mat-list-item routerLinkActive="active-link" routerLink="/publication/list">
+        <mat-icon mat-list-icon>home</mat-icon>
+        <span mat-line>{{ "home" | translate | uppercase }}</span>
+      </a>
+      <a mat-list-item routerLinkActive="active-link" routerLink="/publication/my-publications" (click)="resetMenuTabs()" *ngIf="user && user.role === 'professional'">
+        <mat-icon mat-list-icon>list_alt</mat-icon>
+        <span mat-line>{{ "my_publications" | translate | uppercase }}</span>
+      </a>
+      <a mat-list-item routerLinkActive="active-link" routerLink="/publication/favorites" *ngIf="user && user.role === 'client'">
+        <mat-icon mat-list-icon>favorite_border</mat-icon>
+        <span mat-line>{{ "my_favorites" | translate | uppercase }}</span>
+      </a>
+      <a mat-list-item routerLinkActive="active-link" routerLink="/contact">
+        <mat-icon mat-list-icon>contact_support</mat-icon>
+        <span mat-line>{{ "contact" | translate | uppercase }}</span>
+      </a>
+      <a mat-list-item routerLinkActive="active-link" routerLink="/user/register-social" *ngIf="user && !user?.role">
+        <mat-icon mat-list-icon>check_circle_outline</mat-icon>
+        <span mat-line>{{ "complete_registration" | translate | uppercase }}</span>
+      </a>
+
+      <mat-action-list>
+        <button mat-list-item [matMenuTriggerFor]="menu">
+          <mat-icon mat-list-icon>person</mat-icon>
+          <span *ngIf="!user" mat-line>{{ "log_in" | translate | uppercase }}</span>
+          <span *ngIf="user" mat-line>{{ "my_account" | translate | uppercase }}</span>
+        </button>
+      </mat-action-list>
+    </mat-nav-list>
+
+    <mat-menu #menu="matMenu">
+      <a *ngIf="user" mat-menu-item routerLinkActive="active-link" routerLink="/user/profile">
+        <mat-icon>account_circle</mat-icon>
+        <span mat-line>{{ "profile" | translate | uppercase }}</span>
+      </a>
+      <a *ngIf="user" mat-menu-item class="navigation__link logout" (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span mat-line>{{ "logout" | translate | uppercase }}</span>
+      </a>
+      <a *ngIf="!user" mat-menu-item routerLinkActive="active-link" routerLink="/user/login">
+        <mat-icon>lock_open</mat-icon>
+        <span mat-line>{{ "login" | translate | uppercase }}</span>
+      </a>
+      <a *ngIf="!user" mat-menu-item routerLinkActive="active-link" routerLink="/user/register">
+        <mat-icon>person_add</mat-icon>
+        <span mat-line>{{ "register" | translate | uppercase }}</span>
+      </a>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- <header class="header"> -->
+<!-- <nav class="navigation">
     <a class="navigation_home" routerLink="/publication/list">
       <img class="navigation__logo" src="./../../../../assets/images/logo.svg" alt="Logo" />
     </a>
-    <!-- </div> -->
+    <mat-form-field>
+      <mat-select [formControl]="language" [value]="languagesForm.value.type" (selectionChange)="onLanguage($event)">
+        <mat-select-trigger class="mark">
+          <mat-icon [svgIcon]="language.value" matSuffix></mat-icon>
+          <span>{{ language.value | uppercase }}</span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let language of languages" [value]="language">
+          <mat-icon [svgIcon]="language" matSuffix></mat-icon>
+          <span>{{ language | uppercase }}</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field> -->
 
-    <!-- Selector de idiomas [ES, EN] -->
-    <form class="main__form" [formGroup]="languagesForm">
-      <ul class="main__list">
-        <li class="main__item">
-          <label class="main__label" for="language">{{ "language" | translate }}</label>
-          <select class="main__select" id="size" [formControl]="language" [value]="languagesForm.value.type" (ngModelChange)="onLanguage($event)">
-            <option *ngFor="let language of languages" value="{{ language }}" [selected]="languagesForm.value.language === language">{{ language }}</option>
-          </select>
-          <!-- <select class="main__select" id="language" [formControl]="language" [value]="languagesForm.value.language">
-            <option value="" disabled selected>Selecciona una provincia</option>
-            <option *ngFor="let language of languages" value="{{ language }}" [selected]="languagesForm.value.language === language ? true : false">
-              {{ language }}
-            </option>
-          </select> -->
-        </li>
-      </ul>
-    </form>
-
-    <!-- <div class="navigation__menu" id="menu">
-      <i class="navigation__icon fas fa-bars"></i>
-    </div> -->
-
-    <ul class="navigation__list navigation__list--hidden" id="list">
+<!-- <ul class="navigation__list navigation__list--hidden" id="list">
       <li class="navigation__item" *ngIf="!user || (user && user.role !== 'admin')">
         <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">{{ "home" | translate }}</a>
       </li>
@@ -64,4 +142,31 @@
       </li>
     </ul>
   </nav>
-</header>
+</header> -->
+<!-- Selector de idiomas [ES, EN] -->
+<!-- <form class="main__form" [formGroup]="languagesForm">
+      <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="language">{{ "language" | translate }}</label>
+          <select class="main__select" id="size" [formControl]="language" [value]="languagesForm.value.type" (ngModelChange)="onLanguage($event)">
+            <option *ngFor="let language of languages" value="{{ language }}" [selected]="languagesForm.value.language === language">{{ language }}</option>
+          </select>
+        </li>
+      </ul>
+    </form> -->
+<!-- <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="language">{{ "language" | translate }}</label>
+          <select class="main__select" id="size" [formControl]="language" [value]="languagesForm.value.type" (ngModelChange)="onLanguage($event)">
+            <option *ngFor="let language of languages" value="{{ language }}" [selected]="languagesForm.value.language === language">{{ language }}</option>
+          </select>
+        </li>
+      </ul> -->
+
+<!-- <div class="navigation__menu" id="menu">
+      <i class="navigation__icon fas fa-bars"></i>
+    </div> -->
+
+<!-- <div class="navigation__container" *ngIf="!user || (user && user.role !== 'admin')"> -->
+<!-- <p class="navigation__logo">Cats&Dogs</p> -->
+<!-- <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">Cats&Dogs</a> -->

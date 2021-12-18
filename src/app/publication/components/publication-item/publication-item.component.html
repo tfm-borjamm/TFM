@@ -43,25 +43,27 @@
   <button *ngIf="!isPageMyPublications()" (click)="onSharePublication()">{{ "share" | translate }}</button>
 </div> -->
 
-<mat-card class="mat-elevation-z3">
-  <mat-card-actions class="card__favorite" *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()" align="end">
+<mat-card class="card mat-elevation-z3" [ngClass]="{ adopted: isAdopted }">
+  <!-- <mat-card-actions class="card__favorite"  align="end">
     <button mat-button mat-icon-button *ngIf="!isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_border' | translate }}">
       <mat-icon>favorite_border</mat-icon>
     </button>
     <button mat-button mat-icon-button *ngIf="isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_not_border' | translate }}">
       <mat-icon>favorite</mat-icon>
     </button>
-  </mat-card-actions>
+  </mat-card-actions> -->
+
   <img mat-card-image [src]="image | imagePublication" (error)="image = ''" alt="#" />
-  <mat-card-title>{{ publication.name }}</mat-card-title>
-  <mat-card-subtitle>{{ publication.date | date }}</mat-card-subtitle>
+  <mat-card-title>{{ publication.name | titlecase }}</mat-card-title>
+  <mat-card-subtitle>{{ publication.province }}</mat-card-subtitle>
   <!-- <p>{{ publication.type | translate }}</p> -->
+  <span class="card__banner-state" *ngIf="isAdopted" fxLayout="row" fxLayoutAlign="center end">{{ publication.state | translate | uppercase }}</span>
   <mat-card-content (click)="onDetailsPublication()">
-    {{ publication.description }}
+    {{ publication.description | capitalize }}
   </mat-card-content>
   <mat-divider inset></mat-divider>
+
   <mat-card-actions align="end">
-    <!-- <button mat-button color="warn" (click)="onDeletePublication()" *ngIf="!isClient && isAdopted">{{ "delete" | translate | uppercase }}</button> -->
     <button
       mat-button
       mat-icon-button
@@ -71,6 +73,17 @@
     >
       <mat-icon>delete</mat-icon>
     </button>
+
+    <button
+      mat-button
+      mat-icon-button
+      *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()"
+      (click)="onChangeFavorite()"
+      matTooltip="{{ (isFavorite ? 'favorite_not_border' : 'favorite_border') | translate }}"
+    >
+      <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
+    </button>
+
     <button mat-button mat-icon-button *ngIf="!isPageMyPublications()" (click)="onSharePublication()" matTooltip="{{ 'share' | translate }}">
       <mat-icon>share</mat-icon>
     </button>

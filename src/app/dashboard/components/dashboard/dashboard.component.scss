@@ -1,9 +1,3 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
 .canvas {
   position: relative;
   flex-basis: 100%;
@@ -11,10 +5,11 @@
   margin: 5px;
 }
 
-.count {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+.canvas__spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .count__item {

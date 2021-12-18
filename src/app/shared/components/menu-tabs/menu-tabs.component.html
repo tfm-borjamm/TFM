@@ -5,10 +5,14 @@
   </ul>
 </nav> -->
 
-<mat-tab-group animationDuration="0ms" (selectedTabChange)="onChangeButton($event)">
+<!-- <mat-tab-group animationDuration="0ms" (selectedTabChange)="onChangeButton($event)">
   <mat-tab *ngFor="let tab of tabs" label="{{ tab | translate | uppercase }}"></mat-tab>
-</mat-tab-group>
+</mat-tab-group> -->
 
 <!-- <nav mat-tab-nav-bar [disableRipple]="false">
   <a mat-tab-link *ngFor="let tab of tabs" (click)="onChangeButton(tab)"> {{ tab | translate | uppercase }}</a>
 </nav> -->
+
+<nav mat-tab-nav-bar>
+  <a mat-tab-link *ngFor="let link of links" (click)="onChangeButton(link)" [active]="activeLink == link"> {{ link | translate | uppercase }} </a>
+</nav>

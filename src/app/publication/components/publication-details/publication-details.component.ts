@@ -10,6 +10,7 @@ import { PublicationState } from '../../../shared/enums/publication-state';
 import { Publication } from '../../../shared/models/publication.model';
 import { FavoriteService } from '../../../shared/services/favorite.service';
 import { PublicationService } from '../../../shared/services/publication.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Component({
   selector: 'app-publication-details',
@@ -44,7 +45,8 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private location: Location,
     private userService: UserService, // User service
-    private authService: AuthService // Auth service
+    private authService: AuthService, // Auth service
+    private dialogService: DialogService
   ) {
     console.log(this.activatedRoute.snapshot.data);
 
@@ -79,6 +81,7 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     this.isAdopted = this.publication.state === PublicationState.adopted;
 
     this.author = await this.userService.getUserById(this.publication.idAuthor);
+
     this.currentUser = await this.authService.getCurrentUserLogged();
 
     // Usuario actual:
@@ -140,19 +143,24 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSharePublication(): void {
-    console.log('Compartir publicación');
     const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
-    window.alert('Link a compartir: ' + shareLink);
+    const options: any = {
+      name: 'share',
+      shareLink: shareLink,
+    };
+    this.dialogService.openButtonsDialog(options);
   }
 
   onProfileAuthor(id: string): void {
     this.router.navigate(['user', 'profile', id]);
   }
 
-  onContactAuthor() {
-    // Open to dialog
-    console.log('Contactar con el autor', this.author);
-    window.alert('Contactar con el autor\n - Email: ' + this.author.email + '\n - Teléfono: ' + this.author.telephone);
+  onContactAuthor(): void {
+    const options: any = {
+      name: 'contact',
+      author: this.author,
+    };
+    this.dialogService.openButtonsDialog(options);
   }
 
   // encode(message: string): string {

@@ -1,1 +1,1 @@
-export const languages: string[] = ['ES', 'EN'];
+export const languages: string[] = ['es', 'en'];

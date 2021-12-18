@@ -14,3 +14,20 @@
 //   margin: 1rem;
 //   background-color: indianred;
 // }
+
+.welcome {
+  margin: 1rem 1rem 3rem 1.4rem;
+}
+
+.welcome > p {
+  font-size: 2rem;
+}
+
+.mat-nav-list,
+.mat-action-list {
+  padding-top: 0 !important;
+}
+
+::ng-deep .menu .mat-menu-content:not(:empty) {
+  width: 230px !important;
+}

@@ -1,5 +1,5 @@
 <!-- <p>user-form works!</p> -->
-<main class="main" *ngIf="user">
+<!-- <main class="main" *ngIf="user">
   <div class="main__container">
     <h1 class="main__title" *ngIf="!id">{{ "profile" | translate }}</h1>
     <h1 class="main__title" *ngIf="id">{{ "edit_user" | translate }}</h1>
@@ -86,4 +86,111 @@
       </ul>
     </form>
   </div>
+</main> -->
+
+<main class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
+  <h1 class="main__title" *ngIf="!id">{{ "profile" | translate }}</h1>
+  <h1 class="main__title" *ngIf="id">{{ "edit_user" | translate }}</h1>
+
+  <form class="container__form" [formGroup]="editForm" (ngSubmit)="onEdit()">
+    <ul class="container__list">
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Nombre -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "name" | translate }} (*)</mat-label>
+          <input matInput type="text" id="name" [formControl]="name" placeholder="{{ 'name' | translate }}" />
+          <mat-error *ngIf="editForm.get('name').errors && (editForm.get('name').touched || editForm.get('name').dirty)">
+            <span *ngIf="editForm.get('name').errors?.required">Este campo es obligatorio</span>
+            <span *ngIf="editForm.get('name').errors?.minlength">Este campo debe tener mínimo 3 caracteres</span>
+            <span *ngIf="editForm.get('name').errors?.maxlength">Este campo no debe tener más de 55 caracteres</span>
+            <span *ngIf="editForm.get('name').errors?.pattern">Este campo no debe tener espacios ni caracteres especiales</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "email" | translate }} (*)</mat-label>
+          <input matInput type="email" id="email" [formControl]="email" placeholder="{{ 'email' | translate }}" />
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Postal code -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "postal_code" | translate }} (*)</mat-label>
+          <input matInput type="text" id="cp" [formControl]="cp" placeholder="{{ 'postal_code' | translate }}" />
+          <mat-error *ngIf="editForm.get('cp').errors && (editForm.get('cp').touched || editForm.get('cp').dirty)">
+            <span *ngIf="editForm.get('cp').errors?.required">Este campo es obligatorio</span>
+            <span *ngIf="editForm.get('cp').errors?.pattern">Este campo sólo puede contener números</span>
+            <span *ngIf="editForm.get('cp').errors?.maxlength || editForm.get('cp').errors?.minlength">Este campo debe tener 5 dígitos</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Street -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "street" | translate }} (*)</mat-label>
+          <input matInput type="text" id="street" [formControl]="street" placeholder="{{ 'street' | translate }}" />
+          <mat-error *ngIf="editForm.get('street').errors && (editForm.get('street').touched || editForm.get('street').dirty)">
+            <span *ngIf="editForm.get('street').errors?.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Code -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "code" | translate }} (*)</mat-label>
+          <mat-select [formControl]="code">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_code" | translate }}</mat-option>
+            <mat-option *ngFor="let code of codes" [value]="code">{{ code }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="editForm.get('code').errors && (editForm.get('code').touched || editForm.get('code').dirty)">
+            <span *ngIf="editForm.get('code').errors?.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Telephone -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "telephone" | translate }} (*)</mat-label>
+          <input matInput type="text" id="telephone" [formControl]="telephone" placeholder="{{ 'telephone' | translate }}" />
+          <mat-error *ngIf="editForm.get('telephone').errors && (editForm.get('telephone').touched || editForm.get('telephone').dirty)">
+            <span *ngIf="editForm.get('telephone').errors?.required">Este campo es obligatorio</span>
+            <span *ngIf="editForm.get('telephone').errors?.pattern">Este campo sólo puede contener dígitos</span>
+            <span *ngIf="editForm.get('telephone').errors?.maxlength || editForm.get('telephone').errors?.minlength"> Este campo debe tener 9 dígitos </span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Account type (role) -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "account_type" | translate }} (*)</mat-label>
+          <mat-select [formControl]="role">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_role" | translate }}</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role">{{ role | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Province -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "province" | translate }} (*)</mat-label>
+          <mat-select [formControl]="province">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_province" | translate }}</mat-option>
+            <mat-option *ngFor="let province of provinces" [value]="province">{{ province | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="editForm.get('province').errors && (editForm.get('province').touched || editForm.get('province').dirty)">
+            <span *ngIf="editForm.get('province').errors?.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <!-- Sign in button -->
+      <li class="container__item" align="end" fxFlexFill>
+        <button class="container__button" mat-flat-button color="primary" type="submit" [disabled]="editForm.invalid || btnSubmitted">
+          <app-loading *ngIf="btnSubmitted" class="container__loading" [diameter]="20" [display]="'inline'"></app-loading>
+          <span>{{ "save" | translate }}</span>
+        </button>
+      </li>
+    </ul>
+  </form>
 </main>

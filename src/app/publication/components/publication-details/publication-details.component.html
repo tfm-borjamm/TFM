@@ -43,11 +43,11 @@
   <h4>{{ "date" | translate }}</h4>
   <p>{{ publication.date | date }}</p>
   <h4>{{ "description" | translate }}</h4>
-  <p>{{ publication.description }}</p>
+  <p>{{ publication.description | capitalize }}</p>
   <h4>{{ "province" | translate }}</h4>
   <p>{{ publication.province }}</p>
   <h4>{{ "breed" | translate }}</h4>
-  <p>{{ publication.breed }}</p>
+  <p>{{ publication.breed | titlecase }}</p>
 
   <h4>{{ "type" | translate }}</h4>
   <p>{{ publication.type | translate }}</p>

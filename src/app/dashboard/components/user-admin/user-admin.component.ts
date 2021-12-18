@@ -3,6 +3,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from '../../../shared/enums/role.enum';
 import { User } from '../../../shared/models/user.model';
@@ -21,37 +25,70 @@ export class UserAdminComponent implements OnInit, OnDestroy {
 
   // public defaultTab = Role.client;
   // public tabs = Object.values(Role).splice(1);
-  public defaultTab = 'clients';
-  public tabs = ['clients', 'professionals'];
+  // public defaultLink = 'clients';
+  public links = ['clients', 'professionals'];
 
   // public currentUserID: string;
 
-  public tab: string;
+  public link: string;
 
   displayedColumns: string[] = ['name', 'email', 'telephone', 'province', 'star'];
   dataSource: any = new MatTableDataSource<User>([]);
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  // @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
+  public subscriptionTranslate: Subscription;
 
   public showFilter: boolean = false;
+  public itemsLoaded: Promise<boolean>;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private utilsService: UtilsService,
-    private authService: AuthService
+    private translateService: TranslateService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService
   ) {
-    const search = this.utilsService.getLocalStorage('search');
-    const params = search;
-    if (params) {
-      this.dataSource.filter = params.search;
-      // this.showFilter = true;
-    }
+    // const search = this.utilsService.getLocalStorage('search');
+    // const params = search;
+    // if (params) {
+    //   this.dataSource.filter = params.search;
+    //   // this.showFilter = true;
+    // }
   }
 
   ngOnInit(): void {}
 
-  async loadUsers(tabMenu: string): Promise<void> {
+  ngAfterViewInit() {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      this.itemsLoaded = null;
+      const wordFilter =
+        data.name.toLowerCase() + data.email.toLowerCase() + data.telephone.toLowerCase() + data.province.toLowerCase();
+      this.itemsLoaded = Promise.resolve(true);
+      return wordFilter.indexOf(filter) != -1;
+    };
+
+    this.subscriptionTranslate = this.translateService.onLangChange.subscribe(() => this.translatePagination());
+    this.translatePagination();
+  }
+
+  translatePagination() {
+    this.paginator._intl.itemsPerPageLabel = this.translateService.instant('ITEMS_PER_PAGE');
+    this.paginator._intl.nextPageLabel = this.translateService.instant('NEXT_PAGE');
+    this.paginator._intl.previousPageLabel = this.translateService.instant('PREV_PAGE');
+    this.paginator._intl.firstPageLabel = this.translateService.instant('FIRST_PAGE');
+    this.paginator._intl.lastPageLabel = this.translateService.instant('LAST_PAGE');
+    const originalGetRangeLabel = this.paginator._intl.getRangeLabel;
+    this.paginator._intl.getRangeLabel = (page: number, size: number, len: number) => {
+      return originalGetRangeLabel(page, size, len).replace(
+        this.translateService.currentLang === 'es' ? 'of' : 'de',
+        this.translateService.instant('of')
+      );
+    };
+    this.dataSource.paginator = this.paginator;
+  }
+
+  async loadUsers(link: string): Promise<void> {
     // this.currentUserID = await this.authService.getCurrentUserUID();
 
     // this.users = this.users.filter((user) => {
@@ -68,11 +105,12 @@ export class UserAdminComponent implements OnInit, OnDestroy {
     // this.usersV0 = this.users;
     // this.name = '';
 
-    this.tab = tabMenu.substring(0, tabMenu.length - 1); // delete plural 's' letter
-    this.users = await this.userService.getUsersAdmin(this.tab);
+    this.link = link.substring(0, link.length - 1); // delete plural 's' letter
+    this.users = await this.userService.getUsersAdmin(this.link);
     this.dataSource.data = this.users;
     this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort;
+    this.itemsLoaded = Promise.resolve(true);
   }
 
   // filterAdmin(user: User) {
@@ -84,9 +122,11 @@ export class UserAdminComponent implements OnInit, OnDestroy {
     // Filter name search
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    this.utilsService.setLocalStorage('search', {
-      search: this.dataSource.filter,
-    });
+    if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+
+    // this.utilsService.setLocalStorage('search', {
+    //   search: this.dataSource.filter,
+    // });
 
     // this.name = filterValue.toLowerCase();
     // this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
@@ -94,29 +134,31 @@ export class UserAdminComponent implements OnInit, OnDestroy {
 
   resetFilter() {
     this.dataSource.filter = '';
-    this.utilsService.removeLocalStorage('search');
+    // this.utilsService.removeLocalStorage('search');
   }
 
   // isEqualNames(name1: string, name2: string): boolean {
   //   return name1.includes(name2);
   // }
 
-  onDeleteUser(user: User) {
+  async onDeleteUser(user: User) {
     // Método para eliminar un usuario
-    if (window.confirm('¿Está seguro de que desea eliminar el usuario?')) {
+    const confirmation = await this.dialogService.confirm(
+      '¿Esta seguro de que desea eliminar el usuario? Esta acción no se puede deshacer'
+    );
+    if (confirmation) {
       this.userService
         .deleteUser(user)
         .then(async (a) => {
-          console.log('Se ha eliminado correctamente el usuario', a);
-          this.users = this.users.filter((x) => x.id !== user.id); // Localmente!
-          const response = await this.utilsService.deleteUser(user.id).catch((e) => this.utilsService.errorHandling(e));
-          if (response) {
-            console.log('Respuesta: ', response);
-          }
+          // console.log('Se ha eliminado correctamente el usuario', a);
+          // this.users = this.users.filter((x) => x.id !== user.id); // Localmente!
+          await this.utilsService.deleteUser(user.id).catch((e) => this.utilsService.errorHandling(e));
+          this.dataSource.data = this.dataSource.data.filter((user: User) => user.id !== user.id);
+          this.notificationService.successNotification('publication.delete');
         })
         .catch((e) => this.utilsService.errorHandling(e));
     } else {
-      console.log('El usuario ha cancelado');
+      this.notificationService.infoNotification('Se ha cancelado la operación');
     }
   }
 
@@ -139,5 +181,6 @@ export class UserAdminComponent implements OnInit, OnDestroy {
     //   console.log('Destruimos el subscribe');
     //   this.subscriptionTab.unsubscribe();
     // }
+    if (!this.subscriptionTranslate.closed) this.subscriptionTranslate.unsubscribe();
   }
 }

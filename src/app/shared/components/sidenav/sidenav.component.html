@@ -1,23 +1,89 @@
-<!-- <p>sidenav works!</p> -->
-
-<div class="container" *ngIf="user">
-  <div class="navigation__container">
-    <a class="navigation__link" routerLinkActive="active-link" routerLink="/publication/list">Cats&Dogs</a>
+<div fxLayout="column">
+  <div align="end" fxShow="true" fxHide.gt-sm="true">
+    <button mat-icon-button (click)="onCloseSidenav()">
+      <mat-icon mat-line>close</mat-icon>
+    </button>
   </div>
-  <h1>{{ "welcome" | translate }}</h1>
-  <span>{{ user.name }}</span>
-  <ul class="navigation__list navigation__list--hidden" id="list">
-    <li class="navigation__item">
-      <a class="navigation__link" routerLinkActive="active-link" routerLink="/dashboard" (click)="resetMenuTabs()">{{ "general" | translate }}</a>
-    </li>
-    <li class="navigation__item">
-      <a class="navigation__link" routerLinkActive="active-link" routerLink="/dashboard/users" (click)="resetMenuTabs()">{{ "users" | translate }}</a>
-    </li>
-    <li class="navigation__item">
-      <a class="navigation__link" routerLinkActive="active-link" routerLink="/dashboard/publications" (click)="resetMenuTabs()">{{ "publications" | translate }}</a>
-    </li>
-    <li class="navigation__item">
-      <a class="navigation__link" routerLinkActive="active-link" routerLink="/dashboard/consults" (click)="resetMenuTabs()">{{ "consults" | translate }}</a>
-    </li>
-  </ul>
+
+  <mat-nav-list (click)="onCloseSidenav()">
+    <a mat-list-item class="logo" class="navigation_home" routerLink="/publication/list">
+      <span mat-line>CATS&DOGS</span>
+    </a>
+  </mat-nav-list>
+
+  <div class="welcome" *ngIf="user">
+    <p>{{ "welcome" | translate }}</p>
+    <span>{{ user.name | titlecase }}</span>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <mat-nav-list fxLayout="column" (click)="onCloseSidenav()">
+    <a mat-list-item routerLinkActive="active-link" routerLink="/publication/list" fxShow="true" fxHide.gt-sm="true">
+      <mat-icon mat-list-icon>home</mat-icon>
+      <span mat-line>{{ "home" | translate | uppercase }}</span>
+    </a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/publication/my-publications" (click)="resetMenuTabs()" *ngIf="user?.role === 'professional'">
+      <mat-icon mat-list-icon>list_alt</mat-icon>
+      <span mat-line>{{ "my_publications" | translate | uppercase }}</span>
+    </a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/publication/favorites" *ngIf="user?.role === 'client'">
+      <mat-icon mat-list-icon>favorite_border</mat-icon>
+      <span mat-line>{{ "my_favorites" | translate | uppercase }}</span>
+    </a>
+
+    <a mat-list-item routerLinkActive="active-link" routerLink="/dashboard" (click)="resetMenuTabs()" *ngIf="user?.role === 'admin'">
+      <mat-icon mat-list-icon>dashboard</mat-icon>
+      <span mat-line>{{ "general" | translate | uppercase }}</span>
+    </a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/dashboard/users" (click)="resetMenuTabs()" *ngIf="user?.role === 'admin'">
+      <mat-icon mat-list-icon>people_alt</mat-icon>
+      <span mat-line>{{ "users" | translate | uppercase }}</span>
+    </a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/dashboard/publications" (click)="resetMenuTabs()" *ngIf="user?.role === 'admin'">
+      <mat-icon mat-list-icon>view_list</mat-icon>
+      <span mat-line>{{ "publications" | translate | uppercase }}</span>
+    </a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/dashboard/consults" (click)="resetMenuTabs()" *ngIf="user?.role === 'admin'">
+      <mat-icon mat-list-icon>forum</mat-icon>
+      <span mat-line>{{ "consults" | translate | uppercase }}</span>
+    </a>
+
+    <a mat-list-item routerLinkActive="active-link" routerLink="/contact" fxShow="true" fxHide.gt-sm="true">
+      <mat-icon mat-list-icon>contact_support</mat-icon>
+      <span mat-line>{{ "contact" | translate | uppercase }}</span>
+    </a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/user/register-social" *ngIf="user && !user?.role">
+      <mat-icon mat-list-icon>check_circle_outline</mat-icon>
+      <span mat-line>{{ "complete_registration" | translate | uppercase }}</span>
+    </a>
+  </mat-nav-list>
+
+  <mat-nav-list fxShow="true" fxHide.gt-sm="true">
+    <mat-action-list>
+      <button mat-list-item [matMenuTriggerFor]="menu">
+        <mat-icon mat-list-icon>person</mat-icon>
+        <span *ngIf="!user" mat-line>{{ "log_in" | translate | uppercase }}</span>
+        <span *ngIf="user" mat-line>{{ "my_account" | translate | uppercase }}</span>
+      </button>
+    </mat-action-list>
+    <mat-menu #menu="matMenu" xPosition="before" class="menu">
+      <a *ngIf="user" mat-menu-item routerLinkActive="active-link" routerLink="/user/profile" (click)="onCloseSidenav()">
+        <mat-icon>account_circle</mat-icon>
+        <span mat-line>{{ "profile" | translate | uppercase }}</span>
+      </a>
+      <a *ngIf="user" mat-menu-item class="navigation__link logout" (click)="onLogout()" (click)="onCloseSidenav()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span mat-line>{{ "logout" | translate | uppercase }}</span>
+      </a>
+      <a *ngIf="!user" mat-menu-item routerLinkActive="active-link" routerLink="/user/login" (click)="onCloseSidenav()">
+        <mat-icon>lock_open</mat-icon>
+        <span mat-line>{{ "login" | translate | uppercase }}</span>
+      </a>
+      <a *ngIf="!user" mat-menu-item routerLinkActive="active-link" routerLink="/user/register" (click)="onCloseSidenav()">
+        <mat-icon>person_add</mat-icon>
+        <span mat-line>{{ "register" | translate | uppercase }}</span>
+      </a>
+    </mat-menu>
+  </mat-nav-list>
 </div>

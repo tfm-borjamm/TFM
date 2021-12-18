@@ -32,6 +32,7 @@ export class RegisterSocialComponent implements OnInit {
   public roles: any;
 
   public user: User;
+  public btnSubmitted: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -96,10 +97,11 @@ export class RegisterSocialComponent implements OnInit {
 
   async onRegister() {
     if (this.registerForm.valid) {
-      this.btnForm.nativeElement.disabled = true;
+      // this.btnForm.nativeElement.disabled = true;
+      this.btnSubmitted = true;
       const user: User = {
         ...this.user,
-        street: this.registerForm.value.street,
+        street: this.registerForm.value.street.toLowerCase(),
         province: this.registerForm.value.province,
         role: this.registerForm.value.role,
         code: this.registerForm.value.code,
@@ -122,7 +124,8 @@ export class RegisterSocialComponent implements OnInit {
           }
         })
         .catch((e) => {
-          this.btnForm.nativeElement.disabled = false;
+          // this.btnForm.nativeElement.disabled = false;
+          this.btnSubmitted = false;
           this.utilsService.errorHandling(e);
         });
     }

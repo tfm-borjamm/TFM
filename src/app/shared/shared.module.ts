@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingComponent } from './components/loading/loading.component';
@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuTabsComponent } from './components/menu-tabs/menu-tabs.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { MomentModule } from 'ngx-moment';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -21,6 +22,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SocialDialogComponent } from './components/social-dialog/social-dialog.component';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+import { MatMenuModule } from '@angular/material/menu';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -33,6 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
     PageNotFoundComponent,
     ConfirmDialogComponent,
     SocialDialogComponent,
+    CapitalizePipe,
   ],
   imports: [
     CommonModule,
@@ -47,6 +56,11 @@ import { MatIconModule } from '@angular/material/icon';
     MatProgressSpinnerModule,
     MatListModule,
     MatIconModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatToolbarModule,
+    MatMenuModule,
+    FlexLayoutModule,
   ], // No Translate Module
   exports: [
     TranslateModule,
@@ -57,6 +71,8 @@ import { MatIconModule } from '@angular/material/icon';
     NoResultsComponent,
     LoadingComponent,
     MenuTabsComponent,
+    CapitalizePipe,
   ],
+  providers: [CapitalizePipe, TitleCasePipe],
 })
 export class SharedModule {}

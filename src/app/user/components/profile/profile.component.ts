@@ -66,7 +66,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onContactUser() {
-    console.log('Contactar con: ', this.user);
     const options: any = {
       name: 'contact',
       author: this.user,

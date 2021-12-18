@@ -20,6 +20,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
 
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 @NgModule({
   declarations: [
     PublicationDetailsComponent,
@@ -42,6 +48,10 @@ import { MatCarouselModule } from '@ngbmodule/material-carousel';
     MatTooltipModule,
     MatDividerModule,
     MatCarouselModule.forRoot(),
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FlexLayoutModule,
   ],
 })
 export class PublicationModule {}

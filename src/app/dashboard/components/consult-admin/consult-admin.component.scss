@@ -15,30 +15,29 @@
 //   padding: 0;
 // }
 
-.example-container {
+.container__table {
   max-width: 100%;
   overflow: auto;
 }
 
-table {
+.container__table-data {
   width: 100%;
 }
 
 .mat-header-cell:not(.star, .nodata),
 .mat-cell:not(.star, .nodata) {
-  // border: 1px solid red;
   min-width: 150px;
-  text-align: center;
+  padding-right: 20px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: 1px;
+  max-width: 100px;
 }
 
-.mat-cell:not(.star, .nodata):first-letter {
-  text-transform: capitalize;
-}
+// .mat-cell:not(.star, .nodata):first-letter {
+//   text-transform: capitalize;
+// }
 
 .mat-cell.star {
   text-align: right;
@@ -60,6 +59,10 @@ table {
 .filters {
   display: flex;
   flex-direction: column;
+}
+
+.unread {
+  font-weight: 600;
 }
 
 // ::ng-deep .mat-sort-header-container {

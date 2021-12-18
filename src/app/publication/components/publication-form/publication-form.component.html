@@ -1,7 +1,7 @@
 <!-- <p>Reciclaremos este componente tanto para crear / editar una publicación para las protectoras y el administrador</p> -->
 
 <!-- Formulario para editar o añadir una publicación -->
-<main class="main" *ngIf="publicationForm">
+<!-- <main class="main" *ngIf="publicationForm">
   <div class="main__container">
     <h1 class="main__title">{{ "publication" | translate }}</h1>
     <form class="main__form" [formGroup]="publicationForm" (ngSubmit)="onSubmit()">
@@ -125,9 +125,9 @@
           <div class="errors" *ngIf="publicationForm.get('shipping').errors && (publicationForm.get('shipping').touched || publicationForm.get('shipping').dirty)">
             <span class="errors__msg" *ngIf="publicationForm.get('shipping').errors.required">Este campo es obligatorio</span>
           </div>
-        </li>
+        </li> -->
 
-        <!-- <li class="main__item">
+<!-- <li class="main__item">
           <label class="main__label" for="chip">Con chip (*)</label>
           <select class="main__select" id="chip" [formControl]="chip" [value]="publicationForm.value.chip">
             <option value="" disabled selected>{{"select_a_option" | translate}}</option>
@@ -138,7 +138,7 @@
           </div>
         </li> -->
 
-        <li class="main__item">
+<!-- <li class="main__item">
           <label class="main__label" for="age">{{ "age" | translate }} (*)</label>
           <select class="main__select" id="age" [formControl]="age" [value]="publicationForm.value.age">
             <option value="" disabled selected>{{ "select_a_option" | translate }}</option>
@@ -150,9 +150,9 @@
         </li>
 
         <li class="main__item main__item--description">
-          <label class="main__label" for="image">{{ "image" | translate }} (*)</label>
-          <!-- <input #input class="main__file" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple /> -->
-          <input [formControl]="image" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple />
+          <label class="main__label" for="image">{{ "image" | translate }} (*)</label> -->
+<!-- <input #input class="main__file" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple /> -->
+<!-- <input [formControl]="image" title="" type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple />
           <div class="container__media" *ngIf="files.length !== 0">
             <div *ngFor="let file of files">
               <img class="container__image" src="{{ file.url || file.src }}" alt="Preimagen" />
@@ -162,9 +162,9 @@
           <div *ngIf="publicationForm.get('image').touched || publicationForm.get('image').dirty">
             <span *ngIf="files.length === 0">Este campo es obligatorio</span>
           </div>
-        </li>
+        </li> -->
 
-        <!-- <li class="main__item" *ngIf="publication">
+<!-- <li class="main__item" *ngIf="publication">
             <div class="main__container-img">
               <img *ngIf="imageURL" class="main__fileImg" src="{{ imageURL }}" alt="Preimagen" />
               <ngb-progressbar *ngIf="porcentaje !== 0 && porcentaje !== 100" class="main__progress-bar" [value]="porcentaje" type="dark" striped="true" animated="true"></ngb-progressbar>
@@ -172,7 +172,7 @@
             </div>
           </li> -->
 
-        <li class="main__item main__item--description">
+<!-- <li class="main__item main__item--description">
           <label class="main__label" for="description">{{ "description" | translate }} (*)</label>
           <textarea class="main__textarea" name="description" id="description" [formControl]="description" cols="100" rows="10"></textarea>
           <div class="errors" *ngIf="publicationForm.get('description').errors && (publicationForm.get('description').touched || publicationForm.get('description').dirty)">
@@ -187,4 +187,201 @@
       </ul>
     </form>
   </div>
+</main> -->
+
+<main class="container" *ngIf="publicationForm" fxLayout="column" fxLayoutAlign="center center">
+  <h1 class="main__title">{{ "publication" | translate }}</h1>
+  <form class="container__form" [formGroup]="publicationForm" (ngSubmit)="onSubmit()">
+    <ul class="container__list" fxLayout="row wrap" fxLayout.lt-sm="column">
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Nombre -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "name" | translate }} (*)</mat-label>
+          <input matInput type="text" id="name" [formControl]="name" placeholder="{{ 'name' | translate }}" />
+          <mat-error *ngIf="publicationForm.get('name').errors && (publicationForm.get('name').touched || publicationForm.get('name').dirty)">
+            <span *ngIf="publicationForm.get('name').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Tamaño -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "size" | translate }} (*)</mat-label>
+          <mat-select [formControl]="size">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let size of sizes" [value]="size">{{ size | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('size').errors && (publicationForm.get('size').touched || publicationForm.get('size').dirty)">
+            <span *ngIf="publicationForm.get('size').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Tipo de mascota -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "pet_type" | translate }} (*)</mat-label>
+          <mat-select [formControl]="type">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let type of types" [value]="type">{{ type | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('type').errors && (publicationForm.get('type').touched || publicationForm.get('type').dirty)">
+            <span *ngIf="publicationForm.get('type').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Sexo -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "sex" | translate }} (*)</mat-label>
+          <mat-select [formControl]="sex">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let sex of sexs" [value]="sex">{{ sex | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('sex').errors && (publicationForm.get('sex').touched || publicationForm.get('sex').dirty)">
+            <span *ngIf="publicationForm.get('sex').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Province -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "province" | translate }} (*)</mat-label>
+          <mat-select [formControl]="province">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_province" | translate }}</mat-option>
+            <mat-option *ngFor="let province of provinces" [value]="province">{{ province }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('province').errors && (publicationForm.get('province').touched || publicationForm.get('province').dirty)">
+            <span *ngIf="publicationForm.get('province').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Vaccinate -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "vaccinate" | translate }} (*)</mat-label>
+          <mat-select [formControl]="vaccinate">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let vaccinate of vaccinates" [value]="vaccinate">{{ vaccinate | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('vaccinate').errors && (publicationForm.get('vaccinate').touched || publicationForm.get('vaccinate').dirty)">
+            <span *ngIf="publicationForm.get('vaccinate').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Sterile -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "sterile" | translate }} (*)</mat-label>
+          <mat-select [formControl]="sterile">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let sterile of steriles" [value]="sterile">{{ sterile | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('sterile').errors && (publicationForm.get('sterile').touched || publicationForm.get('sterile').dirty)">
+            <span *ngIf="publicationForm.get('sterile').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Breed -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "breed" | translate }} (*)</mat-label>
+          <input matInput type="text" id="breed" [formControl]="breed" placeholder="{{ 'breed' | translate }}" />
+          <mat-error *ngIf="publicationForm.get('breed').errors && (publicationForm.get('breed').touched || publicationForm.get('breed').dirty)">
+            <span *ngIf="publicationForm.get('breed').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Dewormed -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "dewormed" | translate }} (*)</mat-label>
+          <mat-select [formControl]="dewormed">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let dewormed of dewormeds" [value]="dewormed">{{ dewormed | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('dewormed').errors && (publicationForm.get('dewormed').touched || publicationForm.get('dewormed').dirty)">
+            <span *ngIf="publicationForm.get('dewormed').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Chip -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "chip" | translate }} (*)</mat-label>
+          <mat-select [formControl]="chip">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let chip of chips" [value]="chip">{{ chip | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('chip').errors && (publicationForm.get('chip').touched || publicationForm.get('chip').dirty)">
+            <span *ngIf="publicationForm.get('chip').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Shipping -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "shipping" | translate }} (*)</mat-label>
+          <mat-select [formControl]="shipping">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let shipping of shippings" [value]="shipping">{{ shipping | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('shipping').errors && (publicationForm.get('shipping').touched || publicationForm.get('shipping').dirty)">
+            <span *ngIf="publicationForm.get('shipping').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Age -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "age" | translate }} (*)</mat-label>
+          <mat-select [formControl]="age">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_option" | translate }}</mat-option>
+            <mat-option *ngFor="let age of ages" [value]="age">{{ age | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="publicationForm.get('age').errors && (publicationForm.get('age').touched || publicationForm.get('age').dirty)">
+            <span *ngIf="publicationForm.get('age').errors.required">Este campo es obligatorio</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <!-- Description -->
+      <li class="container__item" fxFlexFill>
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "description" | translate }} (*)</mat-label>
+          <textarea class="container__textarea" matInput [formControl]="description" placeholder="{{ 'description' | translate }}"></textarea>
+          <mat-error *ngIf="publicationForm.get('description').errors && (publicationForm.get('description').touched || publicationForm.get('description').dirty)">
+            <span *ngIf="publicationForm.get('description').errors.required">Este campo es obligatorio</span>
+            <span *ngIf="publicationForm.get('description').errors.minlength">Debe contener mínimo 50 caracteres</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <!-- Image -->
+      <li class="container__item" fxFlexFill>
+        <mat-label>{{ "image" | translate }} (*)</mat-label>
+        <input #fileInput [formControl]="image" hidden type="file" id="image" accept="image/*" (change)="changeImage($event)" multiple />
+
+        <div class="container__media" fxLayout="row wrap" fxLayoutAlign="center center">
+          <button class="container__media-button" type="button" mat-flat-button (click)="fileInput.click(); image.markAsDirty()" *ngIf="files.length === 0">Choose File</button>
+          <ul class="container__media-list" *ngIf="files.length !== 0" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutAlign.lt-md="center center">
+            <li class="container__media-item" *ngFor="let file of files" fxLayout="column">
+              <img class="container__source" src="{{ file.url || file.src }}" alt="Preimagen" />
+              <button fxFlexFill mat-flat-button color="warn" class="container__delete-button" type="button" (click)="deleteImage(file)">Eliminar</button>
+            </li>
+          </ul>
+        </div>
+
+        <mat-error class="container__error" *ngIf="publicationForm.get('image').touched || publicationForm.get('image').dirty">
+          <span *ngIf="files.length === 0">Este campo es obligatorio</span>
+        </mat-error>
+      </li>
+
+      <!-- Sign in button -->
+      <li class="container__item" align="end" fxFlexFill>
+        <button class="container__button" mat-flat-button color="primary" type="submit" [disabled]="publicationForm.invalid || files.length === 0 || btnSubmitted">
+          <app-loading *ngIf="btnSubmitted" class="container__loading" [diameter]="20" [display]="'inline'"></app-loading>
+          <span>{{ "to_post" | translate }}</span>
+        </button>
+      </li>
+    </ul>
+  </form>
 </main>

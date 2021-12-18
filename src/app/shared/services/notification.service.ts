@@ -8,15 +8,42 @@ import { TranslateService } from '@ngx-translate/core';
 export class NotificationService {
   constructor(private _snackBar: MatSnackBar, private translate: TranslateService) {}
 
-  sendNotification(
+  successNotification(
     message: string,
     action: string = 'close',
-    position: MatSnackBarConfig = {
+    config: MatSnackBarConfig = {
       horizontalPosition: 'end',
       verticalPosition: 'bottom',
-      duration: 3000,
+      duration: 8000,
+      panelClass: ['snackbar__success'],
     }
-  ) {
-    this._snackBar.open(this.translate.instant(message), this.translate.instant(action), position);
+  ): void {
+    this._snackBar.open(this.translate.instant(message), this.translate.instant(action), config);
+  }
+
+  infoNotification(
+    message: string,
+    action: string = 'close',
+    config: MatSnackBarConfig = {
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      duration: 8000,
+      panelClass: ['snackbar__info'],
+    }
+  ): void {
+    this._snackBar.open(this.translate.instant(message), this.translate.instant(action), config);
+  }
+
+  errorNotification(
+    message: string,
+    action: string = 'close',
+    config: MatSnackBarConfig = {
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      duration: 8000,
+      panelClass: ['snackbar__error'],
+    }
+  ): void {
+    this._snackBar.open(this.translate.instant(message), this.translate.instant(action), config);
   }
 }

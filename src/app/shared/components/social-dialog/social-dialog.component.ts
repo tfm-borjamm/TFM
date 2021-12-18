@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { User } from '../../models/user.model';
+import { NotificationService } from '../../services/notification.service';
 import { UtilsService } from '../../services/utils.service';
 
 @Component({
@@ -24,10 +25,13 @@ export class SocialDialogComponent implements OnInit {
   public WHATSAPP_ICON = '../../../../assets/images/whatsapp.svg';
   public COPY_ICON = '../../../../assets/images/copy.svg';
 
+  public telephone: string;
+
   constructor(
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     private utilsService: UtilsService,
+    private notificationService: NotificationService,
     public dialogRef: MatDialogRef<SocialDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -39,7 +43,7 @@ export class SocialDialogComponent implements OnInit {
       this.shareLink = encodeURI(this.origin + '/' + this.shareLinkRelative);
     } else {
       this.author = data.options.author;
-      this.author.telephone = this.utilsService.getTelephoneComplete(this.author);
+      this.telephone = this.utilsService.getTelephoneComplete(this.author);
     }
 
     this.addIcons();
@@ -61,7 +65,7 @@ export class SocialDialogComponent implements OnInit {
   copyLinkToClipboard(): void {
     navigator.clipboard
       .writeText(this.shareLink)
-      .then(() => console.log('Se ha copiado correctamente'))
+      .then(() => this.notificationService.successNotification('Se ha copiado correctamente el enlace'))
       .catch((e) => this.utilsService.errorHandling(e));
   }
 

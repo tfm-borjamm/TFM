@@ -1,7 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { ConsultState } from '../../../shared/enums/consult-state.enum';
 import { Consult } from '../../../shared/models/consult.model';
@@ -13,22 +17,27 @@ import { ConsultService } from '../../../shared/services/consult.service';
   styleUrls: ['./consult-details.component.scss'],
 })
 export class ConsultDetailsComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
-
   public replyForm: FormGroup;
   public message: FormControl;
+  public noReplyMessage: FormControl;
 
   public id: string;
   public consult: Consult;
 
   public showForm: boolean;
+  public btnSubmitted: boolean;
+
+  public suscriptionLanguage: Subscription;
   constructor(
     // private router: Router,
     private activatedRoute: ActivatedRoute,
     private consultService: ConsultService,
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
-    private location: Location
+    private location: Location,
+    private translateService: TranslateService,
+    private notificationService: NotificationService,
+    private capitalizePipe: CapitalizePipe
   ) {
     this.consult = this.activatedRoute.snapshot.data.consult;
     // this.activatedRoute.params.forEach((params) => {
@@ -50,16 +59,28 @@ export class ConsultDetailsComponent implements OnInit {
   }
 
   loadForm() {
-    this.message = new FormControl(this.consult.reply ? { value: this.consult.reply.message, disabled: true } : '', [
-      Validators.required,
-    ]);
+    this.message = new FormControl(
+      this.consult.reply ? { value: this.capitalizePipe.transform(this.consult.reply.message), disabled: true } : '',
+      [Validators.required]
+    );
+    this.noReplyMessage = new FormControl({ value: '', disabled: true });
     this.replyForm = this.createForm();
   }
 
   createForm(): FormGroup {
+    this.onTranslateText();
     return (this.replyForm = this.formBuilder.group({
       message: this.message,
+      noReplyMessage: this.noReplyMessage,
     }));
+  }
+
+  onTranslateText() {
+    this.suscriptionLanguage = this.translateService.onLangChange.subscribe((lang) => {
+      console.log(lang);
+      this.noReplyMessage.setValue(this.translateService.instant('no_reply_message_description'));
+    });
+    this.noReplyMessage.setValue(this.translateService.instant('no_reply_message_description'));
   }
 
   onPreviousPage() {
@@ -67,7 +88,6 @@ export class ConsultDetailsComponent implements OnInit {
   }
 
   onDeleteConsult(id: string) {
-    console.log('Eliminar: ', id);
     this.consultService
       .deleteConsult(id)
       .then((a) => {
@@ -79,9 +99,9 @@ export class ConsultDetailsComponent implements OnInit {
   }
 
   async onReplyConsult() {
-    console.log('Button: ', this.btnForm);
     if (this.replyForm.valid) {
-      this.btnForm.nativeElement.disabled = true;
+      // this.btnForm.nativeElement.disabled = true;
+      this.btnSubmitted = true;
       const consult: Consult = {
         ...this.consult,
         state: ConsultState.answered,
@@ -99,15 +119,20 @@ export class ConsultDetailsComponent implements OnInit {
           .updateConsult(consult)
           .then((res) => {
             // Mostramos el mensaje traducido res[1].message!
-            console.log('Respuesta del servidor: ', res[1].message);
+            // console.log('Respuesta del servidor: ', res[1].message);
             this.consult = consult;
             this.replyForm.controls['message'].disable();
+            this.btnSubmitted = false;
+            this.notificationService.successNotification(res[1].message);
           })
           .catch((e) => {
-            console.log('Respuesta de error del servidor: ', e[1].message);
-            this.btnForm.nativeElement.disabled = false;
-            this.utilsService.errorHandling(e[0]);
+            console.log('Respuesta de error del servidor: ', e);
+            // this.btnForm.nativeElement.disabled = false;
+            this.btnSubmitted = false;
+            this.utilsService.errorHandling(e[1].message);
           });
+      } else {
+        this.btnSubmitted = false;
       }
     }
   }
@@ -115,6 +140,10 @@ export class ConsultDetailsComponent implements OnInit {
   ngOnDestroy(): void {
     if (this.consult && this.consult.state === ConsultState.unread) {
       this.consultService.setState(this.consult.id, ConsultState.read).catch((e) => this.utilsService.errorHandling(e));
+    }
+
+    if (!this.suscriptionLanguage.closed) {
+      this.suscriptionLanguage.unsubscribe();
     }
   }
 }

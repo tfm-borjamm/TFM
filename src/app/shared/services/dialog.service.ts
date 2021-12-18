@@ -10,14 +10,14 @@ import { SocialDialogComponent } from '../components/social-dialog/social-dialog
 export class DialogService {
   constructor(private dialog: MatDialog) {}
 
-  async confirm(message: string, width: string = 'auto'): Promise<boolean> {
+  confirm(message: string, width: string = 'auto'): Promise<boolean> {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: width,
       data: {
         message: message,
       },
     });
-    return await dialogRef.afterClosed().pipe(take(1)).toPromise();
+    return dialogRef.afterClosed().pipe(take(1)).toPromise();
   }
 
   openButtonsDialog(options: any, width: string = 'auto'): void {

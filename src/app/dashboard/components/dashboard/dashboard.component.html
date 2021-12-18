@@ -1,66 +1,84 @@
-<div class="count">
-  <div class="count__item">
-    {{ "favorites" | translate }}:
-    <span class="count__number"> {{ countFavorites }}</span>
+<main class="container">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+    <div class="count__item">
+      {{ "favorites" | translate }}:
+      <span class="count__number"> {{ countFavorites }}</span>
+    </div>
+
+    <div class="count__item">
+      {{ "publications" | translate }}:
+      <span class="count__number"> {{ countPublications }}</span>
+    </div>
+
+    <div class="count__item">
+      {{ "users" | translate }}:
+      <span class="count__number">{{ countUsers }}</span>
+    </div>
+
+    <div class="count__item">
+      {{ "consults" | translate }}:
+      <span class="count__number"> {{ countConsults }}</span>
+    </div>
   </div>
 
-  <div class="count__item">
-    {{ "publications" | translate }}:
-    <span class="count__number"> {{ countPublications }}</span>
-  </div>
+  <!-- <select type="submit" [ngModel]="lineChartType" (ngModelChange)="lineChartType = $event">
+    <option *ngFor="let option of ['bar', 'line']" value="{{ option }}">{{ option | translate }}</option>
+  </select> -->
 
-  <div class="count__item">
-    {{ "users" | translate }}:
-    <span class="count__number">{{ countUsers }}</span>
-  </div>
+  <mat-form-field appearance="fill">
+    <mat-label>{{ "chartType" | translate }}</mat-label>
+    <mat-select [ngModel]="lineChartType" (selectionChange)="lineChartType = $event.value">
+      <mat-option *ngFor="let charType of chartTypes" [value]="charType">{{ charType | translate }}</mat-option>
+    </mat-select>
+  </mat-form-field>
 
-  <div class="count__item">
-    {{ "consults" | translate }}:
-    <span class="count__number"> {{ countConsults }}</span>
-  </div>
-</div>
+  <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+    <div class="canvas">
+      <canvas
+        baseChart
+        [datasets]="lineChartDataPublications"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [colors]="lineChartColorsPublications"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType"
+      >
+      </canvas>
+      <div class="canvas__spinner" *ngIf="lineChartDataPublications[0].data.length === 0">
+        <app-loading [diameter]="30"></app-loading>
+      </div>
+    </div>
 
-<select type="submit" [ngModel]="lineChartType" (ngModelChange)="lineChartType = $event">
-  <option *ngFor="let option of ['bar', 'line']" value="{{ option }}">{{ option | translate }}</option>
-</select>
+    <div class="canvas">
+      <canvas
+        baseChart
+        [datasets]="lineChartDataUsers"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [colors]="lineChartColorsUsers"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType"
+      >
+      </canvas>
+      <div class="canvas__spinner" *ngIf="lineChartDataUsers[0].data.length === 0">
+        <app-loading [diameter]="30"></app-loading>
+      </div>
+    </div>
 
-<div class="container">
-  <div class="canvas">
-    <canvas
-      baseChart
-      [datasets]="lineChartDataPublications"
-      [labels]="lineChartLabels"
-      [options]="lineChartOptions"
-      [colors]="lineChartColorsPublications"
-      [legend]="lineChartLegend"
-      [chartType]="lineChartType"
-    >
-    </canvas>
+    <div class="canvas">
+      <canvas
+        baseChart
+        [datasets]="lineChartDataConsults"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [colors]="lineChartColorsConsults"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType"
+      >
+      </canvas>
+      <div class="canvas__spinner" *ngIf="lineChartDataConsults[0].data.length === 0">
+        <app-loading [diameter]="30"></app-loading>
+      </div>
+    </div>
   </div>
-
-  <div class="canvas">
-    <canvas
-      baseChart
-      [datasets]="lineChartDataUsers"
-      [labels]="lineChartLabels"
-      [options]="lineChartOptions"
-      [colors]="lineChartColorsUsers"
-      [legend]="lineChartLegend"
-      [chartType]="lineChartType"
-    >
-    </canvas>
-  </div>
-
-  <div class="canvas">
-    <canvas
-      baseChart
-      [datasets]="lineChartDataConsults"
-      [labels]="lineChartLabels"
-      [options]="lineChartOptions"
-      [colors]="lineChartColorsConsults"
-      [legend]="lineChartLegend"
-      [chartType]="lineChartType"
-    >
-    </canvas>
-  </div>
-</div>
+</main>

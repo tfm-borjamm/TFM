@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { checkEmail } from 'src/app/shared/validations/checkEmail.validator';
 import { ConsultState } from '../../../shared/enums/consult-state.enum';
@@ -12,7 +14,8 @@ import { ConsultService } from '../../../shared/services/consult.service';
   styleUrls: ['./consult-form.component.scss'],
 })
 export class ConsultFormComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
+  // @ViewChild('btnForm') btnForm: ElementRef;
+  @ViewChild(FormGroupDirective) formDirective: FormGroupDirective;
 
   public contactForm: FormGroup;
   public name: FormControl;
@@ -20,10 +23,14 @@ export class ConsultFormComponent implements OnInit {
   public subject: FormControl;
   public message: FormControl;
 
+  public btnSubmitted: boolean;
+
   constructor(
     private formBuilder: FormBuilder,
     private utilsService: UtilsService,
-    private consultService: ConsultService
+    private consultService: ConsultService,
+    private notificationService: NotificationService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -50,15 +57,17 @@ export class ConsultFormComponent implements OnInit {
 
   async onContact() {
     if (this.contactForm.valid) {
-      this.btnForm.nativeElement.disabled = true;
+      // this.btnForm.nativeElement.disabled = true;
+      this.btnSubmitted = true;
       const servertime = await this.utilsService.getServerTimeStamp().catch((e) => this.utilsService.errorHandling(e));
       if (servertime) {
         const consult: Consult = {
           id: this.utilsService.generateID(),
-          name: this.contactForm.value.name,
+          name: this.contactForm.value.name.toLowerCase(),
           email: this.contactForm.value.email.toLowerCase(),
-          subject: this.contactForm.value.subject,
+          subject: this.contactForm.value.subject.toLowerCase(),
           message: this.contactForm.value.message,
+          language: this.translateService.currentLang.toLowerCase(),
           state: ConsultState.unread,
           creation_date: servertime.timestamp,
         };
@@ -66,12 +75,15 @@ export class ConsultFormComponent implements OnInit {
         this.consultService
           .createConsult(consult)
           .then(() => {
-            console.log('Consulta enviada correctamente');
-            this.contactForm.reset();
+            // console.log('Consulta enviada correctamente');
+            this.notificationService.successNotification('success_message_sent');
+            this.btnSubmitted = false;
+            this.formDirective.resetForm();
           })
           .catch((e) => {
-            this.btnForm.nativeElement.disabled = false;
-            this.utilsService.errorHandling(e);
+            // this.btnForm.nativeElement.disabled = false;
+            this.btnSubmitted = false;
+            this.utilsService.errorHandling('failed_message_sent');
           });
       }
     }

@@ -9,7 +9,7 @@ import { PublicationService } from '../../../shared/services/publication.service
 import { age } from 'src/app/publication/helpers/age';
 import { confirm, confirmWithUnknow } from 'src/app/publication/helpers/confirmation';
 import { UserService } from 'src/app/shared/services/user.service';
-import { Location } from '@angular/common';
+import { Location, TitleCasePipe } from '@angular/common';
 import { Sex } from '../../enums/sex.enum';
 import { Size } from '../../enums/size.enum';
 import { Type } from '../../../shared/enums/type.enum';
@@ -17,6 +17,7 @@ import { PublicationState } from '../../../shared/enums/publication-state';
 import { User } from 'src/app/shared/models/user.model';
 import { provinces } from 'src/app/shared/helpers/provinces';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
 
 @Component({
   selector: 'app-publication-form',
@@ -71,6 +72,8 @@ export class PublicationFormComponent implements OnInit {
   public isAuthor: boolean = false;
   public provinces: string[] = provinces;
 
+  public btnSubmitted: boolean;
+
   constructor(
     private formBuilder: FormBuilder,
     private utilsService: UtilsService,
@@ -80,7 +83,9 @@ export class PublicationFormComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private titleCasePipe: TitleCasePipe,
+    private capitalizePipe: CapitalizePipe
   ) {
     // Editar o Crear
     // this.activatedRoute.params.forEach((params) => (this.publicationID = params['id']));
@@ -156,17 +161,21 @@ export class PublicationFormComponent implements OnInit {
     this.types = Object.values(Type);
     this.sizes = Object.values(Size);
 
-    this.name = new FormControl(this.publication?.name ? this.publication.name : '', [Validators.required]);
-    this.description = new FormControl(this.publication?.description ? this.publication.description : '', [
+    this.name = new FormControl(this.publication?.name ? this.titleCasePipe.transform(this.publication.name) : '', [
       Validators.required,
-      Validators.minLength(50),
     ]);
+    this.description = new FormControl(
+      this.publication?.description ? this.capitalizePipe.transform(this.publication.description) : '',
+      [Validators.required, Validators.minLength(50)]
+    );
     this.age = new FormControl(this.publication.age ? this.publication.age : '', [Validators.required]);
     this.size = new FormControl(this.publication.size ? this.publication.size : '', [Validators.required]);
     this.sex = new FormControl(this.publication.sex ? this.publication.sex : '', [Validators.required]);
     this.chip = new FormControl(this.publication.chip ? this.publication.chip : '', [Validators.required]);
     this.type = new FormControl(this.publication.type ? this.publication.type : '', [Validators.required]);
-    this.breed = new FormControl(this.publication.breed ? this.publication.breed : '', [Validators.required]);
+    this.breed = new FormControl(this.publication.breed ? this.capitalizePipe.transform(this.publication.breed) : '', [
+      Validators.required,
+    ]);
     this.sterile = new FormControl(this.publication.sterile ? this.publication.sterile : '', [Validators.required]);
     this.shipping = new FormControl(this.publication.shipping ? this.publication.shipping : '', [Validators.required]);
     this.vaccinate = new FormControl(this.publication.vaccinate ? this.publication.vaccinate : '', [
@@ -269,6 +278,7 @@ export class PublicationFormComponent implements OnInit {
       // }
     } else {
       console.log('Error al subir el fichero !!!');
+      this.notificationService.errorNotification('Sólo se pueden subir no más de 5 imágenes');
 
       // console.info(validations.init(isSizeValid, isNumFilesValid, isFormatValid));
     }
@@ -293,6 +303,7 @@ export class PublicationFormComponent implements OnInit {
 
   public async onSubmit() {
     if (this.publicationForm.valid) {
+      this.btnSubmitted = true;
       if (this.editPublication) {
         // Comprobamos si existe alguna imagen eliminada
         const isDeleted = this.originalImages.filter((image: any) => image.status === 'deleted');
@@ -324,7 +335,7 @@ export class PublicationFormComponent implements OnInit {
         id: this.publicationID,
         idAuthor: !this.editPublication ? this.user.id : this.publication.idAuthor,
         // idAuthor: this.editPublication && this.isAdmin ? this.publication.idAuthor : this.user.id,
-        name: this.publicationForm.value.name,
+        name: this.publicationForm.value.name.toLowerCase(),
         // province: this.editPublication && this.isAdmin ? this.publication.province : this.user.province,
         province: this.publicationForm.value.province,
         description: this.publicationForm.value.description,
@@ -334,7 +345,7 @@ export class PublicationFormComponent implements OnInit {
         sex: this.publicationForm.value.sex,
         chip: this.publicationForm.value.chip,
         type: this.publicationForm.value.type,
-        breed: this.publicationForm.value.breed,
+        breed: this.publicationForm.value.breed.toLowerCase(),
         sterile: this.publicationForm.value.sterile,
         vaccinate: this.publicationForm.value.vaccinate,
         dewormed: this.publicationForm.value.dewormed,
@@ -374,9 +385,10 @@ export class PublicationFormComponent implements OnInit {
       }
 
       if (!publication.date) {
-        const servertime = await this.utilsService
-          .getServerTimeStamp()
-          .catch((e) => this.utilsService.errorHandling(e));
+        const servertime = await this.utilsService.getServerTimeStamp().catch((e) => {
+          this.btnSubmitted = false;
+          this.utilsService.errorHandling(e);
+        });
         if (servertime) {
           publication.date = servertime.timestamp;
         }
@@ -387,23 +399,29 @@ export class PublicationFormComponent implements OnInit {
           .createPublication(publication)
           .then(() => {
             // this.utilsService.successToast('Añadido correctamente');
-            this.publicationForm.reset();
+            // this.publicationForm.reset();
             this.location.back();
             // console.log('Creado correctamente!');
-            this.notificationService.sendNotification('create_success', 'ok');
+            this.notificationService.successNotification('create_success', 'ok');
           })
-          .catch((e) => this.utilsService.errorHandling(e));
+          .catch((e) => {
+            this.btnSubmitted = false;
+            this.utilsService.errorHandling(e);
+          });
       } else {
         this.publicationService
           .updatePublication(publication)
           .then(() => {
             // this.utilsService.successToast('Editado correctamente');
-            this.publicationForm.reset();
+            // this.publicationForm.reset();
             this.location.back();
             // console.log('Editado correctamente!');
-            this.notificationService.sendNotification('edit_success', 'ok');
+            this.notificationService.successNotification('edit_success', 'ok');
           })
-          .catch((e) => this.utilsService.errorHandling(e));
+          .catch((e) => {
+            this.btnSubmitted = false;
+            this.utilsService.errorHandling(e);
+          });
       }
     }
   }

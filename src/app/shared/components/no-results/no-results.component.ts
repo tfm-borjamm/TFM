@@ -6,10 +6,8 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./no-results.component.scss'],
 })
 export class NoResultsComponent implements OnInit {
-  @Input() title: string;
+  @Input() small: boolean;
   constructor() {}
 
-  ngOnInit(): void {
-    this.title = this.title ?? 'No se han encontrado resultados';
-  }
+  ngOnInit(): void {}
 }

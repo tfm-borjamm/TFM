@@ -1,3 +1,10 @@
-main {
-  min-height: 100vh;
+mat-sidenav {
+  min-width: 250px;
+}
+
+.header {
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000;
 }

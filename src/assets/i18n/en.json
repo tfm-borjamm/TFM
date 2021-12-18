@@ -67,9 +67,11 @@
   "login_facebook": "Enter with Facebook",
   "filters": "Filters",
   "profile": "Profile",
+  "my_profile": "My profile",
   "publications_admin": "These are all the publications that exist in the application",
   "available": "In adoption",
   "adopted": "Adopted",
+  "adopteds": "Adopted",
   "author": "Author",
   "type": "Type",
   "your_publications": "Your publications",
@@ -112,7 +114,7 @@
   "delete_from_favorites": "Delete from favorites",
   "no_results": "No results found",
   "to_post": "To post",
-  "to_filter": "To filter",
+
   "general": "General",
   "my_publications": "My publications",
   "my_favorites": "My favorites",
@@ -154,11 +156,12 @@
   "cancel": "Cancel",
   "favorite_border": "Add to favorites",
   "favorite_not_border": "Delete from favorites",
-  "ITEMS_PER_PAGE": "Items per page",
+  "ITEMS_PER_PAGE": "Items per page:",
   "NEXT_PAGE": "Next page",
   "PREV_PAGE": "Prev page",
   "FIRST_PAGE": "First page",
   "LAST_PAGE": "Last page",
+  "of": "of",
   "more": "More",
   "shipping": "shipping possibility",
 
@@ -173,5 +176,19 @@
   "dewormed.yes": "Dewormed",
   "shipping.no": "With shipping option",
   "shipping.yes": "No shipping option",
-  "more_options": "More options"
+  "more_options": "More options",
+
+  "choose_file": "Choose files",
+  "no_reply_message": "Automatic message to be added",
+  "no_reply_message_description": "Please do not reply to this message. In case you need to make another new question, go to the contact page of the web application and fill out the form. Thanks a lot.",
+  "search": "Search",
+
+  "copy_link": "Copy link",
+  "all_rights_reserved": "All rights reserved",
+  "page_not_found": "Page not found",
+  "success_message_sent": "Message sent successfully",
+  "failed_message_sent": "Error sending message",
+  "user_data": "User's data",
+
+  "chartType": "Chart's type"
 }

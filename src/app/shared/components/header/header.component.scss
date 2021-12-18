@@ -1,13 +1,67 @@
-.header {
-  border: 2px solid;
-  // background-color: black;
+// .mat-toolbar {
+//   position: sticky;
+//   position: -webkit-sticky; /* For macOS/iOS Safari */
+//   top: 0; /* Sets the sticky toolbar to be on top */
+//   z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+//   // background-color: #2d2e2e;
+//   // color: white;
+// }
+
+.logo {
+  color: white;
+  font-family: "Alfa Slab One", cursive;
 }
 
-.navigation__link.logout:hover {
-  cursor: pointer;
+.mark > mat-icon {
+  position: absolute;
 }
 
-.navigation__logo {
-  display: block;
-  width: 200px;
+.mark > span {
+  margin-left: 33px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.mat-form-field {
+  width: 75px !important;
+  margin: 0 1rem;
+}
+
+.mat-select-arrow-wrapper {
+  display: inline-block !important;
+  vertical-align: none !important;
+}
+
+.mat-nav-list,
+.mat-action-list {
+  padding: 0 !important;
+}
+
+::ng-deep .mat-list-text {
+  padding-left: 8px !important;
+  padding-top: 3px !important;
+}
+
+::ng-deep .mat-line {
+  font-weight: 500 !important;
+}
+
+button {
+  border: 0px !important;
+}
+
+// ::ng-deep .mat-form-field-underline {
+//   height: 0px !important;
+// }
+
+::ng-deep .language .mat-form-field-infix {
+  border-top: 0 !important;
+}
+
+::ng-deep .language .mat-form-field-wrapper {
+  padding: 0 !important;
+}
+
+::ng-deep .language .mat-form-field-underline {
+  width: 0;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { provinces } from 'src/app/shared/helpers/provinces';
 import { UtilsService } from 'src/app/shared/services/utils.service';
@@ -28,9 +28,7 @@ interface settings {
 })
 export class PublicationListComponent implements OnInit {
   public idLastItem: string = null;
-  public limitItems: number = 5;
-  // public filterKey: string = null;
-  // public filterValue: string = null;
+  public limitItems: number = 6;
 
   public filterPublication: FormGroup;
   public province: FormControl;
@@ -49,8 +47,12 @@ export class PublicationListComponent implements OnInit {
   public paramProvince: string = null;
 
   public user: User;
-  public defaultTab = PublicationState.available;
-  public tabs = Object.values(PublicationState);
+
+  public links = ['available', 'adopteds'];
+
+  public showFilter: boolean;
+
+  public itemsLoaded: Promise<boolean>;
 
   constructor(
     private publicationService: PublicationService,
@@ -72,10 +74,6 @@ export class PublicationListComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // console.log('CReando inittttt', this.publications);
-    // this.idLastItem = null;
-    // this.finished = false;
-
     this.currentURL = this.router.url;
 
     if (this.currentURL.includes('/publication/list')) {
@@ -87,12 +85,12 @@ export class PublicationListComponent implements OnInit {
   }
 
   loadForm() {
-    this.type = new FormControl(this.paramType ?? '', [Validators.required]);
-    this.province = new FormControl(this.paramProvince ?? '', [Validators.required]);
+    this.type = new FormControl(this.paramType ?? '');
+    this.province = new FormControl(this.paramProvince ?? '');
     this.filterPublication = this.createForm();
   }
 
-  public createForm(): FormGroup {
+  createForm(): FormGroup {
     return this.formBuilder.group({
       type: this.type,
       province: this.province,
@@ -103,9 +101,27 @@ export class PublicationListComponent implements OnInit {
     this.publications = this.publications.filter((x) => x.id !== id);
   }
 
-  async onChangeFilter(selected?: filterSelected) {
+  resetFilter() {
+    this.resetSearch();
+    this.type.setValue('');
+    this.province.setValue('');
+    this.utilsService.removeLocalStorage('filterPublications');
+    this.getPublications();
+  }
+
+  resetSearch(): void {
     this.idLastItem = null;
     this.finished = false;
+  }
+
+  resetLoading(): void {
+    let promise: Promise<boolean>;
+    this.itemsLoaded = promise;
+  }
+
+  async onChangeFilter(selected?: filterSelected) {
+    this.resetSearch();
+    this.resetLoading();
 
     const search: any = {
       type: this.filterPublication.value.type,
@@ -150,8 +166,6 @@ export class PublicationListComponent implements OnInit {
   }
 
   async getPublications(settings: settings = { start: true }) {
-    console.log('LOG GET-PUBLICATIONS', settings);
-
     let options;
     let nextPublications;
 
@@ -198,19 +212,12 @@ export class PublicationListComponent implements OnInit {
       this.currentURL.includes('/publication/my-publications')
     ) {
       this.queryDB = this.queryDB ?? `users/${this.user.id}/myPublications`;
-      // this.queryDB = this.queryDB ?? `users/myPublications`;
       options = {
-        // query : {
-        //   idLastItem: this.idLastItem,
-        //   limitItems: this.limitItems,
-        // },
-        // url: this.currentURL === '/publication/favorites' ? `users/${id_user}/myFavorites` : this.queryDB,
         idLastItem: this.idLastItem,
         limitItems: this.limitItems,
         url: this.currentURL.includes('/publication/favorites') ? `users/${this.user.id}/myFavorites` : this.queryDB, // Favoritos: users/${id_user}/myFavorites
       };
       const idPublications = await this.publicationService.getPublicationsID(options); // [{id: '', state: null | ''}, ... ]
-      // console.log('IDs', idPublications, this.queryDB);
       let queryDB: string = null;
       if (this.queryDB.includes('myHistory')) {
         queryDB = 'history';
@@ -221,7 +228,6 @@ export class PublicationListComponent implements OnInit {
       const promisesPublications = idPublications.map((idx) => {
         if (typeof idx === 'string') return this.publicationService.getPublicationById(idx, queryDB);
         const { id, state } = idx;
-        // console.log('Estamos en favorito porque no es una string', id, state);
         const url = state === PublicationState.adopted ? 'history' : 'publications';
         return this.publicationService.getPublicationById(id, url);
       });
@@ -234,6 +240,7 @@ export class PublicationListComponent implements OnInit {
     this.finished = nextPublications.length < this.limitItems;
     this.setLastItemID();
     console.log('this.finished', this.finished);
+    this.itemsLoaded = Promise.resolve(true);
   }
 
   setLastItemID() {
@@ -255,17 +262,21 @@ export class PublicationListComponent implements OnInit {
   }
 
   onCreatePublication() {
-    this.router.navigate(['publication/item']);
+    this.router.navigate(['publication', 'item']);
   }
 
-  onChange(tab: string) {
+  onChange(link: string) {
+    this.resetLoading();
     // const checked = (event.target as HTMLInputElement).checked;
     // this.queryDB = checked ? 'users/myHistory' : 'users/myPublications';
+
+    if (link === 'adopteds') link = link.substring(0, link.length - 1); // delete plural 's' letter
+
+    console.log('Filtra:', link);
     this.publications = [];
     this.queryDB =
-      tab === PublicationState.adopted ? `users/${this.user.id}/myHistory` : `users/${this.user.id}/myPublications`;
-    this.idLastItem = null;
-    this.finished = false;
+      link === PublicationState.adopted ? `users/${this.user.id}/myHistory` : `users/${this.user.id}/myPublications`;
+    this.resetSearch();
     this.getPublications();
   }
 

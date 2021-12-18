@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit {
   public lineChartType: ChartType = 'line';
   // lineChartPlugins: any = [];
 
+  public chartTypes = ['bar', 'line'];
+
   constructor(
     private consultService: ConsultService,
     private publicationService: PublicationService,
@@ -106,7 +108,8 @@ export class DashboardComponent implements OnInit {
           {
             ticks: {
               autoSkip: false,
-              stepSize: 1,
+              stepSize: 10,
+              suggestedMax: 100,
               beginAtZero: true,
             },
           },

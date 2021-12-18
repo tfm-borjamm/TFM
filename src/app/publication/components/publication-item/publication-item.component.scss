@@ -1,42 +1,50 @@
-// .card {
-//   border: 2px solid;
-//   position: relative;
-//   margin: 1rem 0;
+// .tag {
+//   display: block;
+//   background: #000000;
+//   color: #ffffff;
+//   text-transform: uppercase;
+//   padding: 0.5rem 0;
+//   font-weight: bold;
+//   width: 200px;
+//   text-align: center;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
 // }
-
-// .card:hover {
-//   cursor: pointer;
-// }
-
-.tag {
-  display: block;
-  background: #000000;
-  color: #ffffff;
-  text-transform: uppercase;
-  padding: 0.5rem 0;
-  font-weight: bold;
-  width: 200px;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 
 .mat-card {
-  max-width: 270px;
   margin: 2rem 1rem;
-  // position: relative;
   transition: transform 0.1s;
-  padding-top: 0.5rem;
   pointer-events: none;
+  width: 230px;
+  overflow: hidden;
 }
 
-.mat-card:hover {
-  transform: scale(1.01);
+.card__banner-state {
+  position: absolute;
+  top: -70%;
+  left: 85%;
+  transform: rotate(45deg);
+  width: 100%;
+  height: 100%;
+  background: #2e2e2e;
+  font-weight: bold;
+  color: #ffffff;
+  padding-bottom: 1rem;
+}
+
+.adopted::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .mat-card-image {
-  max-width: 270px;
+  width: 230px;
   height: 200px;
   object-fit: cover;
   object-position: center;
@@ -44,14 +52,15 @@
 
 .mat-card-content {
   cursor: pointer;
-  // text-overflow: ellipsis;
+  text-overflow: ellipsis;
   // white-space: nowrap;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   margin: 1rem 0;
   overflow: hidden;
   line-height: 21px;
+  height: 40px;
 }
 
 .mat-card-content,
@@ -60,8 +69,8 @@
 }
 
 .mat-card-actions .mat-button {
-  padding: 0;
-  margin: 0;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .mat-card-actions.card__favorite {

@@ -8,6 +8,7 @@ import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { Role } from '../../../shared/enums/role.enum';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
@@ -15,13 +16,17 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
+  @ViewChild('btnFormGoogle') btnFormGoogle: MatButton;
+  @ViewChild('btnFormFacebook') btnFormFacebook: MatButton;
   public loginForm: FormGroup;
   public email: FormControl;
   public password: FormControl;
 
   public FACEBOOK_ICON = '../../../../assets/images/facebook.svg';
   public GOOGLE_ICON = '../../../../assets/images/google.svg';
+
+  public hide = true;
+  public btnSubmitted: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,7 +42,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.email = new FormControl('', [Validators.required, Validators.email, checkEmail()]);
-    this.password = new FormControl('', [Validators.required]);
+    this.password = new FormControl('', [Validators.required, Validators.minLength(8)]);
     this.loginForm = this.createForm();
   }
 
@@ -55,27 +60,31 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     if (this.loginForm.valid) {
-      this.btnForm.nativeElement.disabled = true;
+      this.btnSubmitted = true;
       const email = this.loginForm.value.email.toLowerCase();
       const password = this.loginForm.value.password;
       this.authService
         .login(email, password)
         .then((userAuth) => {
-          this.loginForm.reset();
+          // this.loginForm.reset();
           console.log('Inicio de sesión correcto');
           // this.router.navigate(['/publication/list']);
           this.routeNavigateHome(userAuth.user.uid);
         })
         .catch((e) => {
-          this.btnForm.nativeElement.disabled = false;
+          this.btnSubmitted = false;
           this.utilsService.errorHandling(e);
         });
     }
   }
 
   async onLoginProvider(provider: string) {
+    this.setBlockedBtnSocial(provider, true);
     const userAuth = await this.authService.loginWithProvider(provider);
-    if (!userAuth) return;
+    if (!userAuth) {
+      this.setBlockedBtnSocial(provider, false);
+      return;
+    }
     console.log('Usuario logueado:', userAuth);
     const isNewUser = userAuth?.additionalUserInfo?.isNewUser;
     if (isNewUser) {
@@ -84,8 +93,8 @@ export class LoginComponent implements OnInit {
 
       const user: any = {
         id: userAuth.user.uid,
-        email: userAuth.user.email,
-        name: userAuth.user.displayName,
+        email: userAuth.user.email.toLowerCase(),
+        name: userAuth.user.displayName.toLowerCase(),
         added_date: new Date(date).getTime(),
       };
       this.userService
@@ -94,7 +103,10 @@ export class LoginComponent implements OnInit {
           console.log('Se ha creado el usuario correctamente');
           this.router.navigate(['user/register-social']);
         })
-        .catch((e) => this.utilsService.errorHandling(e));
+        .catch((e) => {
+          this.utilsService.errorHandling(e);
+          this.setBlockedBtnSocial(provider, false);
+        });
     } else {
       console.info('El usuario ya se había registrado');
       // const user = await this.userService.getUserById(userAuth.user.uid);
@@ -107,13 +119,19 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  setBlockedBtnSocial(provider: string, disabled: boolean) {
+    if (provider.includes('google')) this.btnFormGoogle.disabled = disabled;
+    else this.btnFormFacebook.disabled = disabled;
+  }
+
   async routeNavigateHome(uid: string) {
-    const user = await this.userService.getUserById(uid);
-    if (user?.role === Role.admin) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.router.navigate(['/publication/list']);
-    }
+    // const user = await this.userService.getUserById(uid);
+    // if (user?.role === Role.admin) {
+    //   this.router.navigate(['/dashboard']);
+    // } else {
+    //   this.router.navigate(['/publication/list']);
+    // }
+    this.router.navigate(['/publication/list']);
   }
 
   // async onLoginGoogle() {

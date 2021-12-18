@@ -1,15 +1,24 @@
+import { TitleCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { take } from 'rxjs/operators';
 import { Consult } from 'src/app/shared/models/consult.model';
 import { User } from 'src/app/shared/models/user.model';
+import { CapitalizePipe } from '../pipes/capitalize.pipe';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UtilsService {
-  constructor(private db: AngularFireDatabase, private http: HttpClient) {}
+  constructor(
+    private db: AngularFireDatabase,
+    private http: HttpClient,
+    private notificationService: NotificationService,
+    private capitalizePipe: CapitalizePipe,
+    private titlecasePipe: TitleCasePipe
+  ) {}
 
   generateID(): string {
     return this.db.createPushId();
@@ -36,24 +45,33 @@ export class UtilsService {
     if (error.code) {
       switch (error.code) {
         case 'auth/user-not-found':
-          console.error('El usuario no se encuentra registrado en la aplicación');
+          // console.error('El usuario no se encuentra registrado en la aplicación');
+          this.notificationService.errorNotification('El usuario no se encuentra registrado en la aplicación');
           // console.log(
           //   'Si ha introducido bien el correo electrónico de la cuenta, le habrá llegado un correo electrónico para restablecer la contraseña'
           // );
           break;
         case 'auth/popup-closed-by-user':
-          console.error(
+          this.notificationService.errorNotification(
             'Ha cerrado la ventana para iniciar sesión a través de un proveedor externo y no se ha podido completar el proceso correctamente. Vuelve a intentarlo'
           );
+          // console.error(
+          //   'Ha cerrado la ventana para iniciar sesión a través de un proveedor externo y no se ha podido completar el proceso correctamente. Vuelve a intentarlo'
+          // );
           break;
         case 'auth/network-request-failed':
-          console.error('No tiene conexión a internet');
+          this.notificationService.errorNotification('No tiene conexión a internet');
+          // console.error('No tiene conexión a internet');
           break;
         case 'auth/email-already-in-use':
-          console.error('El email introducido ya se encuentra registrado en la aplicación');
+          this.notificationService.errorNotification(
+            'El email introducido ya se encuentra registrado en la aplicación'
+          );
+          // console.error('El email introducido ya se encuentra registrado en la aplicación');
           break;
         case 'auth/wrong-password':
-          console.error('El email o la contraseña introducida es incorrecta');
+          this.notificationService.errorNotification('El email o la contraseña introducida es incorrecta');
+          // console.error('El email o la contraseña introducida es incorrecta');
           break;
         case 'auth/account-exists-with-different-credential':
           const provider = e.provider;
@@ -63,10 +81,12 @@ export class UtilsService {
             'facebook.com': 'Facebook.',
           };
           const messageError = providerName[provider] || 'ninguno.';
-          console.error(`Por favor, autenticate mediante ${messageError}`);
+          this.notificationService.errorNotification(`Por favor, autenticate mediante ${messageError}`);
+          // console.error(`Por favor, autenticate mediante ${messageError}`);
           break;
         default:
-          console.error(error.message);
+          this.notificationService.errorNotification(error.message);
+          // console.error(error.message);
           break;
       }
     }
@@ -97,9 +117,10 @@ export class UtilsService {
     const url = 'https://tfm-borjamm-functions.netlify.app/.netlify/functions/send-email';
     const body = {
       email_dest: consult.email,
-      question_msg: consult.message,
-      answer_msg: consult.reply.message,
-      name: consult.name,
+      question_msg: this.capitalizePipe.transform(consult.message),
+      answer_msg: this.capitalizePipe.transform(consult.reply.message),
+      name: this.titlecasePipe.transform(consult.name),
+      language: consult.language,
     };
     return this.http.post<any>(url, JSON.stringify(body)).toPromise();
   }

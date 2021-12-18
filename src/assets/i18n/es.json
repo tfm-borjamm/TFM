@@ -67,9 +67,11 @@
   "login_facebook": "Entrar con Facebook",
   "filters": "Filtros",
   "profile": "Perfil",
+  "my_profile": "Mi perfil",
   "publications_admin": "Estas son todas las publicaciones que existen en la aplicación",
   "available": "En adopción",
-  "adopted": "Adoptados",
+  "adopted": "Adoptado",
+  "adopteds": "Adoptados",
   "author": "Autor",
   "type": "Tipo",
   "your_publications": "Tus publicaciones",
@@ -115,7 +117,7 @@
   "delete_from_favorites": "Eliminar de favoritos",
   "no_results": "No se han encontrado resultados",
   "to_post": "Publicar",
-  "to_filter": "Filtrar",
+
   "general": "General",
   "my_publications": "Mis publicaciones",
   "my_favorites": "Mis favoritos",
@@ -156,11 +158,12 @@
   "cancel": "Cancelar",
   "favorite_border": "Añadir a favoritos",
   "favorite_not_border": "Eliminar de favoritos",
-  "ITEMS_PER_PAGE": "Elementos por página",
+  "ITEMS_PER_PAGE": "Elementos por página:",
   "NEXT_PAGE": "Siguiente página",
   "PREV_PAGE": "Anterior página",
   "FIRST_PAGE": "Primera página",
   "LAST_PAGE": "Última página",
+  "of": "de",
   "more": "Más",
   "shipping": "Posibilidad de envio",
 
@@ -175,5 +178,20 @@
   "dewormed.yes": "Desparacitado ",
   "shipping.no": "Con opción a envio",
   "shipping.yes": "Sin opción a envio",
-  "more_options": "Más opciones"
+  "more_options": "Más opciones",
+
+  "choose_file": "Selecciona imágenes",
+  "no_reply_message": "Mensaje automático que se añadirá",
+  "no_reply_message_description": "Por favor, no responda a este mensaje. En caso de que necesite hacer otra nueva consulta, dirijase a la página de contacto de la aplicación web y rellene el formulario. Muchas gracias.",
+  "search": "Buscar",
+
+  "copy_link": "Copiar enlace",
+
+  "all_rights_reserved": "Todos los derechos reservados",
+  "page_not_found": "Página no encontrada",
+  "success_message_sent": "Mensaje enviado correctamente",
+  "failed_message_sent": "Error al enviar el mensaje",
+  "user_data": "Datos del usuario",
+
+  "chartType": "Tipo de gráfica"
 }

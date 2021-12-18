@@ -11,6 +11,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { confirmPassword } from '../../validations/confirmPassword.validator';
 import { Location } from '@angular/common';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -39,26 +40,31 @@ export class RegisterComponent implements OnInit {
 
   public currentUserId: string;
 
+  public hideConfirmPassword: boolean = true;
+  public hidePassword: boolean = true;
+  public btnSubmitted: boolean;
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private utilsService: UtilsService,
     private userService: UserService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private notificationService: NotificationService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
     const numbersValidator = /^[0-9]*$/;
-    const fullnameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    const nameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
 
     this.url = this.router.url;
     this.name = new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(55),
-      Validators.pattern(fullnameValidator),
+      Validators.pattern(nameValidator),
     ]);
     this.email = new FormControl('', [Validators.required, Validators.email, checkEmail()]);
     this.street = new FormControl('', [Validators.required]);
@@ -78,7 +84,7 @@ export class RegisterComponent implements OnInit {
       Validators.pattern(numbersValidator),
     ]);
     this.password = new FormControl('', [Validators.required, Validators.minLength(8)]);
-    this.repeat_password = new FormControl('', [Validators.required, Validators.minLength(8)]);
+    this.repeat_password = new FormControl('', [Validators.required]);
 
     // this.roles = Object.entries(Role).map((entry) => {
     //   const [key, value] = entry;
@@ -99,28 +105,38 @@ export class RegisterComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    return (this.registerForm = this.formBuilder.group({
-      name: this.name,
-      email: this.email,
-      street: this.street,
-      province: this.province,
-      role: this.role,
-      code: this.code,
-      telephone: this.telephone,
-      cp: this.cp,
-      passwords: this.formBuilder.group(
-        {
-          password: this.password,
-          repeat_password: this.repeat_password,
-        },
-        { validator: confirmPassword }
-      ),
-    }));
+    return (this.registerForm = this.formBuilder.group(
+      {
+        name: this.name,
+        email: this.email,
+        street: this.street,
+        province: this.province,
+        role: this.role,
+        code: this.code,
+        telephone: this.telephone,
+        cp: this.cp,
+        password: this.password,
+        repeat_password: this.repeat_password,
+      },
+      { validator: confirmPassword('password', 'repeat_password') }
+    ));
+  }
+
+  passwordOnInput() {
+    if (this.registerForm.hasError('equalValue')) {
+      this.repeat_password.setErrors({
+        required: this.registerForm.get('repeat_password').errors?.required,
+        equalValue: true,
+      });
+    } else {
+      this.repeat_password.setErrors(null);
+    }
   }
 
   async onRegister() {
     if (this.registerForm.valid) {
-      this.btnForm.nativeElement.disabled = true;
+      // this.btnForm.nativeElement.disabled = true;
+      this.btnSubmitted = true;
       const email = this.registerForm.value.email.toLowerCase();
       const password = this.registerForm.value.passwords.password;
 
@@ -149,9 +165,9 @@ export class RegisterComponent implements OnInit {
 
       if (id) {
         this.user.id = id;
-        this.user.name = this.registerForm.value.name;
+        this.user.name = this.registerForm.value.name.toLowerCase();
         this.user.email = email;
-        this.user.street = this.registerForm.value.street;
+        this.user.street = this.registerForm.value.street.toLowerCase();
         this.user.role = this.registerForm.value.role;
         this.user.province = this.registerForm.value.province;
         this.user.code = this.registerForm.value.code;
@@ -162,7 +178,12 @@ export class RegisterComponent implements OnInit {
         this.userService
           .createUser(this.user)
           .then(() => {
-            console.log('Registrado correctamente');
+            // console.log('Registrado correctamente');
+            const notification = this.currentUserId
+              ? 'Se ha creado el usuario correctamente'
+              : 'Se ha registrado correctamente';
+            this.notificationService.successNotification(notification);
+
             this.registerForm.reset();
             if (this.currentUserId) {
               // is admin adding user
@@ -173,7 +194,8 @@ export class RegisterComponent implements OnInit {
             }
           })
           .catch((e) => {
-            this.btnForm.nativeElement.disabled = false;
+            // this.btnForm.nativeElement.disabled = false;
+            this.btnSubmitted = false;
             this.utilsService.errorHandling(e);
           });
       }

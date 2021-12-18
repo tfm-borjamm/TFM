@@ -1,5 +1,5 @@
 import { ConsultState } from '../enums/consult-state.enum';
-import { Reply } from './Reply.model';
+import { Reply } from './reply.model';
 
 export class Consult {
   id: string;
@@ -7,6 +7,7 @@ export class Consult {
   email: string;
   subject: string;
   message: string;
+  language: string;
   creation_date: number;
   state: ConsultState;
   reply?: Reply;

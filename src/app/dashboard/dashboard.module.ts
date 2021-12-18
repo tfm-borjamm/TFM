@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -26,6 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -51,6 +53,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatTooltipModule,
     MatInputModule,
     MatSortModule,
+    FlexLayoutModule,
   ],
 })
 export class DashboardModule {}

@@ -1,1 +1,11 @@
-<h3 class="message">{{ "no_results" | translate }}</h3>
+<div
+  [ngClass]="{ 'container__results-medium': !small, 'container__results-small': small }"
+  [ngClass.lt-sm]="{ 'container__results-size': true }"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+>
+  <div [ngClass]="{ 'container__media-medium': !small, 'container__media-small': small }">
+    <img class="container__media-not-found" src="../../../../assets/images/no-results.svg" alt="Page not found" />
+  </div>
+  <p class="container__info">{{ "no_results" | translate }}</p>
+</div>

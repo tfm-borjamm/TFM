@@ -20,6 +20,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -43,6 +46,8 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     SharedModule,
     BrowserAnimationsModule,
+    MatSidenavModule,
+    FlexLayoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

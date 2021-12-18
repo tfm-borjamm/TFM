@@ -8,7 +8,10 @@ import { User } from '../../../shared/models/user.model';
 import { AuthService } from '../../../shared/services/auth.service';
 import { UserService } from '../../../shared/services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
-import { Location } from '@angular/common';
+import { Location, TitleCasePipe } from '@angular/common';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { Role } from 'src/app/shared/enums/role.enum';
+import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
 
 @Component({
   selector: 'app-user-form',
@@ -16,7 +19,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
+  // @ViewChild('btnForm') btnForm: ElementRef;
   public user: User;
   public editForm: FormGroup;
   public id: string;
@@ -33,6 +36,9 @@ export class UserFormComponent implements OnInit {
   public codes: string[] = [];
   public provinces: string[] = provinces;
 
+  public btnSubmitted: boolean;
+  public roles: Role[] = Object.values(Role);
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -40,7 +46,10 @@ export class UserFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private notificationService: NotificationService,
+    private titleCasePipe: TitleCasePipe,
+    private capitalizePipe: CapitalizePipe
   ) {
     this.user = this.activatedRoute.snapshot.data.user;
     // this.activatedRoute.params.forEach((params) => {
@@ -57,21 +66,21 @@ export class UserFormComponent implements OnInit {
 
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
     const numbersValidator = /^[0-9]*$/;
-    const fullnameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    const nameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
 
-    this.name = new FormControl(this.user.name, [
+    this.name = new FormControl(this.titleCasePipe.transform(this.user.name), [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(55),
-      Validators.pattern(fullnameValidator),
+      Validators.pattern(nameValidator),
     ]);
-    this.email = new FormControl({ value: this.user.email, disabled: true }, [
+    this.email = new FormControl({ value: this.capitalizePipe.transform(this.user.email), disabled: true }, [
       Validators.required,
       Validators.email,
       checkEmail(),
     ]);
     this.role = new FormControl({ value: this.user.role, disabled: true }, [Validators.required]);
-    this.street = new FormControl(this.user.street, [Validators.required]);
+    this.street = new FormControl(this.titleCasePipe.transform(this.user.street), [Validators.required]);
     this.province = new FormControl(this.user.province, [Validators.required]);
     this.code = new FormControl(this.user.code ?? '', [Validators.required]);
     this.telephone = new FormControl(this.user.telephone, [
@@ -129,12 +138,13 @@ export class UserFormComponent implements OnInit {
     // Actualizar los campos del usuario en la base de datos
     if (this.editForm.valid) {
       // email: this.id ? this.user.email : this.editForm.value.email,
-      this.btnForm.nativeElement.disabled = true;
+      // this.btnForm.nativeElement.disabled = true;
+      this.btnSubmitted = true;
       const user: User = {
         id: this.user.id,
         email: this.user.email,
-        name: this.editForm.value.name,
-        street: this.editForm.value.street,
+        name: this.editForm.value.name.toLowerCase(),
+        street: this.editForm.value.street.toLowerCase(),
         cp: this.editForm.value.cp,
         code: this.editForm.value.code,
         telephone: this.editForm.value.telephone,
@@ -146,12 +156,14 @@ export class UserFormComponent implements OnInit {
       this.userService
         .updateUser(user)
         .then(() => {
-          console.log('Información guardada correctamente');
-          this.btnForm.nativeElement.disabled = false;
+          // console.log('Información guardada correctamente');
+          this.notificationService.successNotification('Se han guardado los datos correctamente');
+          // this.btnForm.nativeElement.disabled = false;
           this.location.back();
         })
         .catch((e) => {
-          this.btnForm.nativeElement.disabled = false;
+          // this.btnForm.nativeElement.disabled = false;
+          this.btnSubmitted = false;
           this.utilsService.errorHandling(e);
         });
     }
