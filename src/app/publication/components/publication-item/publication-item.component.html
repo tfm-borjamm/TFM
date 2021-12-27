@@ -43,8 +43,9 @@
   <button *ngIf="!isPageMyPublications()" (click)="onSharePublication()">{{ "share" | translate }}</button>
 </div> -->
 
-<mat-card class="card mat-elevation-z3" [ngClass]="{ adopted: isAdopted }">
-  <!-- <mat-card-actions class="card__favorite"  align="end">
+<article>
+  <mat-card class="card mat-elevation-z3" [ngClass]="{ adopted: isAdopted }">
+    <!-- <mat-card-actions class="card__favorite"  align="end">
     <button mat-button mat-icon-button *ngIf="!isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_border' | translate }}">
       <mat-icon>favorite_border</mat-icon>
     </button>
@@ -53,68 +54,70 @@
     </button>
   </mat-card-actions> -->
 
-  <img mat-card-image [src]="image | imagePublication" (error)="image = ''" alt="#" />
-  <mat-card-title>{{ publication.name | titlecase }}</mat-card-title>
-  <mat-card-subtitle>{{ publication.province }}</mat-card-subtitle>
-  <!-- <p>{{ publication.type | translate }}</p> -->
-  <span class="card__banner-state" *ngIf="isAdopted" fxLayout="row" fxLayoutAlign="center end">{{ publication.state | translate | uppercase }}</span>
-  <mat-card-content (click)="onDetailsPublication()">
-    {{ publication.description | capitalize }}
-  </mat-card-content>
-  <mat-divider inset></mat-divider>
+    <img mat-card-image [src]="image | imagePublication" (error)="image = ''" alt="#" />
+    <mat-card-title class="card__title">{{ publication.name | titlecase }}</mat-card-title>
+    <mat-card-subtitle class="card__subtitle">{{ publication.province }}</mat-card-subtitle>
 
-  <mat-card-actions align="end">
-    <button
-      mat-button
-      mat-icon-button
-      *ngIf="currentUser && isClient && isFavorite && isPageFavorites()"
-      (click)="onDeleteFavorite()"
-      matTooltip="{{ 'delete_from_favorites' | translate }}"
-    >
-      <mat-icon>delete</mat-icon>
-    </button>
+    <p class="card__tag">{{ publication.state | translate | uppercase }}</p>
+    <a mat-card-content class="card__anchor" routerLink="/publication/{{ publication.state }}/details/{{ publication.id }}">
+      {{ publication.description | capitalize }}
+    </a>
 
-    <button
-      mat-button
-      mat-icon-button
-      *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()"
-      (click)="onChangeFavorite()"
-      matTooltip="{{ (isFavorite ? 'favorite_not_border' : 'favorite_border') | translate }}"
-    >
-      <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
-    </button>
+    <mat-divider inset></mat-divider>
 
-    <button mat-button mat-icon-button *ngIf="!isPageMyPublications()" (click)="onSharePublication()" matTooltip="{{ 'share' | translate }}">
-      <mat-icon>share</mat-icon>
-    </button>
-
-    <button
-      mat-button
-      mat-icon-button
-      *ngIf="currentUser && (isAdmin || isAuthor)"
-      [matMenuTriggerFor]="menu"
-      matTooltip="{{ 'more_options' | translate }}"
-      aria-label="Example icon-button with a menu"
-    >
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="onSharePublication()" *ngIf="isPageMyPublications()">
-        <mat-icon>share</mat-icon>
-        <span>{{ "share" | translate }}</span>
-      </button>
-      <button mat-menu-item (click)="onMarkAsAdopted()" *ngIf="!isAdopted">
-        <mat-icon>pets</mat-icon>
-        <span>{{ "mark_as_adopted" | translate }}</span>
-      </button>
-      <button mat-menu-item (click)="onEditPublication()" *ngIf="!isAdopted">
-        <mat-icon>edit</mat-icon>
-        <span>{{ "edit" | translate }}</span>
-      </button>
-      <button mat-menu-item (click)="onDeletePublication()">
+    <mat-card-actions align="end">
+      <button
+        mat-button
+        mat-icon-button
+        *ngIf="currentUser && isClient && isFavorite && isPageFavorites()"
+        (click)="onDeleteFavorite()"
+        matTooltip="{{ 'delete_from_favorites' | translate }}"
+      >
         <mat-icon>delete</mat-icon>
-        <span>{{ "delete" | translate }}</span>
       </button>
-    </mat-menu>
-  </mat-card-actions>
-</mat-card>
+
+      <button
+        mat-button
+        mat-icon-button
+        *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()"
+        (click)="onChangeFavorite()"
+        matTooltip="{{ (isFavorite ? 'favorite_not_border' : 'favorite_border') | translate }}"
+      >
+        <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
+      </button>
+
+      <button mat-button mat-icon-button *ngIf="!isPageMyPublications()" (click)="onSharePublication()" matTooltip="{{ 'share' | translate }}">
+        <mat-icon>share</mat-icon>
+      </button>
+
+      <button
+        mat-button
+        mat-icon-button
+        *ngIf="currentUser && (isAdmin || isAuthor)"
+        [matMenuTriggerFor]="menu"
+        matTooltip="{{ 'more_options' | translate }}"
+        aria-label="Example icon-button with a menu"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onSharePublication()" *ngIf="isPageMyPublications()">
+          <mat-icon>share</mat-icon>
+          <span>{{ "share" | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="onMarkAsAdopted()" *ngIf="!isAdopted">
+          <mat-icon>pets</mat-icon>
+          <span>{{ "mark_as_adopted" | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="onEditPublication()" *ngIf="!isAdopted">
+          <mat-icon>edit</mat-icon>
+          <span>{{ "edit" | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="onDeletePublication()">
+          <mat-icon>delete</mat-icon>
+          <span>{{ "delete" | translate }}</span>
+        </button>
+      </mat-menu>
+    </mat-card-actions>
+  </mat-card>
+</article>

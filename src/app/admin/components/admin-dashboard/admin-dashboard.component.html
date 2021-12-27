@@ -1,0 +1,126 @@
+<main class="container" [ngClass.xs]="{ 'container--padding': true }">
+    <h1>{{ "dashboard.title" | translate }}</h1>
+    <p>{{ "dashboard.subtitle" | translate }}</p>
+    <section>
+      <h3 class="container__section-title">{{ "dashboard.total_count" | translate }}</h3>
+      <mat-list class="general__list" role="list" fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-sm="row wrap" fxLayoutAlign.lt-sm="center start">
+        <mat-list-item
+          class="general__item mat-elevation-z2"
+          role="listitem"
+          fxFlex.lt-sm="100%"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          matTooltip="{{ 'dashboard.count.favorites' | translate }}"
+        >
+          <mat-icon mat-list-icon class="general__icon">favorite</mat-icon>
+          <p mat-line class="general__number">{{ countFavorites }}</p>
+        </mat-list-item>
+  
+        <mat-list-item
+          class="general__item mat-elevation-z2"
+          role="listitem"
+          fxFlex.lt-sm="100%"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          matTooltip="{{ 'dashboard.count.publications' | translate }}"
+        >
+          <mat-icon mat-list-icon class="general__icon">view_list</mat-icon>
+          <p mat-line class="general__number">{{ countPublications }}</p>
+        </mat-list-item>
+  
+        <mat-list-item
+          class="general__item mat-elevation-z2"
+          role="listitem"
+          fxFlex.lt-sm="100%"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          matTooltip="{{ 'dashboard.count.users' | translate }}"
+        >
+          <mat-icon mat-list-icon class="general__icon">people_alt</mat-icon>
+          <p mat-line class="general__number">{{ countUsers }}</p>
+        </mat-list-item>
+  
+        <mat-list-item
+          class="general__item mat-elevation-z2"
+          role="listitem"
+          fxFlex.lt-sm="100%"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          matTooltip="{{ 'dashboard.count.consults' | translate }}"
+        >
+          <mat-icon mat-list-icon class="general__icon">forum</mat-icon>
+          <p mat-line class="general__number">{{ countConsults }}</p>
+        </mat-list-item>
+      </mat-list>
+    </section>
+  
+    <section>
+      <h3 class="container__section-title container__section-title--margin">{{ "dashboard.last_7_days" | translate }}</h3>
+  
+      <!-- <select type="submit" [ngModel]="lineChartType" (ngModelChange)="lineChartType = $event">
+      <option *ngFor="let option of ['bar', 'line']" value="{{ option }}">{{ option | translate }}</option>
+    </select> -->
+  
+      <mat-form-field appearance="fill">
+        <mat-label>{{ "chartType" | translate }}</mat-label>
+        <mat-select [ngModel]="lineChartType" (selectionChange)="lineChartType = $event.value">
+          <mat-option *ngFor="let charType of chartTypes" [value]="charType">{{ charType | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-list class="canvas__list" role="list" fxLayout="row wrap" fxLayoutAlign="space-between center">
+        <mat-list-item class="canvas" role="listitem" fxFlex="50%" fxFlex.lt-lg="100%">
+          <canvas
+            baseChart
+            [datasets]="lineChartDataPublications"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [colors]="lineChartColorsPublications"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+          >
+          </canvas>
+          <div class="canvas__spinner" *ngIf="lineChartDataPublications[0].data.length === 0">
+            <app-loading [diameter]="30"></app-loading>
+          </div>
+        </mat-list-item>
+  
+        <mat-list-item class="canvas" role="listitem" fxFlex="50%" fxFlex.lt-lg="100%">
+          <canvas
+            baseChart
+            [datasets]="lineChartDataUsers"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [colors]="lineChartColorsUsers"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+          >
+          </canvas>
+          <div class="canvas__spinner" *ngIf="lineChartDataUsers[0].data.length === 0">
+            <app-loading [diameter]="30"></app-loading>
+          </div>
+        </mat-list-item>
+  
+        <mat-list-item class="canvas" role="listitem" fxFlex="50%" fxFlex.lt-lg="100%">
+          <canvas
+            baseChart
+            [datasets]="lineChartDataConsults"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [colors]="lineChartColorsConsults"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+          >
+          </canvas>
+          <div class="canvas__spinner" *ngIf="lineChartDataConsults[0].data.length === 0">
+            <app-loading [diameter]="30"></app-loading>
+          </div>
+        </mat-list-item>
+  
+        <mat-list-item class="canvas" role="listitem" fxFlex="50%" fxFlex.lt-lg="100%" fxLayout="row" fxLayoutAlign="center start">
+          <img class="canvas__media" src="../../../../assets/images/graphic_chart.svg" alt="" />
+        </mat-list-item>
+      </mat-list>
+    </section>
+  </main>
+  

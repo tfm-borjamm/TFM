@@ -8,11 +8,8 @@
   "name": "Nombre",
   "surname": "Apellidos",
   "street": "Dirección",
-  "email": "Email",
+  "email": "Correo electrónico",
   "message_placeholder": "Escribe un mensaje",
-  "error": "Se ha producido un error",
-  "error_login": "El correo electrónico o la contraseña es incorrecta",
-  "error_email_exists": "El correo eléctronico ya se encuentra registrado en la aplicación",
   "publications": "Publicaciones",
   "publication": "Publicación",
   "share_link_message": "Hola, te comparto una mascota que necesita un dueño por si te interesa: ",
@@ -128,9 +125,9 @@
   "role": "Rol",
   "change": "Cambiar",
   "joined_on": "Se unió el",
-  "number_of_posts_uploaded": "Número de publicaciones que ha subido a la plataforma",
-  "number_of_posts_adopted": "Número de publicaciones que ha subido y han sido adoptadas",
-  "number_of_posts_saved": "Número de publicaciones guardados en favoritos",
+  "number_of_publications_uploaded": "Número de publicaciones subidas a la plataforma",
+  "number_of_publications_adopted": "Número de publicaciones que ya se encuentran adoptadas",
+  "number_of_publications_saved": "Número de publicaciones guardadas en favoritos",
   "language": "Idioma",
   "line": "Lineal",
   "bar": "Barras",
@@ -169,7 +166,7 @@
 
   "chip.yes": "Con chip",
   "chip.no": "Sin chip",
-  "vaccinate.unknown": "Se desconoce si se encuentra vacunado",
+  "vaccinate.unknown": "Se desconoce",
   "vaccinate.no": "Sin vacunar",
   "vaccinate.yes": "Vacunado",
   "sterile.no": "Sin esterilizar",
@@ -186,12 +183,93 @@
   "search": "Buscar",
 
   "copy_link": "Copiar enlace",
-
   "all_rights_reserved": "Todos los derechos reservados",
   "page_not_found": "Página no encontrada",
   "success_message_sent": "Mensaje enviado correctamente",
   "failed_message_sent": "Error al enviar el mensaje",
   "user_data": "Datos del usuario",
 
-  "chartType": "Tipo de gráfica"
+  "chartType": "Tipo de gráfica",
+
+  "header": {
+    "title": "La manera más simple de adoptar",
+    "subtitle": "Encuentra la mascota que necesita tu adopción"
+  },
+
+  "clear": "Limpiar",
+
+  "info": {
+    "cancelled": "Se ha cancelado la operación",
+    "confirm": {
+      "delete": "¿Está seguro que desea eliminar el recurso? Esta acción no se puede deshacer",
+      "adopted": "¿Está seguro que desea marcar como adoptado la publicación? Esta acción no se puede deshacer",
+      "read": "¿Está seguro que desea marcado como leída la consulta? Esta acción no se puede deshacer"
+    }
+  },
+
+  "success": {
+    "forgot_password": "Se le ha enviado un correo electrónico para que pueda restablecer la contraseña de su cuenta",
+    "user_created": "Se ha creado el usuario correctamente",
+    "user_deleted": "Se ha eliminado el usuario correctamente",
+    "user_updated": "Se ha actualizado el usuario correctamente",
+    "user_registered": "Se ha registrado en la aplicación correctamente",
+    "user_registered_social": "Se ha registrado correctamente. Por favor, vuelva a iniciar sesión con la cuenta ya registrada",
+    "consult_created": "Se ha creado la consulta correctamente",
+    "consult_deleted": "Se ha deliminado la consulta correctamente",
+    "consult_answered": "Se ha marcado como leída la consulta correctamente",
+    "publication_deleted": "Se ha eliminado la publicación correctamente",
+    "publication_adopted": "Se ha marcado como adoptado la publicación correctamente",
+    "publication_created": "Se ha creado la publicación correctamente",
+    "publication_updated": "Se ha editado la publicación correctamente",
+    "favorites_added": "Se ha añadido la publicación en su lista de favoritos",
+    "favorites_deleted": "Se ha eliminado la publicación de su lista de favoritos",
+    "link_copied": "Se ha copiado correctamente el enlace de la publicación",
+    "message_sent": "Se ha enviado el correo correctamente"
+  },
+
+  "errors": {
+    "required": "Este campo es obligatorio",
+    "email": "El correo electrónico no tiene un formato válido",
+    "minlength_8": "Este campo debe tener mínimo 8 caracteres",
+    "minlength_3": "Este campo debe tener mínimo 3 caracteres",
+    "maxlength_55": "Este campo no debe tener más de 55 caracteres",
+    "maxlength_50": "Este campo no debe tener más de 50 caracteres",
+    "pattern": "Este campo no debe tener espacios ni caracteres especiales",
+    "pattern_digits": "Este campo sólo puede contener dígitos",
+    "pattern_name": "El nombre no tiene un formato válido",
+    "length_5": "Este campo debe tener 5 dígitos",
+    "length_9": "Este campo debe tener 9 dígitos",
+    "length_3_55": "Este campo debe tener entre 3 y 500 caracteres",
+    "length_50_500": "Este campo debe tener entre 50 y 500 caracteres",
+    "length_50_600": "Este campo debe tener entre 50 y 600 caracteres",
+    "passwords_equalValue": "Las contraseñas no coinciden",
+    "login": "El correo electrónico o la contraseña es incorrecta",
+    "email_exists": "El correo eléctronico ya se encuentra registrado en la aplicación",
+    "internet": "Existe un problema con su conexión a internet. Por favor, revise que sigue con conexión",
+    "close_window": "Ha cerrado la ventana para iniciar sesión a través de un proveedor externo y no se ha podido completar el proceso correctamente. Vuelve a intentarlo",
+    "register": "El usuario no se encuentra registrado en la aplicación",
+    "auth_provider_email": "Por favor, inicie sesión mediante correo electrónico y contraseña",
+    "auth_provider_google": "Por favor, inicie sesión a través de Google",
+    "auth_provider_facebook": "Por favor, inicie sesión a través de Facebook",
+    "auth_provider_error": "Se ha producido un error mientras se iniciaba sesión",
+    "upload_images": "Se pueden subir como máximo 5 imágenes que no superen los 5 MB",
+    "user_created": "Ha ocurrido un error mientras se creaba el usuario",
+    "user_deleted": "Ha ocurrido un error mientras se eliminaba el usuario",
+    "message_sent": "Ha ocurrido un error mientras se enviaba el correo"
+  },
+
+  "new_publication": "Nueva publicación",
+  "edit_publication": "Editar publicación",
+  "dashboard": {
+    "title": "General",
+    "subtitle": "Este es el resumen general del estado que tiene la aplicación web actualmente",
+    "total_count": "Recuento total",
+    "last_7_days": "Últimos 7 días",
+    "count": {
+      "favorites": "Recuento de las publicaciones favoritas que existen en la aplicación web",
+      "publications": "Recuento de las publicaciones que existen en la aplicación web",
+      "users": "Recuento de los usuarios registrados en la aplicación web",
+      "consults": "Recuento de las consultas que existen en la aplicación web"
+    }
+  }
 }

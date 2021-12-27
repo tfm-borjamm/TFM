@@ -1,9 +1,9 @@
-<mat-sidenav-container class="example-container" [hasBackdrop]="false" *ngIf="loadInformation" fullscreen>
-  <mat-sidenav [mode]="mobileQuery.matches ? 'over' : 'side'" #snav [opened]="user?.role === 'admin' && !mobileQuery.matches">
+<mat-sidenav-container [hasBackdrop]="false" *ngIf="loadInformation">
+  <mat-sidenav [fixedInViewport]="true" role="navigation" [mode]="mobileQuery.matches ? 'over' : 'side'" #snav [opened]="user?.role === 'admin' && !mobileQuery.matches">
     <app-sidenav [user]="user" [mobileQuery]="mobileQuery" (snavStateOnChange)="snav.close()"></app-sidenav>
   </mat-sidenav>
-  <mat-sidenav-content fxLayout="column">
-    <app-header [user]="user" (snavStateOnChange)="snav.toggle()" class="header"></app-header>
+  <mat-sidenav-content class="content" role="region" fxLayout="column">
+    <app-header [user]="user" (snavStateOnChange)="snav.toggle()"></app-header>
     <router-outlet></router-outlet>
     <app-footer fxFlexOffset="auto"></app-footer>
   </mat-sidenav-content>

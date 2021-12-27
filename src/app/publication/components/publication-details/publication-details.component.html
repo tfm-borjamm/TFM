@@ -1,85 +1,169 @@
-<div *ngIf="publication">
-  <!-- <img src="#" alt=""> -->
-  <h1>{{ "professional" | translate }}</h1>
-  <div *ngIf="this.author">
-    <h4 *ngIf="this.author" (click)="onProfileAuthor(this.author.id)">{{ this.author.name }}</h4>
-    <button (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
-  </div>
-
-  <!-- <p>Compartir</p>
-  <app-share-buttons [shareLinkRelative]="shareLink"></app-share-buttons> -->
-
-  <h1>{{ "publication" | translate }}</h1>
-
-  <!-- <ul class="images">
-    <li *ngFor="let image of publication.images">
-      <img class="image" [src]="image.url | imagePublication" alt="{{ 'pet_image' | translate }}" (error)="image.url = ''" />
-    </li>
-  </ul> -->
-
-  <div class="container__carrousel">
-    <mat-carousel
-      timings="250ms ease-in"
-      [autoplay]="true"
-      color="warn"
-      [loop]="false"
-      [hideArrows]="publication.images.length === 1"
-      [hideIndicators]="publication.images.length === 1"
-      [useMouseWheel]="false"
-      orientation="ltr"
-      [maintainAspectRatio]="false"
-      slideHeight="500px"
-      maxWidth="500px"
-      class="carrousel"
+<article class="container container--maxwidth" [ngClass.lt-lg]="{ 'container__publication-maxwidth': true }" *ngIf="publication">
+  <h1 class="container__title">Detalles de {{ publication.name | capitalize }}</h1>
+  <div align="end">
+    <button
+      *ngIf="isAuthor || isAdmin"
+      class="container__button-more"
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      matTooltip="{{ 'more_options' | translate }}"
+      aria-label="More options"
     >
-      <mat-carousel-slide #matCarouselSlide *ngFor="let image of publication.images; let i = index" [image]="image.url" [hideOverlay]="true"></mat-carousel-slide>
-    </mat-carousel>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onDeletePublication()">
+        <mat-icon>delete</mat-icon>
+        <span>{{ "delete" | translate }}</span>
+      </button>
+      <button mat-menu-item *ngIf="!isAdopted" (click)="onEditPublication()">
+        <mat-icon>edit</mat-icon>
+        <span>{{ "edit" | translate }}</span>
+      </button>
+      <button mat-menu-item *ngIf="!isAdopted" (click)="onMarkAsAdopted()">
+        <mat-icon>pets</mat-icon>
+        <span>{{ "mark_as_adopted" | translate }}</span>
+      </button>
+    </mat-menu>
   </div>
+  <!-- <div >
+      <button (click)="onDeletePublication()">{{ "delete" | translate }}</button>
+      <button *ngIf="!isAdopted" (click)="onEditPublication()">{{ "edit" | translate }}</button>
+      <button *ngIf="!isAdopted" (click)="onMarkAsAdopted()">{{ "mark_as_adopted" | translate }}</button>
+    </div> -->
 
-  <!-- <li>{{ publication.id }}</li> -->
+  <div
+    class="container__publication"
+    fxLayout.lt-lg="column"
+    fxLayoutGap.gt-md="100px"
+    fxLayoutGap.lt-lg="30px"
+    fxLayoutAlign.lt-lg="center center"
+    fxLayout.gt-md="row"
+    fxLayoutAlign.gt-md="start start"
+  >
+    <section class="container__section" aria-label="Detalle de la publicación" fxFlex="1 1 auto">
+      <div fxLayout="column" fxLayoutGap="16px">
+        <div class="container__carrousel">
+          <mat-carousel
+            timings="250ms ease-in"
+            [autoplay]="true"
+            color="warn"
+            [loop]="false"
+            [hideArrows]="publication.images.length === 1"
+            [hideIndicators]="publication.images.length === 1"
+            [useMouseWheel]="false"
+            orientation="ltr"
+            [maintainAspectRatio]="false"
+            slideHeight="500px"
+            maxWidth="500px"
+            class="carrousel"
+          >
+            <mat-carousel-slide #matCarouselSlide *ngFor="let image of publication.images; let i = index" [image]="image.url" [hideOverlay]="true"></mat-carousel-slide>
+          </mat-carousel>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <div>
+            <p>{{ publication.date | amLocale: translateService.currentLang | amDateFormat: "DD-MM-YYYY" }}</p>
+            <p class="container__tag">{{ publication.state | translate | uppercase }}</p>
+          </div>
 
-  <h4>{{ "name" | translate }}</h4>
-  <p>{{ publication.name }}</p>
-  <h4>{{ "date" | translate }}</h4>
-  <p>{{ publication.date | date }}</p>
-  <h4>{{ "description" | translate }}</h4>
-  <p>{{ publication.description | capitalize }}</p>
-  <h4>{{ "province" | translate }}</h4>
-  <p>{{ publication.province }}</p>
-  <h4>{{ "breed" | translate }}</h4>
-  <p>{{ publication.breed | titlecase }}</p>
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <button mat-icon-button (click)="onSharePublication()" matTooltip="{{ 'share' | translate }}">
+              <mat-icon>share</mat-icon>
+            </button>
+            <button *ngIf="isClient" mat-icon-button (click)="onChangeFavorite(isFavorite ? -1 : +1)">
+              <mat-icon *ngIf="isFavorite" matTooltip="{{ 'favorite_not_border' | translate }}">favorites</mat-icon>
+              <mat-icon *ngIf="!isFavorite" matTooltip="{{ 'favorite_border' | translate }}">favorite_border</mat-icon>
+            </button>
+            <span *ngIf="isClient" class="container__item-title">{{ countFavorites }}</span>
+          </div>
+        </div>
+        <!-- <button (click)="onSharePublication()">{{ "share" | translate }}</button> -->
+        <!-- <button (click)="onChangeFavorite(+1)" *ngIf="isClient && !isFavorite">Corazon sin rellenar</button> -->
+        <!-- <h4 *ngIf="isClient">{{ "favorites" | translate }}:</h4> -->
+        <!-- <span *ngIf="isClient">{{ countFavorites }}</span> -->
 
-  <h4>{{ "type" | translate }}</h4>
-  <p>{{ publication.type | translate }}</p>
-  <h4>{{ "state" | translate }}</h4>
-  <p>{{ publication.state | translate }}</p>
-  <h4>{{ "size" | translate }}</h4>
-  <p>{{ publication.size | translate }}</p>
-  <h4>{{ "sex" | translate }}</h4>
-  <p>{{ publication.sex | translate }}</p>
-  <h4>{{ "age" | translate }}</h4>
-  <p>{{ publication.age | translate }}</p>
+        <p class="container__item-title">{{ "description" | translate }}</p>
+        <p>{{ publication.description | capitalize }}</p>
 
-  <p translate="{{ 'chip.' + publication.chip }}"></p>
-  <p translate="{{ 'vaccinate.' + publication.vaccinate }}"></p>
-  <p translate="{{ 'sterile.' + publication.sterile }}"></p>
-  <p translate="{{ 'dewormed.' + publication.dewormed }}"></p>
-  <p translate="{{ 'shipping.' + publication.shipping }}"></p>
+        <!-- <h4>{{ "breed" | translate }}</h4>
+        <h4>{{ "province" | translate }}</h4>
+        <h4>{{ "type" | translate }}</h4>
+        <h4>{{ "state" | translate }}</h4>
+        <h4>{{ "size" | translate }}</h4>
+        <h4>{{ "sex" | translate }}</h4>
+        <h4>{{ "age" | translate }}</h4> -->
 
-  <div class="buttons">
-    <button (click)="onSharePublication()">{{ "share" | translate }}</button>
-    <button (click)="onChangeFavorite(-1)" *ngIf="isClient && isFavorite">Corazon rellenado</button>
-    <button (click)="onChangeFavorite(+1)" *ngIf="isClient && !isFavorite">Corazon sin rellenar</button>
-    <h4 *ngIf="isClient">{{ "favorites" | translate }}:</h4>
-    <span *ngIf="isClient">{{ countFavorites }}</span>
+        <mat-list class="container__pet" fxLayout.gt-xs="row wrap" fxLayout.lt-sm="column" role="list">
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'breed' | translate }}">category</mat-icon>
+            <p mat-line>{{ publication.breed | titlecase }}</p>
+          </mat-list-item>
+
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'type' | translate }}">pets</mat-icon>
+            <p mat-line>{{ publication.type | translate }}</p>
+          </mat-list-item>
+
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'size' | translate }}" svgIcon="size" aria-hidden="false" aria-label="Size icon"></mat-icon>
+            <p mat-line>{{ publication.size | translate }}</p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'sex' | translate }}" svgIcon="sex" aria-hidden="false" aria-label="Sex icon"></mat-icon>
+            <p mat-line>{{ publication.sex | translate }}</p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'age' | translate }}" svgIcon="age" aria-hidden="false" aria-label="Age icon"></mat-icon>
+            <p mat-line>{{ publication.age | translate }}</p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'chip' | translate }}" svgIcon="chip" aria-hidden="false" aria-label="Chip icon"></mat-icon>
+            <p mat-line translate="{{ 'chip.' + publication.chip }}"></p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'vaccinate' | translate }}" svgIcon="vaccinate" aria-hidden="false" aria-label="Vaccinate icon"></mat-icon>
+            <p mat-line translate="{{ 'vaccinate.' + publication.vaccinate }}"></p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'sterile' | translate }}">child_friendly</mat-icon>
+            <p mat-line translate="{{ 'sterile.' + publication.sterile }}"></p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'dewormed' | translate }}">sanitizer</mat-icon>
+            <p mat-line translate="{{ 'dewormed.' + publication.dewormed }}"></p>
+          </mat-list-item>
+          <mat-list-item fxFlex.gt-xs="50%" role="listitem">
+            <mat-icon mat-list-icon matTooltip="{{ 'shipping' | translate }}" svgIcon="dispatch" aria-hidden="false" aria-label="Dispatch icon"></mat-icon>
+            <p mat-line translate="{{ 'shipping.' + publication.shipping }}"></p>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon matTooltip="{{ 'province' | translate }}">location_on</mat-icon>
+            <p mat-line>{{ publication.province }}</p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </section>
+
+    <aside fxFlex="1 1 50%" fxFlex.lt-lg="1 1 auto" fxFlexFill>
+      <div *ngIf="author" class="container__aside-author" [ngClass.lt-sm]="{ 'container__aside-author--padding': true }">
+        <mat-nav-list class="container__aside-nav">
+          <a mat-list-item routerLink="/user/profile/{{ author.id }}">
+            <mat-icon mat-list-icon class="container__mat-icon">how_to_reg</mat-icon>
+            <p mat-line>{{ author.name | titlecase }}</p>
+            <mat-icon>chevron_right</mat-icon>
+          </a>
+        </mat-nav-list>
+
+        <button mat-flat-button color="primary" (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
+      </div>
+
+      <!-- <div class="container__aside-share">
+        <button mat-raised-button color="primary" (click)="onSharePublication()">{{ "share" | translate }}</button>
+      </div> -->
+    </aside>
   </div>
-
-  <div *ngIf="isAuthor || isAdmin">
-    <button (click)="onDeletePublication()">{{ "delete" | translate }}</button>
-    <button *ngIf="!isAdopted" (click)="onEditPublication()">{{ "edit" | translate }}</button>
-    <button *ngIf="!isAdopted" (click)="onMarkAsAdopted()">{{ "mark_as_adopted" | translate }}</button>
-  </div>
-</div>
+</article>
 
 <!-- <div>
     <p>Comparte esta publicación</p>

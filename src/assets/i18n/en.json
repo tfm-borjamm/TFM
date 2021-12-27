@@ -10,9 +10,6 @@
   "street": "Street",
   "email": "Email",
   "message_placeholder": "Write a message",
-  "error": "An error has occurred",
-  "error_login": "The email or password is incorrect",
-  "error_email_exists": "The email already exists in the application",
   "publications": "Publications",
   "publication": "Publication",
   "share_link_message": "Hello, I share a pet that needs an owner in case you are interested: ",
@@ -125,9 +122,9 @@
   "role": "Role",
   "change": "Change",
   "joined_on": "Joined on",
-  "number_of_posts_uploaded": "Number of posts uploaded to the platform",
-  "number_of_posts_adopted": "Number of posts that have been uploaded and have been adopted",
-  "number_of_posts_saved": "Number of posts saved in favorites",
+  "number_of_publications_uploaded": "Number of publications uploaded to the platform",
+  "number_of_publications_adopted": "Number of publications that have been adopted",
+  "number_of_publications_saved": "Number of publications saved in favorites",
   "language": "Language",
   "line": "Line",
   "bar": "Bar",
@@ -167,7 +164,7 @@
 
   "chip.yes": "With chip",
   "chip.no": "Without chip",
-  "vaccinate.unknown": "It is unknown if he is vaccinated",
+  "vaccinate.unknown": "It is unknown",
   "vaccinate.no": "Unvaccinated",
   "vaccinate.yes": "Vaccinated",
   "sterile.no": "Without sterilization",
@@ -190,5 +187,87 @@
   "failed_message_sent": "Error sending message",
   "user_data": "User's data",
 
-  "chartType": "Chart's type"
+  "chartType": "Chart's type",
+
+  "header": {
+    "title": "The simplest way to adopt",
+    "subtitle": "Find the pet that needs your adoption"
+  },
+
+  "clear": "Clear",
+
+  "info": {
+    "cancelled": "The operation has been cancelled",
+    "confirm": {
+      "delete": "Are you sure you want to delete the resource? This action can not be undone",
+      "adopted": "Are you sure you want to mark the post as adopted? This action can not be undone",
+      "read": "Are you sure you want the query marked as read? This action can not be undone"
+    }
+  },
+
+  "success": {
+    "forgot_password": "An email has been sent to you so that you can reset your account password",
+    "user_created": "User created successfully",
+    "user_deleted": "User has been successfully removed",
+    "user_updated": "User has been updated successfully",
+    "user_registered": "You have successfully registered in the application",
+    "user_registered_social": "You have successfully registered. Please log in again with the account already registered",
+    "consult_created": "The consult was created successfully",
+    "consult_deleted": "The consult has been delimited correctly",
+    "consult_answered": "The consult has been marked as read correctly",
+    "publication_deleted": "The publication has been deleted successfully",
+    "publication_adopted": "The publication has been marked as adopted successfully",
+    "publication_created": "The publication has been created successfully",
+    "publication_updated": "The publication has been edited successfully",
+    "favorites_added": "The publication has been added to your favorites list",
+    "favorites_deleted": "The publication has been removed from your favorites list",
+    "link_copied": "Publication link copied successfully",
+    "message_sent": "The mail has been sent successfully"
+  },
+
+  "errors": {
+    "required": "This field is required",
+    "email": "Email doesn't have a correct format",
+    "minlength_8": "This field must have a minimum of 8 characters",
+    "minlength_3": "This field must have a minimum of 3 characters",
+    "maxlength_55": "This field must not be longer than 55 characters",
+    "maxlength_50": "This field must not be longer than 50 characters",
+    "pattern": "This field must not have spaces or special characters",
+    "pattern_digits": "This field can only contain digits",
+    "pattern_name": "The name is not in a valid format",
+    "length_5": "This field must have 5 digits",
+    "length_9": "This field must have 9 digits",
+    "length_3_55": "This field must be between 3 and 500 characters",
+    "length_50_500": "This field must be between 50 and 500 characters",
+    "length_50_600": "This field must be between 50 and 600 characters",
+    "passwords_equalValue": "Passwords do not match",
+    "login": "The email or password is incorrect",
+    "email_exists": "The email is already registered in the application",
+    "internet": "There is a problem with your internet connection. Please check that you are still online",
+    "close_window": "You have closed the window to log in through an external provider and the process could not be completed successfully. Retry",
+    "register": "The user is not registered in the application",
+    "auth_provider_email": "Please login using email and password",
+    "auth_provider_google": "Please login through Google",
+    "auth_provider_facebook": "Please log in via Facebook",
+    "auth_provider_error": "An error occurred while logging in",
+    "upload_images": "A maximum of 5 images can be uploaded that do not exceed 5 MB",
+    "user_created": "An error occurred while creating the user",
+    "user_deleted": "An error occurred while deleting the user",
+    "message_sent": "An error occurred while sending the mail"
+  },
+
+  "new_publication": "New publication",
+  "edit_publication": "Edit publication",
+  "dashboard": {
+    "title": "General",
+    "subtitle": "This is the general summary of the current state of the web application",
+    "total_count": "Total count",
+    "last_7_days": "Last 7 days",
+    "count": {
+      "favorites": "Count of favorite publications that exist in the web application",
+      "publications": "Count of publications that exist in the web application",
+      "users": "Count of registered users in the web application",
+      "consults": "Count of consults that exist in the web application"
+    }
+  }
 }

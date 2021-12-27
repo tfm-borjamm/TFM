@@ -74,6 +74,8 @@ export class PublicationFormComponent implements OnInit {
 
   public btnSubmitted: boolean;
 
+  public publicationParam: Publication;
+
   constructor(
     private formBuilder: FormBuilder,
     private utilsService: UtilsService,
@@ -97,12 +99,12 @@ export class PublicationFormComponent implements OnInit {
     // Si vamos a editar una publicación
 
     this.user = await this.authService.getCurrentUserLogged();
-    const publicationParam = this.activatedRoute.snapshot.data.publication;
-    console.log('--->', publicationParam);
+    this.publicationParam = this.activatedRoute.snapshot.data.publication;
+    console.log('--->', this.publicationParam);
 
-    if (publicationParam) {
+    if (this.publicationParam) {
       // this.publication = await this.publicationService.getPublicationById(this.publicationID);
-      this.publication = publicationParam;
+      this.publication = this.publicationParam;
       this.publicationID = this.publication.id;
       this.isAuthor = this.publication.idAuthor === this.user.id;
 
@@ -166,7 +168,7 @@ export class PublicationFormComponent implements OnInit {
     ]);
     this.description = new FormControl(
       this.publication?.description ? this.capitalizePipe.transform(this.publication.description) : '',
-      [Validators.required, Validators.minLength(50)]
+      [Validators.required, Validators.minLength(50), Validators.maxLength(600)]
     );
     this.age = new FormControl(this.publication.age ? this.publication.age : '', [Validators.required]);
     this.size = new FormControl(this.publication.size ? this.publication.size : '', [Validators.required]);
@@ -277,9 +279,8 @@ export class PublicationFormComponent implements OnInit {
       //   // }
       // }
     } else {
-      console.log('Error al subir el fichero !!!');
-      this.notificationService.errorNotification('Sólo se pueden subir no más de 5 imágenes');
-
+      // Se pueden subir como máximo 5 imágenes que no superen los 5 MB
+      this.notificationService.errorNotification('errors.upload_images');
       // console.info(validations.init(isSizeValid, isNumFilesValid, isFormatValid));
     }
   }
@@ -294,7 +295,7 @@ export class PublicationFormComponent implements OnInit {
     if (!this.image.dirty) this.image.markAsDirty();
     if (file.url) {
       this.originalImages.filter((img: any) => img.id === file.id).map((obj: any) => (obj.status = 'deleted'));
-      console.log('suerte', this.originalImages);
+      // console.log('suerte', this.originalImages);
     }
     // console.log(this.files, this.originalImages);
     this.files = this.files.filter((f: any) => f.id !== file.id);
@@ -402,7 +403,7 @@ export class PublicationFormComponent implements OnInit {
             // this.publicationForm.reset();
             this.location.back();
             // console.log('Creado correctamente!');
-            this.notificationService.successNotification('create_success', 'ok');
+            this.notificationService.successNotification('success.publication_created');
           })
           .catch((e) => {
             this.btnSubmitted = false;
@@ -416,7 +417,7 @@ export class PublicationFormComponent implements OnInit {
             // this.publicationForm.reset();
             this.location.back();
             // console.log('Editado correctamente!');
-            this.notificationService.successNotification('edit_success', 'ok');
+            this.notificationService.successNotification('success.publication_updated');
           })
           .catch((e) => {
             this.btnSubmitted = false;

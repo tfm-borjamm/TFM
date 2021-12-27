@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PublicationRoutingModule } from './publication-routing.module';
 import { PublicationDetailsComponent } from './components/publication-details/publication-details.component';
 import { PublicationFormComponent } from './components/publication-form/publication-form.component';
 import { PublicationItemComponent } from './components/publication-item/publication-item.component';
@@ -19,12 +18,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
+import { MatListModule } from '@angular/material/list';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   ],
   imports: [
     CommonModule,
-    PublicationRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
@@ -52,6 +52,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatSelectModule,
     FlexLayoutModule,
+    MatListModule,
+    RouterModule,
   ],
+  exports: [PublicationListComponent],
 })
 export class PublicationModule {}

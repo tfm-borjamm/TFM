@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Role } from 'src/app/shared/enums/role.enum';
@@ -8,6 +8,7 @@ import { Publication } from '../../../shared/models/publication.model';
 import { FavoriteService } from '../../../shared/services/favorite.service';
 import { PublicationService } from '../../../shared/services/publication.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-publication-item',
@@ -34,10 +35,13 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private publicationService: PublicationService,
     private favoriteService: FavoriteService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
+    console.log('INIT CARD ITEM');
+
     if (this.currentUser) {
       this.isAuthor = this.currentUser.id === this.publication.idAuthor;
       this.isAdmin = this.currentUser.role === Role.admin;
@@ -56,48 +60,55 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   }
 
   isPageFavorites(): boolean {
-    return this.router.url === '/publication/favorites';
+    return this.router.url === '/favorites';
   }
 
   isPageMyPublications(): boolean {
-    return this.router.url === '/publication/my-publications';
+    return this.router.url === '/publications';
   }
 
   onChangeFavorite() {
     this.isFavorite = !this.isFavorite;
+    this.notificationService.successNotification(
+      this.isFavorite ? 'success.favorites_added' : 'success.favorites_deleted'
+    );
   }
 
   onEditPublication() {
-    this.router.navigate([`publication/item/${this.publication.id}`]);
+    this.router.navigate(['publication', this.publication.id]);
   }
 
-  onDetailsPublication() {
-    this.router.navigate([`publication/${this.publication.state}/details/${this.publication.id}`]);
-  }
+  // onDetailsPublication() {
+  //   this.router.navigate(['publication', this.publication.state, 'details', this.publication.id]);
+  // }
 
-  onDeleteFavorite(): void {
-    // Eliminamos de favoritos si o si !
-    this.favoriteService
-      .removeFavorite(this.currentUser.id, this.publication.id)
-      .then(() => {
-        console.log('Se ha eliminado correctamente!');
-        this.onChangePublication.emit(this.publication.id);
-      })
-      .catch((e) => this.utilsService.errorHandling(e));
-  }
-
-  onMarkAsAdopted() {
-    // this.publication = null;
-    if (window.confirm('¿Estas seguro?')) {
-      this.publicationService
-        .updatePublicationState(this.publication)
+  async onDeleteFavorite(): Promise<void> {
+    const confirm = await this.dialogService.confirm('info.confirm.delete');
+    if (confirm) {
+      this.favoriteService
+        .removeFavorite(this.currentUser.id, this.publication.id)
         .then(() => {
-          console.log('Marcado como adoptado');
+          this.notificationService.successNotification('success.favorites_deleted');
           this.onChangePublication.emit(this.publication.id);
         })
         .catch((e) => this.utilsService.errorHandling(e));
     } else {
-      console.log('Cancelado por el usuario');
+      this.notificationService.infoNotification('info.cancelled');
+    }
+  }
+
+  async onMarkAsAdopted(): Promise<void> {
+    const confirm = await this.dialogService.confirm('info.confirm.adopted');
+    if (confirm) {
+      this.publicationService
+        .updatePublicationState(this.publication)
+        .then(() => {
+          this.notificationService.successNotification('success.publication_adopted');
+          this.onChangePublication.emit(this.publication.id);
+        })
+        .catch((e) => this.utilsService.errorHandling(e));
+    } else {
+      this.notificationService.infoNotification('info.cancelled');
     }
   }
 
@@ -105,26 +116,25 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
     // Compartir publicación
     // Open the dialog
     // const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
-    const options = {
+    const options: { name: string; shareLink: string } = {
       name: 'share',
       shareLink: `publication/${this.publication.state}/details/${this.publication.id}`,
     };
     this.dialogService.openButtonsDialog(options);
-    // window.alert('Link a compartir: ' + shareLink);
   }
 
-  onDeletePublication(): void {
-    if (window.confirm('¿Estas seguro?')) {
-      console.log('Eliminar publicación: ', this.publication.id);
+  async onDeletePublication(): Promise<void> {
+    const confirm = await this.dialogService.confirm('info.confirm.delete');
+    if (confirm) {
       this.publicationService
         .deletePublication(this.publication)
-        .then((a) => {
-          console.log('Se ha eliminado la publicación correctamente', a);
+        .then(() => {
+          this.notificationService.successNotification('success.publication_deleted');
           this.onChangePublication.emit(this.publication.id);
         })
         .catch((e) => this.utilsService.errorHandling(e));
     } else {
-      console.log('Cancelado por el usuario');
+      this.notificationService.infoNotification('info.cancelled');
     }
   }
 
@@ -132,23 +142,16 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
     console.log('Se destruye el item!');
     const isChangeFavorite = this.isFavorite !== this.detectedChangeFavorite;
     if (this.isClient && isChangeFavorite) {
-      console.log('Petición real a la base de datos');
+      // console.log('Petición real a la base de datos');
       if (this.isFavorite) {
         // Se añade a favoritos
         this.favoriteService
           .setFavorite(this.currentUser.id, this.publication)
-          .then((a) => {
-            console.log('Se ha añadido a favoritos', a);
-          })
           .catch((e) => this.utilsService.errorHandling(e));
       } else {
         // Se quita de favoritos
         this.favoriteService
           .removeFavorite(this.currentUser.id, this.publication.id)
-          .then((a) => {
-            console.log('Se ha eliminado de favoritos', a);
-            // this.onChangePublication.emit(this.publication.id);
-          })
           .catch((e) => this.utilsService.errorHandling(e));
       }
     }

@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { codes } from 'src/app/user/helpers/codes';
+import { codes } from 'src/app/shared/helpers/codes';
 import { provinces } from 'src/app/shared/helpers/provinces';
 import { User } from '../../../shared/models/user.model';
 import { AuthService } from '../../../shared/services/auth.service';
@@ -12,6 +12,7 @@ import { Location, TitleCasePipe } from '@angular/common';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Role } from 'src/app/shared/enums/role.enum';
 import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Component({
   selector: 'app-user-form',
@@ -45,9 +46,10 @@ export class UserFormComponent implements OnInit {
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    // private router: Router,
     private location: Location,
     private notificationService: NotificationService,
+    private dialogService: DialogService,
     private titleCasePipe: TitleCasePipe,
     private capitalizePipe: CapitalizePipe
   ) {
@@ -118,23 +120,28 @@ export class UserFormComponent implements OnInit {
   //   return user;
   // }
 
-  onDeleteUser() {
+  async onDeleteUser(): Promise<void> {
     // Método para eliminar un usuario
-    this.userService
-      .deleteUser(this.user)
-      .then(async (a) => {
-        console.log('Se ha eliminado correctamente el usuario', a);
-        const response = await this.utilsService
-          .deleteUser(this.user.id)
-          .catch((e) => this.utilsService.errorHandling(e));
-        if (response) {
-          console.log('Respuesta: ', response);
-        }
-      })
-      .catch((e) => this.utilsService.errorHandling(e));
+    const confirm = await this.dialogService.confirm('info.confirm.delete');
+    if (confirm) {
+      this.userService
+        .deleteUser(this.user)
+        .then(async () => {
+          const response = await this.utilsService
+            .deleteUser(this.user.id)
+            .catch((e) => this.utilsService.errorHandling(e));
+          if (response) {
+            console.log('Respuesta: ', response);
+          }
+          this.notificationService.successNotification('success.user_deleted');
+        })
+        .catch((e) => this.utilsService.errorHandling(e));
+    } else {
+      this.notificationService.infoNotification('info.cancelled');
+    }
   }
 
-  onEdit() {
+  onEdit(): void {
     // Actualizar los campos del usuario en la base de datos
     if (this.editForm.valid) {
       // email: this.id ? this.user.email : this.editForm.value.email,
@@ -157,8 +164,8 @@ export class UserFormComponent implements OnInit {
         .updateUser(user)
         .then(() => {
           // console.log('Información guardada correctamente');
-          this.notificationService.successNotification('Se han guardado los datos correctamente');
           // this.btnForm.nativeElement.disabled = false;
+          this.notificationService.successNotification('success.user_updated');
           this.location.back();
         })
         .catch((e) => {

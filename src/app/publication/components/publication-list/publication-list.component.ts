@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { provinces } from 'src/app/shared/helpers/provinces';
@@ -11,14 +9,11 @@ import { PublicationState } from '../../../shared/enums/publication-state';
 import { Type } from '../../../shared/enums/type.enum';
 import { PublicationService } from '../../../shared/services/publication.service';
 import { Publication } from 'src/app/shared/models/publication.model';
+import { Observable, Subscription } from 'rxjs';
 
 interface filterSelected {
   filter: string;
   value: string;
-}
-
-interface settings {
-  start: boolean;
 }
 
 @Component({
@@ -26,88 +21,97 @@ interface settings {
   templateUrl: './publication-list.component.html',
   styleUrls: ['./publication-list.component.scss'],
 })
-export class PublicationListComponent implements OnInit {
-  public idLastItem: string = null;
-  public limitItems: number = 6;
+export class PublicationListComponent implements OnInit, OnDestroy {
+  @Input() public changeTabs: Observable<string>;
+  @Input() public changeFilters: Observable<void>;
 
-  public filterPublication: FormGroup;
-  public province: FormControl;
-  public type: FormControl;
+  public subscriptionTabs: Subscription;
+  public subscriptionFilters: Subscription;
+
+  public idLastItem: string = null;
+  public limitItems: number = 3;
+
+  // public filterPublication: FormGroup;
+  // public province: FormControl;
+  // public type: FormControl;
 
   public publications: any[] = [];
 
   public finished: boolean = false;
-  public types: string[] = Object.values(Type);
-  public provinces: string[] = provinces;
+  // public types: string[] = Object.values(Type);
+  // public provinces: string[] = provinces;
 
   public currentURL: string;
   public queryDB: string;
 
-  public paramType: string = null;
-  public paramProvince: string = null;
+  // public paramType: string = null;
+  // public paramProvince: string = null;
 
   public user: User;
 
-  public links = ['available', 'adopteds'];
+  // public links = ['available', 'adopteds'];
 
-  public showFilter: boolean;
+  // public showFilter: boolean;
 
   public itemsLoaded: Promise<boolean>;
+  public onLoadingNextItems: boolean;
 
   constructor(
     private publicationService: PublicationService,
     private utilsService: UtilsService,
-    private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService
   ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    const filterPublications = this.utilsService.getLocalStorage('filterPublications');
-    const params = filterPublications;
-    if (params) {
-      const isTypeOK = Object.values(Type).includes(params?.type);
-      const isProvinceOK = provinces.includes(params?.province);
-      this.paramType = isTypeOK ? params?.type : null;
-      this.paramProvince = isProvinceOK ? params?.province : null;
-    }
-    console.log('PARAMS: ', this.paramProvince, this.paramType);
+    // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    // const filterPublications = this.utilsService.getLocalStorage('filterPublications');
+    // const params = filterPublications;
+    // if (params) {
+    //   const isTypeOK = Object.values(Type).includes(params?.type);
+    //   const isProvinceOK = provinces.includes(params?.province);
+    //   this.paramType = isTypeOK ? params?.type : null;
+    //   this.paramProvince = isProvinceOK ? params?.province : null;
+    // }
+    // console.log('PARAMS: ', this.paramProvince, this.paramType);
   }
 
   async ngOnInit(): Promise<void> {
     this.currentURL = this.router.url;
-
-    if (this.currentURL.includes('/publication/list')) {
-      this.loadForm();
-      if (this.paramType || this.paramProvince) this.onChangeFilter();
-    }
     this.user = await this.authService.getCurrentUserLogged();
-    if (!this.currentURL.includes('/publication/my-publications')) this.getPublications();
+    if (this.currentURL === '/home')
+      this.subscriptionFilters = this.changeFilters.subscribe(() => this.onChangeFilter());
+
+    if (this.currentURL === '/publications')
+      this.subscriptionTabs = this.changeTabs.subscribe((link) => this.onChangeTab(link));
+
+    console.log('---->', this.currentURL);
+
+    if (this.currentURL !== '/publications') this.getPublications();
   }
 
-  loadForm() {
-    this.type = new FormControl(this.paramType ?? '');
-    this.province = new FormControl(this.paramProvince ?? '');
-    this.filterPublication = this.createForm();
-  }
+  // loadForm() {
+  //   this.type = new FormControl(this.paramType ?? '');
+  //   this.province = new FormControl(this.paramProvince ?? '');
+  //   this.filterPublication = this.createForm();
+  // }
 
-  createForm(): FormGroup {
-    return this.formBuilder.group({
-      type: this.type,
-      province: this.province,
-    });
-  }
+  // createForm(): FormGroup {
+  //   return this.formBuilder.group({
+  //     type: this.type,
+  //     province: this.province,
+  //   });
+  // }
 
   onChangePublication(id: string) {
     this.publications = this.publications.filter((x) => x.id !== id);
   }
 
-  resetFilter() {
-    this.resetSearch();
-    this.type.setValue('');
-    this.province.setValue('');
-    this.utilsService.removeLocalStorage('filterPublications');
-    this.getPublications();
-  }
+  // resetFilter() {
+  //   this.resetSearch();
+  //   // this.type.setValue('');
+  //   // this.province.setValue('');
+  //   this.utilsService.removeLocalStorage('filterPublications');
+  //   this.getPublications();
+  // }
 
   resetSearch(): void {
     this.idLastItem = null;
@@ -119,53 +123,64 @@ export class PublicationListComponent implements OnInit {
     this.itemsLoaded = promise;
   }
 
-  async onChangeFilter(selected?: filterSelected) {
-    this.resetSearch();
+  onChangeFilter() {
     this.resetLoading();
+    this.resetSearch();
+    this.getPublications();
 
-    const search: any = {
-      type: this.filterPublication.value.type,
-      province: this.filterPublication.value.province,
-    };
+    // const search: any = {
+    //   type: this.filterPublication.value.type,
+    //   province: this.filterPublication.value.province,
+    // };
 
-    if (selected) {
-      const { filter, value } = selected;
-      search[filter] = value;
-    }
+    // if (selected) {
+    //   const { filter, value } = selected;
+    //   search[filter] = value;
+    // }
 
-    console.log('Search: ', search);
+    // console.log('Search: ', search);
 
-    if (search.type && search.province) {
-      const query = {
-        type: search.type,
-        province: search.province,
-      };
-      this.utilsService.setLocalStorage('filterPublications', query);
-    } else if (search.type) {
-      const query = {
-        type: search.type,
-      };
-      this.utilsService.setLocalStorage('filterPublications', query);
-    } else if (search.province) {
-      const query = {
-        province: search.province,
-      };
-      this.utilsService.setLocalStorage('filterPublications', query);
-    } else {
-      this.utilsService.removeLocalStorage('filterPublications');
-    }
+    // if (search.type && search.province) {
+    //   const query = {
+    //     type: search.type,
+    //     province: search.province,
+    //   };
+    //   this.utilsService.setLocalStorage('filterPublications', query);
+    // } else if (search.type) {
+    //   const query = {
+    //     type: search.type,
+    //   };
+    //   this.utilsService.setLocalStorage('filterPublications', query);
+    // } else if (search.province) {
+    //   const query = {
+    //     province: search.province,
+    //   };
+    //   this.utilsService.setLocalStorage('filterPublications', query);
+    // } else {
+    //   this.utilsService.removeLocalStorage('filterPublications');
+    // }
 
-    if (selected) this.getPublications();
+    // if (selected) this.getPublications();
+  }
+
+  onChangeTab(link: string) {
+    this.resetLoading();
+    this.resetSearch();
+    this.publications = [];
+    this.queryDB =
+      link === PublicationState.adopted ? `users/${this.user.id}/myHistory` : `users/${this.user.id}/myPublications`;
+    this.getPublications();
   }
 
   onScroll() {
     console.log('SCROLLED');
     if (this.finished) return;
     console.log('Sigue habiendo articulos');
+    this.onLoadingNextItems = true;
     this.getPublications({ start: false });
   }
 
-  async getPublications(settings: settings = { start: true }) {
+  async getPublications(settings: any = { start: true }) {
     let options;
     let nextPublications;
 
@@ -198,7 +213,7 @@ export class PublicationListComponent implements OnInit {
     }
     console.log('Valores: ', filterKey, filterValue);
 
-    if (this.currentURL.includes('/publication/list')) {
+    if (this.currentURL.includes('/home')) {
       options = {
         filterKey: filterKey,
         filterValue: filterValue,
@@ -206,16 +221,15 @@ export class PublicationListComponent implements OnInit {
         limitItems: this.limitItems,
       };
       nextPublications = await this.publicationService.getPublications(options);
-      this.publications = settings.start ? nextPublications : this.publications.concat(nextPublications);
-    } else if (
-      this.currentURL.includes('/publication/favorites') ||
-      this.currentURL.includes('/publication/my-publications')
-    ) {
+      // settings.start ? this.publications.push(nextPublications) : this.publications.concat(...nextPublications);
+      this.publications = settings.start ? nextPublications : this.publications.concat(...nextPublications);
+      // debugger;
+    } else if (this.currentURL.includes('/favorites') || this.currentURL.includes('/publications')) {
       this.queryDB = this.queryDB ?? `users/${this.user.id}/myPublications`;
       options = {
         idLastItem: this.idLastItem,
         limitItems: this.limitItems,
-        url: this.currentURL.includes('/publication/favorites') ? `users/${this.user.id}/myFavorites` : this.queryDB, // Favoritos: users/${id_user}/myFavorites
+        url: this.currentURL.includes('/favorites') ? `users/${this.user.id}/myFavorites` : this.queryDB, // Favoritos: users/${id_user}/myFavorites
       };
       const idPublications = await this.publicationService.getPublicationsID(options); // [{id: '', state: null | ''}, ... ]
       let queryDB: string = null;
@@ -239,8 +253,9 @@ export class PublicationListComponent implements OnInit {
     }
     this.finished = nextPublications.length < this.limitItems;
     this.setLastItemID();
-    console.log('this.finished', this.finished);
+    console.log('IS FINISHED? ', this.finished);
     this.itemsLoaded = Promise.resolve(true);
+    this.onLoadingNextItems = false;
   }
 
   setLastItemID() {
@@ -261,34 +276,24 @@ export class PublicationListComponent implements OnInit {
     this.idLastItem = lastPublication.id;
   }
 
-  onCreatePublication() {
-    this.router.navigate(['publication', 'item']);
-  }
-
-  onChange(link: string) {
-    this.resetLoading();
-    // const checked = (event.target as HTMLInputElement).checked;
-    // this.queryDB = checked ? 'users/myHistory' : 'users/myPublications';
-
-    if (link === 'adopteds') link = link.substring(0, link.length - 1); // delete plural 's' letter
-
-    console.log('Filtra:', link);
-    this.publications = [];
-    this.queryDB =
-      link === PublicationState.adopted ? `users/${this.user.id}/myHistory` : `users/${this.user.id}/myPublications`;
-    this.resetSearch();
-    this.getPublications();
-  }
+  // onCreatePublication() {
+  //   this.router.navigate(['publication', 'item']);
+  // }
 
   // trackByFn(index: number) {
   //   return index;
   // }
 
   trackByFn(index: number, item: Publication) {
-    return item.id;
+    // return item.id;
+    return item ? item.id : undefined;
   }
 
   ngOnDestroy(): void {
-    console.log('Nos vamos del componente padre');
+    if (this.currentURL === '/home' && this.subscriptionFilters && !this.subscriptionFilters.closed)
+      this.subscriptionFilters.unsubscribe();
+    if (this.currentURL === '/publications' && this.subscriptionTabs && !this.subscriptionTabs.closed)
+      this.subscriptionTabs.unsubscribe();
+    // console.log('Nos vamos del componente padre');
   }
 }

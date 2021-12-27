@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
           return true;
         }
         console.log('DENEGADO: USUARIO NO AUTENTICADO');
-        this.router.navigate(['/user/login']);
+        this.router.navigate(['access', 'login']);
         return false;
       })
     );

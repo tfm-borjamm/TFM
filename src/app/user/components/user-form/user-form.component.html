@@ -89,9 +89,7 @@
 </main> -->
 
 <main class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
-  <h1 class="main__title" *ngIf="!id">{{ "profile" | translate }}</h1>
-  <h1 class="main__title" *ngIf="id">{{ "edit_user" | translate }}</h1>
-
+  <h1 class="container__title" translate="{{ !id ? 'profile' : 'edit_user' }}"></h1>
   <form class="container__form" [formGroup]="editForm" (ngSubmit)="onEdit()">
     <ul class="container__list">
       <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
@@ -100,10 +98,10 @@
           <mat-label>{{ "name" | translate }} (*)</mat-label>
           <input matInput type="text" id="name" [formControl]="name" placeholder="{{ 'name' | translate }}" />
           <mat-error *ngIf="editForm.get('name').errors && (editForm.get('name').touched || editForm.get('name').dirty)">
-            <span *ngIf="editForm.get('name').errors?.required">Este campo es obligatorio</span>
-            <span *ngIf="editForm.get('name').errors?.minlength">Este campo debe tener mínimo 3 caracteres</span>
-            <span *ngIf="editForm.get('name').errors?.maxlength">Este campo no debe tener más de 55 caracteres</span>
-            <span *ngIf="editForm.get('name').errors?.pattern">Este campo no debe tener espacios ni caracteres especiales</span>
+            <span class="container__error" *ngIf="editForm.get('name').errors?.required">{{ "errors.required" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('name').errors?.minlength">{{ "errors.minlength_3" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('name').errors?.maxlength">{{ "errors.maxlength_55" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('name').errors?.pattern">{{ "errors.pattern" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -120,9 +118,9 @@
           <mat-label>{{ "postal_code" | translate }} (*)</mat-label>
           <input matInput type="text" id="cp" [formControl]="cp" placeholder="{{ 'postal_code' | translate }}" />
           <mat-error *ngIf="editForm.get('cp').errors && (editForm.get('cp').touched || editForm.get('cp').dirty)">
-            <span *ngIf="editForm.get('cp').errors?.required">Este campo es obligatorio</span>
-            <span *ngIf="editForm.get('cp').errors?.pattern">Este campo sólo puede contener números</span>
-            <span *ngIf="editForm.get('cp').errors?.maxlength || editForm.get('cp').errors?.minlength">Este campo debe tener 5 dígitos</span>
+            <span class="container__error" *ngIf="editForm.get('cp').errors?.required">{{ "errors.required" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('cp').errors?.pattern">{{ "errors.pattern_digits" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('cp').errors?.maxlength || editForm.get('cp').errors?.minlength">{{ "errors.length_5" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -131,7 +129,7 @@
           <mat-label>{{ "street" | translate }} (*)</mat-label>
           <input matInput type="text" id="street" [formControl]="street" placeholder="{{ 'street' | translate }}" />
           <mat-error *ngIf="editForm.get('street').errors && (editForm.get('street').touched || editForm.get('street').dirty)">
-            <span *ngIf="editForm.get('street').errors?.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="editForm.get('street').errors?.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -145,7 +143,7 @@
             <mat-option *ngFor="let code of codes" [value]="code">{{ code }}</mat-option>
           </mat-select>
           <mat-error *ngIf="editForm.get('code').errors && (editForm.get('code').touched || editForm.get('code').dirty)">
-            <span *ngIf="editForm.get('code').errors?.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="editForm.get('code').errors?.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -154,9 +152,11 @@
           <mat-label>{{ "telephone" | translate }} (*)</mat-label>
           <input matInput type="text" id="telephone" [formControl]="telephone" placeholder="{{ 'telephone' | translate }}" />
           <mat-error *ngIf="editForm.get('telephone').errors && (editForm.get('telephone').touched || editForm.get('telephone').dirty)">
-            <span *ngIf="editForm.get('telephone').errors?.required">Este campo es obligatorio</span>
-            <span *ngIf="editForm.get('telephone').errors?.pattern">Este campo sólo puede contener dígitos</span>
-            <span *ngIf="editForm.get('telephone').errors?.maxlength || editForm.get('telephone').errors?.minlength"> Este campo debe tener 9 dígitos </span>
+            <span class="container__error" *ngIf="editForm.get('telephone').errors?.required">{{ "errors.required" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('telephone').errors?.pattern">{{ "errors.pattern_digits" | translate }}</span>
+            <span class="container__error" *ngIf="editForm.get('telephone').errors?.maxlength || editForm.get('telephone').errors?.minlength">{{
+              "errors.length_9" | translate
+            }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -179,7 +179,7 @@
             <mat-option *ngFor="let province of provinces" [value]="province">{{ province | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="editForm.get('province').errors && (editForm.get('province').touched || editForm.get('province').dirty)">
-            <span *ngIf="editForm.get('province').errors?.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="editForm.get('province').errors?.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>

@@ -1,22 +1,50 @@
-// .mat-toolbar {
-//   position: sticky;
-//   position: -webkit-sticky; /* For macOS/iOS Safari */
-//   top: 0; /* Sets the sticky toolbar to be on top */
-//   z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
-//   // background-color: #2d2e2e;
-//   // color: white;
-// }
+.header__container {
+  background: linear-gradient(
+      0deg,
+      rgba(134, 143, 150, 0.7) 0%,
+      rgba(89, 97, 100, 0.7) 100%
+    ),
+    url("../../../../assets/images/index.jpg");
+
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 60vh;
+  background-attachment: fixed;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.header__title {
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center;
+  margin: 0 1rem;
+}
+
+.header__subtitle {
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  margin: 1rem;
+}
 
 .logo {
-  color: white;
+  color: #000;
+  font-size: 20px !important;
   font-family: "Alfa Slab One", cursive;
 }
 
-.mark > mat-icon {
+.language__trigger-icon {
   position: absolute;
 }
 
-.mark > span {
+.language__trigger-text {
   margin-left: 33px;
   font-size: 1rem;
   font-weight: 500;
@@ -64,4 +92,31 @@ button {
 
 ::ng-deep .language .mat-form-field-underline {
   width: 0;
+}
+
+::ng-deep .nav__logo .mat-list-item-content {
+  padding: 0 8px 0 0 !important;
+}
+
+// :ng-deep .mat-select-panel .mat-option {
+//   font-size: 1rem !important;
+// }
+
+.language--margin {
+  margin-right: 8px !important;
+}
+
+.nav__toolbar {
+  padding-left: 8px;
+  padding-right: 0px;
+}
+
+::ng-deep .mat-select-panel .mat-optgroup-label,
+::ng-deep .mat-select-panel .mat-option {
+  font-size: 1rem !important;
+}
+
+.language__text {
+  position: relative;
+  bottom: -2px;
 }

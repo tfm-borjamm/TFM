@@ -22,13 +22,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PublicationModule } from './publication/publication.module';
+import { HomeComponent } from './components/home/home.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';
+import { PublicationsComponent } from './components/publications/publications.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, HomeComponent, FavoritesComponent, PublicationsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -48,6 +60,15 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     MatSidenavModule,
     FlexLayoutModule,
+    PublicationModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

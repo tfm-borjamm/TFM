@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OutletContext, Router, RouterOutlet } from '@angular/router';
 import { User } from './shared/models/user.model';
@@ -28,8 +28,8 @@ export class AppComponent {
     private translate: TranslateService,
     private authService: AuthService,
     private userService: UserService,
-    private router: Router,
-    private media: MediaMatcher
+    private media: MediaMatcher,
+    private router: Router
   ) {
     this.mobileQuery = this.media.matchMedia('(max-width: 960px)');
   }

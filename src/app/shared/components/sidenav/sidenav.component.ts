@@ -36,10 +36,10 @@ export class SidenavComponent implements OnInit {
     // this.utilsService.clearLocalStorage();
     this.authService.logout();
     // this.router.navigate(['publication']);
-    // if (this.router.url == '/publication/list') {
+    // if (this.router.url == '/home') {
     //   // window.location.reload();
     // } else {
-    this.router.navigate(['publication/list']);
+    this.router.navigate(['home']);
     // }
   }
 }

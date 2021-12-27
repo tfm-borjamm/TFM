@@ -1,0 +1,41 @@
+<main
+  class="container"
+  [ngClass.xs]="{ 'container--padding': true }"
+  fxLayoutAlign="start start"
+  fxLayout="row"
+  fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="start center"
+  fxLayoutGap.gt-sm="6rem"
+>
+  <aside [ngClass.lt-md]="{ container__filter: true }" fxFlex="400px" fxFlex.lt-md="1 1 auto">
+    <div align="end">
+      <button type="button" mat-icon-button fxHide fxShow.xs="true" fxShow.sm="false" (click)="showFilter = !showFilter">
+        <mat-icon matTooltip="{{ 'filters' | translate }}">filter_list</mat-icon>
+      </button>
+    </div>
+
+    <div fxShow [fxShow.xs]="showFilter">
+      <h3>{{ "filters" | translate }}</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>{{ "province" | translate }}</mat-label>
+        <mat-select [formControl]="province" (selectionChange)="onChangeFilter({ filter: 'province', value: $event.value })">
+          <mat-option value="">{{ "all" | translate }}</mat-option>
+          <mat-option *ngFor="let province of provinces" [value]="province">{{ province }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>{{ "type" | translate }}</mat-label>
+        <mat-select [formControl]="type" (selectionChange)="onChangeFilter({ filter: 'type', value: $event.value })">
+          <mat-option value="">{{ "all" | translate }}</mat-option>
+          <mat-option *ngFor="let type of types" [value]="type">{{ type | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="resetFilter()" [disabled]="!filterPublication.get('type').value && !filterPublication.get('province').value">
+        {{ "clear" | translate }}
+      </button>
+    </div>
+  </aside>
+
+  <app-publication-list [changeFilters]="onChangeFilterSubject.asObservable()" fxFlex="1 1 auto"></app-publication-list>
+</main>

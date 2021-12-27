@@ -46,43 +46,29 @@ export class UtilsService {
       switch (error.code) {
         case 'auth/user-not-found':
           // console.error('El usuario no se encuentra registrado en la aplicación');
-          this.notificationService.errorNotification('El usuario no se encuentra registrado en la aplicación');
-          // console.log(
-          //   'Si ha introducido bien el correo electrónico de la cuenta, le habrá llegado un correo electrónico para restablecer la contraseña'
-          // );
+          this.notificationService.errorNotification('errors.register');
           break;
         case 'auth/popup-closed-by-user':
-          this.notificationService.errorNotification(
-            'Ha cerrado la ventana para iniciar sesión a través de un proveedor externo y no se ha podido completar el proceso correctamente. Vuelve a intentarlo'
-          );
-          // console.error(
-          //   'Ha cerrado la ventana para iniciar sesión a través de un proveedor externo y no se ha podido completar el proceso correctamente. Vuelve a intentarlo'
-          // );
+          this.notificationService.errorNotification('errors.close_window');
           break;
         case 'auth/network-request-failed':
-          this.notificationService.errorNotification('No tiene conexión a internet');
-          // console.error('No tiene conexión a internet');
+          this.notificationService.errorNotification('errors.internet');
           break;
         case 'auth/email-already-in-use':
-          this.notificationService.errorNotification(
-            'El email introducido ya se encuentra registrado en la aplicación'
-          );
-          // console.error('El email introducido ya se encuentra registrado en la aplicación');
+          this.notificationService.errorNotification('errors.email_exists');
           break;
         case 'auth/wrong-password':
-          this.notificationService.errorNotification('El email o la contraseña introducida es incorrecta');
-          // console.error('El email o la contraseña introducida es incorrecta');
+          this.notificationService.errorNotification('errors.login');
           break;
         case 'auth/account-exists-with-different-credential':
           const provider = e.provider;
           const providerName: { [key: string]: string } = {
-            password: 'correo y contraseña.',
-            'google.com': 'Google.',
-            'facebook.com': 'Facebook.',
+            password: 'errors.auth_provider_email',
+            'google.com': 'errors.auth_provider_google',
+            'facebook.com': 'errors.auth_provider_facebook',
           };
-          const messageError = providerName[provider] || 'ninguno.';
-          this.notificationService.errorNotification(`Por favor, autenticate mediante ${messageError}`);
-          // console.error(`Por favor, autenticate mediante ${messageError}`);
+          const messageError = providerName[provider] || 'errors.auth_provider_error';
+          this.notificationService.errorNotification(messageError);
           break;
         default:
           this.notificationService.errorNotification(error.message);

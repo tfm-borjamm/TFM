@@ -65,7 +65,7 @@ export class SocialDialogComponent implements OnInit {
   copyLinkToClipboard(): void {
     navigator.clipboard
       .writeText(this.shareLink)
-      .then(() => this.notificationService.successNotification('Se ha copiado correctamente el enlace'))
+      .then(() => this.notificationService.successNotification('success.link_copied'))
       .catch((e) => this.utilsService.errorHandling(e));
   }
 

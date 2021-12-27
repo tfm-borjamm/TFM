@@ -1,0 +1,84 @@
+.container--padding {
+  padding: 2rem 1.5rem;
+}
+
+.container__section-title {
+  font-weight: bold;
+}
+
+.container__section-title--margin {
+  margin: 2rem 0;
+}
+
+.general__list {
+  // margin-bottom: 2rem;
+  padding: 0 !important;
+}
+
+.general__item {
+  // border: 2px solid black;
+  padding: 3rem 0;
+  border-radius: 3px;
+  transition: 0.1s transform;
+  margin: 0.9rem;
+}
+
+.general__item:hover {
+  transform: scale(1.1);
+}
+
+.general__number {
+  font-weight: bold;
+  font-size: 35px !important;
+}
+
+.general__icon {
+  height: 40px !important;
+  width: 40px !important;
+  font-size: 40px !important;
+}
+
+::ng-deep .mat-line,
+::ng-deep .mat-list-text {
+  overflow: initial !important;
+}
+
+.canvas__list {
+  position: relative;
+  display: block;
+  margin: 1rem 0;
+}
+
+.canvas {
+  position: relative;
+  width: 100%;
+  display: block;
+  height: 100%;
+  margin: 1rem 0;
+  // outline: 1px solid blue;
+}
+
+.canvas__spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.list__item {
+  max-width: 600px;
+}
+
+.canvas__media {
+  transition: 0.5s transform;
+  width: 100%;
+  max-width: 400px;
+}
+
+.canvas__media:hover {
+  transform: rotate(-15deg);
+}
+
+::ng-deep .canvas .mat-list-item-content {
+  padding: 0 !important;
+}

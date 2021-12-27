@@ -13,24 +13,40 @@
 // }
 
 .mat-card {
-  margin: 2rem 1rem;
+  margin: 1.5rem 0.8rem;
   transition: transform 0.1s;
   pointer-events: none;
   width: 230px;
   overflow: hidden;
+  word-wrap: break-word;
 }
 
-.card__banner-state {
+.card__title,
+.card__subtitle {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.card__title {
+  line-height: 25px;
+}
+
+.card__subtitle {
+  line-height: 16px;
+}
+
+.card__tag {
   position: absolute;
-  top: -70%;
-  left: 85%;
-  transform: rotate(45deg);
-  width: 100%;
-  height: 100%;
-  background: #2e2e2e;
+  left: 0;
+  bottom: 0;
+  font-size: 12px;
+  margin: 0.9rem 1rem;
   font-weight: bold;
-  color: #ffffff;
-  padding-bottom: 1rem;
+  border-radius: 4px;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid #d7dcdf;
+  border-radius: 4px;
 }
 
 .adopted::before {
@@ -77,4 +93,9 @@
   // margin: 0;
   margin-bottom: 0.5rem;
   padding: 0;
+}
+
+.card__anchor {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
 }

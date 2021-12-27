@@ -1,6 +1,6 @@
 <!-- <main class="container" [ngClass.xs]="{ 'container--padding': true }">
   <!-- <div
-    *ngIf="currentURL.includes('/publication/list')"
+    *ngIf="currentURL.includes('/home')"
     fxLayoutAlign="start start"
     fxLayout="row"
     fxLayout.lt-md="column"
@@ -87,13 +87,13 @@
     </div>
   </div>
 
-  <div *ngIf="!currentURL.includes('/publication/list')">
-    <div *ngIf="currentURL.includes('/publication/favorites')">
+  <div *ngIf="!currentURL.includes('/home')">
+    <div *ngIf="currentURL.includes('/favorites')">
       <h1>{{ "your_favorites" | translate }}</h1>
       <p>{{ "favorites_description" | translate }}</p>
     </div>
 
-    <div *ngIf="currentURL.includes('/publication/my-publications')">
+    <div *ngIf="currentURL.includes('/publications')">
       <h1>{{ "your_publications" | translate }}</h1>
       <p>{{ "publications_description" | translate }}</p>
       <div align="end">
@@ -138,9 +138,18 @@
 
 <!-- <div *ngIf="publications && publications.length !== 0" class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div> -->
 
-<main class="container" [ngClass.xs]="{ 'container--padding': true }">
-  <div fxLayoutAlign="start start" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign.lt-md="start center" fxLayoutGap.gt-sm="4rem">
-    <div *ngIf="currentURL.includes('/publication/list')" [ngClass.lt-md]="{ container__filter: true }">
+<!-- <main> -->
+<!-- <div
+  class="container"
+  [ngClass.xs]="{ 'container--padding': true }"
+  fxLayoutAlign="start start"
+  fxLayout="row"
+  fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="start center"
+  fxLayoutGap.gt-sm="4rem"
+> -->
+<!-- <div> -->
+<!-- <aside *ngIf="currentURL.includes('/home')" [ngClass.lt-md]="{ container__filter: true }">
       <div align="end">
         <button mat-icon-button fxHide fxShow.xs="true" fxShow.sm="false" (click)="showFilter = !showFilter">
           <mat-icon matTooltip="{{ 'filters' | translate }}">filter_list</mat-icon>
@@ -167,9 +176,9 @@
         <button mat-flat-button color="primary" (click)="resetFilter()" [disabled]="!filterPublication.get('type').value && !filterPublication.get('province').value">
           Limpiar
         </button>
-      </div>
+      </div> -->
 
-      <!-- <select
+<!-- <select
         class="main__select"
         id="size"
         [formControl]="province"
@@ -179,20 +188,20 @@
         <option value="" selected>{{ "all" | translate }}</option>
         <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
       </select> -->
-      <!-- <p>{{ "type" | translate }}</p>
+<!-- <p>{{ "type" | translate }}</p>
       <select class="main__select" id="size" [formControl]="type" [value]="filterPublication.value.type" (ngModelChange)="onChangeFilter({ filter: 'type', value: $event })">
         <option value="" selected>{{ "all" | translate }}</option>
         <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type | translate }}</option>
       </select> -->
-    </div>
+<!-- </aside> -->
 
-    <div class="container__list-items" fxFlex="1 1 auto">
-      <div *ngIf="currentURL.includes('/publication/favorites')">
+<section class="container__list-items">
+  <!-- <div *ngIf="currentURL.includes('/favorites')">
         <h1>{{ "your_favorites" | translate }}</h1>
         <p>{{ "favorites_description" | translate }}</p>
-      </div>
+      </div> -->
 
-      <div *ngIf="currentURL.includes('/publication/my-publications')">
+  <!-- <div *ngIf="currentURL.includes('/publications')">
         <h1>{{ "your_publications" | translate }}</h1>
         <p>{{ "publications_description" | translate }}</p>
         <div align="end">
@@ -202,38 +211,51 @@
         </div>
 
         <app-menu-tabs *ngIf="user" [links]="links" (newLinkEvent)="onChange($event)"></app-menu-tabs>
-      </div>
+      </div> -->
 
-      <ng-container *ngIf="itemsLoaded | async; else loading">
-        <div *ngIf="publications && publications.length !== 0; else noResults" fxLayoutAlign="start start" fxLayout="row wrap" fxLayoutAlign.lt-md="center start">
-          <app-publication-item
-            *ngFor="let publication of publications; trackBy: trackByFn; let last = last"
-            class="item"
-            [ngClass]="{ last: last }"
-            [publication]="publication"
-            [currentUser]="user"
-            (onChangePublication)="onChangePublication($event)"
-          ></app-publication-item>
+  <ng-container *ngIf="(itemsLoaded | async) && true; else loading">
+    <div
+      class="container__list-publications"
+      *ngIf="publications && publications.length !== 0; else noResults"
+      fxLayout="row wrap"
+      fxLayoutAlign="start start"
+      fxLayoutAlign.lt-md="center start"
+      infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()"
+    >
+      <app-publication-item
+        *ngFor="let publication of publications; trackBy: trackByFn; let index = index; let last = last"
+        [ngClass]="{ last: last }"
+        [publication]="publication"
+        [currentUser]="user"
+        (onChangePublication)="onChangePublication($event)"
+      ></app-publication-item>
 
-          <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"></div>
-        </div>
+      <!-- Tracking value: [{{ trackByFn(index, publication) }}] -->
+    </div>
 
-        <!-- Scrolled -->
-        <!-- <div *ngIf="!finished" class="container__wait" fxLayout="row" fxLayoutAlign="center center">
+    <div align="center" *ngIf="!finished && onLoadingNextItems">
+      <app-loading [diameter]="30"></app-loading>
+    </div>
+
+    <!-- Scrolled -->
+    <!-- <div *ngIf="!finished" class="container__wait" fxLayout="row" fxLayoutAlign="center center">
           <app-loading [diameter]="40"></app-loading>
         </div> -->
-        <!-- <div *ngIf="finished">Eso son todos los datos de la BD</div> -->
-      </ng-container>
+    <!-- <div *ngIf="finished">Eso son todos los datos de la BD</div> -->
+  </ng-container>
 
-      <ng-template #loading>
-        <div class="container__wait" fxLayout="row" fxLayoutAlign="center center">
-          <app-loading [diameter]="40"></app-loading>
-        </div>
-      </ng-template>
-
-      <ng-template #noResults>
-        <app-no-results></app-no-results>
-      </ng-template>
+  <ng-template #loading>
+    <div class="container__wait" fxLayout="row" fxLayoutAlign="center center">
+      <app-loading [diameter]="40"></app-loading>
     </div>
-  </div>
-</main>
+  </ng-template>
+
+  <ng-template #noResults>
+    <app-no-results></app-no-results>
+  </ng-template>
+</section>
+<!-- </div> -->
+<!-- </main> -->

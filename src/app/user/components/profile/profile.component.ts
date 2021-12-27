@@ -4,7 +4,6 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { User } from '../../../shared/models/user.model';
 import { AuthService } from '../../../shared/services/auth.service';
 import { UserService } from '../../../shared/services/user.service';
-import { Subscription } from 'rxjs';
 import { Role } from '../../../shared/enums/role.enum';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'src/app/shared/services/dialog.service';
@@ -18,7 +17,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public user: User;
   public currentUser: User;
   public userID: string;
-  public subscription: Subscription;
 
   public isAdminUser: boolean;
   public isProfessionalUser: boolean;
@@ -65,19 +63,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  onContactUser() {
-    const options: any = {
+  onContactUser(): void {
+    const options: { name: string; author: User } = {
       name: 'contact',
       author: this.user,
     };
     this.dialogService.openButtonsDialog(options);
   }
 
-  onEditUser() {
+  onEditUser(): void {
     this.router.navigate(['user', 'profile-form', this.user.id]);
   }
 
-  ngOnDestroy() {
-    // if (!this.subscription.closed) this.subscription.unsubscribe();
-  }
+  ngOnDestroy() {}
 }

@@ -1,0 +1,180 @@
+<!-- <main class="main">
+  <div class="main__container">
+    <h1 class="main__title">{{ "register" | translate }}</h1>
+    <p>{{ "register_description" | translate }}</p>
+    <form class="main__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <ul class="main__list">
+        <li class="main__item">
+          <label class="main__label" for="cp">{{ "postal_code" | translate }} (*)</label>
+          <input class="main__input" type="text" name="cp" [formControl]="cp" placeholder="{{ 'postal_code' | translate }}" />
+          <div class="errors" *ngIf="registerForm.get('cp').errors && (registerForm.get('cp').touched || registerForm.get('cp').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.pattern">Este campo sólo puede contener números</span>
+            <span class="errors__msg" *ngIf="registerForm.get('cp').errors.maxlength || registerForm.get('cp').errors.minlength">Este campo debe contener 5 dígitos</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="street">{{ "street" | translate }} (*)</label>
+          <input class="main__input" type="text" name="street" [formControl]="street" placeholder="{{ 'street' | translate }}" />
+          <div class="errors" *ngIf="registerForm.get('street').errors && (registerForm.get('street').touched || registerForm.get('street').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('street').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="code">{{ "code" | translate }} (*)</label>
+          <select class="main__select" id="code" [formControl]="code" [value]="registerForm.value.code">
+            <option value="" disabled selected>{{ "select_a_code" | translate }}</option>
+            <option *ngFor="let code of codes" value="{{ code }}" [selected]="registerForm.value.code === code ? true : false">
+              {{ code }}
+            </option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('code').errors && (registerForm.get('code').touched || registerForm.get('code').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('code').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="telephone">{{ "telephone" | translate }} (*)</label>
+          <input class="main__input" type="telephone" name="telephone" [formControl]="telephone" placeholder="{{ 'telephone' | translate }}" />
+          <div class="errors" *ngIf="registerForm.get('telephone').errors && (registerForm.get('telephone').touched || registerForm.get('telephone').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.required">Este campo es obligatorio</span>
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.pattern">Este campo sólo puede contener dígitos</span>
+            <span class="errors__msg" *ngIf="registerForm.get('telephone').errors.maxlength || registerForm.get('telephone').errors.minlength"
+              >Este campo debe tener 9 dígitos</span
+            >
+          </div>
+        </li>
+
+        <li class="main__item">
+              <label class="main__label" for="role">Tipo de usuario (*)</label>
+              <select class="main__select" id="role" [formControl]="role" [value]="registerForm.value.role">
+                <option value="" disabled selected>Selecciona el tipo</option>
+                <option *ngFor="let role of roles" value="{{ role.key }}" [selected]="registerForm.value.role === role.key">{{ role.value }}</option>
+              </select>
+              <div class="errors" *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
+                <span class="errors__msg" *ngIf="registerForm.get('role').errors.required">Este campo es obligatorio</span>
+              </div>
+            </li>
+
+        <li class="main__item">
+          <label class="main__label" for="role">{{ "account_type" | translate }} (*)</label>
+          <select class="main__select" id="role" [formControl]="role" [value]="registerForm.value.role">
+            <option value="" disabled selected>{{ "select_a_role" | translate }}</option>
+            <option *ngFor="let role of roles" value="{{ role }}" [selected]="registerForm.value.role === role">{{ role | translate }}</option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('role').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item">
+          <label class="main__label" for="province">{{ "province" | translate }}(*)</label>
+          <select class="main__select" id="province" [formControl]="province" [value]="registerForm.value.province">
+            <option value="" disabled selected>{{ "select_a_province" | translate }}</option>
+            <option *ngFor="let province of provinces" value="{{ province }}" [selected]="registerForm.value.province === province ? true : false">{{ province }}</option>
+          </select>
+          <div class="errors" *ngIf="registerForm.get('province').errors && (registerForm.get('province').touched || registerForm.get('province').dirty)">
+            <span class="errors__msg" *ngIf="registerForm.get('province').errors.required">Este campo es obligatorio</span>
+          </div>
+        </li>
+
+        <li class="main__item main__item--fb-100">
+          <button #btnForm class="main__button" type="submit" [disabled]="registerForm.invalid">{{ "register" | translate }}</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+</main> -->
+
+<main class="container" fxLayout="column" fxLayoutAlign="center center">
+  <h1 class="container__title">{{ "register" | translate }}</h1>
+  <p>{{ "register_description" | translate }}</p>
+  <form class="container__form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+    <ul class="container__list">
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Postal code -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "postal_code" | translate }} (*)</mat-label>
+          <input matInput type="text" id="cp" [formControl]="cp" placeholder="{{ 'postal_code' | translate }}" />
+          <mat-error *ngIf="registerForm.get('cp').errors && (registerForm.get('cp').touched || registerForm.get('cp').dirty)">
+            <span class="container__error" *ngIf="registerForm.get('cp').errors?.required">{{ "errors.required" | translate }}</span>
+            <span class="container__error" *ngIf="registerForm.get('cp').errors?.pattern">{{ "errors.pattern_digits" | translate }}</span>
+            <span class="container__error" *ngIf="registerForm.get('cp').errors?.maxlength || registerForm.get('cp').errors?.minlength">{{ "errors.length_5" | translate }}</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Street -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "street" | translate }} (*)</mat-label>
+          <input matInput type="text" id="street" [formControl]="street" placeholder="{{ 'street' | translate }}" />
+          <mat-error *ngIf="registerForm.get('street').errors && (registerForm.get('street').touched || registerForm.get('street').dirty)">
+            <span class="container__error" *ngIf="registerForm.get('street').errors?.required">{{ "errors.required" | translate }}</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Code -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "code" | translate }} (*)</mat-label>
+          <mat-select [formControl]="code">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_code" | translate }}</mat-option>
+            <mat-option *ngFor="let code of codes" [value]="code">{{ code }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="registerForm.get('code').errors && (registerForm.get('code').touched || registerForm.get('code').dirty)">
+            <span class="container__error" *ngIf="registerForm.get('code').errors?.required">{{ "errors.required" | translate }}</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Telephone -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "telephone" | translate }} (*)</mat-label>
+          <input matInput type="text" id="telephone" [formControl]="telephone" placeholder="{{ 'telephone' | translate }}" />
+          <mat-error *ngIf="registerForm.get('telephone').errors && (registerForm.get('telephone').touched || registerForm.get('telephone').dirty)">
+            <span class="container__error" *ngIf="registerForm.get('telephone').errors?.required">{{ "errors.required" | translate }}</span>
+            <span class="container__error" *ngIf="registerForm.get('telephone').errors?.pattern">{{ "errors.pattern_digits" | translate }}</span>
+            <span class="container__error" *ngIf="registerForm.get('telephone').errors?.maxlength || registerForm.get('telephone').errors?.minlength">{{
+              "errors.length_9" | translate
+            }}</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+        <!-- Account type (role) -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "account_type" | translate }} (*)</mat-label>
+          <mat-select [formControl]="role">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_role" | translate }}</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role">{{ role | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="registerForm.get('role').errors && (registerForm.get('role').touched || registerForm.get('role').dirty)">
+            <span class="container__error" *ngIf="registerForm.get('role').errors?.required">{{ "errors.required" | translate }}</span>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Province -->
+        <mat-form-field appearance="fill">
+          <mat-label>{{ "province" | translate }} (*)</mat-label>
+          <mat-select [formControl]="province">
+            <mat-option [value]="null" [disabled]="true">{{ "select_a_province" | translate }}</mat-option>
+            <mat-option *ngFor="let province of provinces" [value]="province">{{ province | translate }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="registerForm.get('province').errors && (registerForm.get('province').touched || registerForm.get('province').dirty)">
+            <span class="container__error" *ngIf="registerForm.get('province').errors?.required">{{ "errors.required" | translate }}</span>
+          </mat-error>
+        </mat-form-field>
+      </li>
+
+      <!-- Sign in button -->
+      <li class="container__item" align="end" fxFlexFill>
+        <button class="container__button" mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid || btnSubmitted">
+          <app-loading *ngIf="btnSubmitted" class="container__loading" [diameter]="20" [display]="'inline'"></app-loading>
+          <span>{{ "register" | translate }}</span>
+        </button>
+      </li>
+    </ul>
+  </form>
+</main>

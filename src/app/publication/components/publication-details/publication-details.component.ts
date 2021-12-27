@@ -11,6 +11,10 @@ import { Publication } from '../../../shared/models/publication.model';
 import { FavoriteService } from '../../../shared/services/favorite.service';
 import { PublicationService } from '../../../shared/services/publication.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-publication-details',
@@ -37,6 +41,13 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
 
   public countFavorites: number = 0;
 
+  public CHIP_ICON = '../../../../assets/images/chip.svg';
+  public AGE_ICON = '../../../../assets/images/age.svg';
+  public SEX_ICON = '../../../../assets/images/sex.svg';
+  public SIZE_ICON = '../../../../assets/images/size.svg';
+  public VACCINATE_ICON = '../../../../assets/images/vaccinate.svg';
+  public DISPATCH_ICON = '../../../../assets/images/dispatch.svg';
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -44,10 +55,15 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     private favoriteService: FavoriteService,
     private utilsService: UtilsService,
     private location: Location,
-    private userService: UserService, // User service
-    private authService: AuthService, // Auth service
-    private dialogService: DialogService
+    private userService: UserService,
+    private authService: AuthService,
+    private dialogService: DialogService,
+    private notificationService: NotificationService,
+    public translateService: TranslateService,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
   ) {
+    this.addIcons();
     console.log(this.activatedRoute.snapshot.data);
 
     this.publication = this.activatedRoute.snapshot.data.publication;
@@ -102,8 +118,17 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
       this.isFavorite = favoritesCurrentUser.map((favorite) => favorite.id).includes(this.publication.id);
       this.isCopyFavorite = this.isFavorite;
       this.countFavorites = (await this.favoriteService.getFavorites(this.id)).length;
-      console.log('-->', this.countFavorites, this.id);
+      // console.log('-->', this.countFavorites, this.id);
     }
+  }
+
+  addIcons() {
+    this.matIconRegistry.addSvgIcon('chip', this.domSanitizer.bypassSecurityTrustResourceUrl(this.CHIP_ICON));
+    this.matIconRegistry.addSvgIcon('age', this.domSanitizer.bypassSecurityTrustResourceUrl(this.AGE_ICON));
+    this.matIconRegistry.addSvgIcon('sex', this.domSanitizer.bypassSecurityTrustResourceUrl(this.SEX_ICON));
+    this.matIconRegistry.addSvgIcon('size', this.domSanitizer.bypassSecurityTrustResourceUrl(this.SIZE_ICON));
+    this.matIconRegistry.addSvgIcon('vaccinate', this.domSanitizer.bypassSecurityTrustResourceUrl(this.VACCINATE_ICON));
+    this.matIconRegistry.addSvgIcon('dispatch', this.domSanitizer.bypassSecurityTrustResourceUrl(this.DISPATCH_ICON));
   }
 
   onChangeFavorite(count: number) {
@@ -113,38 +138,43 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
   }
 
   onEditPublication() {
-    this.router.navigate([`/publication/item/${this.publication.id}`]);
+    this.router.navigate(['publication', this.publication.id]);
   }
 
-  onDeletePublication() {
-    // Eliminar publicación
-    this.publicationService
-      .deletePublication(this.publication)
-      .then(() => {
-        console.log('Publicación eliminada correctamente');
-        this.publication = null;
-        this.location.back();
-      })
-      .catch((e) => this.utilsService.errorHandling(e));
-  }
-
-  onMarkAsAdopted() {
-    if (window.confirm('¿Estas seguro?')) {
+  async onDeletePublication() {
+    const confirm = await this.dialogService.confirm('info.confirm.delete');
+    if (confirm) {
       this.publicationService
-        .updatePublicationState(this.publication)
-        .then((p) => {
-          console.log('Marcado como adoptado', p);
-          this.publication.state = PublicationState.adopted;
+        .deletePublication(this.publication)
+        .then(() => {
+          this.notificationService.successNotification('success.publication_deleted');
+          this.publication = null;
+          this.location.back();
         })
         .catch((e) => this.utilsService.errorHandling(e));
     } else {
-      console.log('Cancelado por el usuario');
+      this.notificationService.infoNotification('info.cancelled');
+    }
+  }
+
+  async onMarkAsAdopted() {
+    const confirm = await this.dialogService.confirm('info.confirm.adopted');
+    if (confirm) {
+      this.publicationService
+        .updatePublicationState(this.publication)
+        .then(() => {
+          this.publication.state = PublicationState.adopted;
+          this.notificationService.successNotification('success.publication_adopted');
+        })
+        .catch((e) => this.utilsService.errorHandling(e));
+    } else {
+      this.notificationService.infoNotification('info.cancelled');
     }
   }
 
   onSharePublication(): void {
     const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
-    const options: any = {
+    const options: { name: string; shareLink: string } = {
       name: 'share',
       shareLink: shareLink,
     };
@@ -156,7 +186,7 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
   }
 
   onContactAuthor(): void {
-    const options: any = {
+    const options: { name: string; author: User } = {
       name: 'contact',
       author: this.author,
     };
@@ -184,22 +214,15 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     if (!this.publication) return;
     const isClientCurrentUser = this.currentUser && this.currentUser.role === Role.client;
     const isChangeFavorite = this.isFavorite !== this.isCopyFavorite;
-    console.log('No entra aquí');
     if (isClientCurrentUser && isChangeFavorite) {
-      console.log('Se procede a cambiar favorito');
+      // console.log('Se procede a cambiar favorito');
       if (this.isFavorite) {
         this.favoriteService
           .setFavorite(this.currentUser.id, this.publication)
-          .then((a) => {
-            console.log('Se ha añadido a favoritos', a);
-          })
           .catch((e) => this.utilsService.errorHandling(e));
       } else {
         this.favoriteService
           .removeFavorite(this.currentUser.id, this.publication.id)
-          .then((a) => {
-            console.log('Se ha eliminado de favoritos', a);
-          })
           .catch((e) => this.utilsService.errorHandling(e));
       }
     }

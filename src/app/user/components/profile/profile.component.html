@@ -1,7 +1,6 @@
 <main class="container container--max" *ngIf="user">
-  <h1 class="container__title" *ngIf="isCurrentUser" align="center">{{ "profile" | translate }}</h1>
-  <h1 class="container__title" *ngIf="!isCurrentUser" align="center">{{ "user_data" | translate }}</h1>
-  <div class="container__profile" fxLayout="row" fxLayoutAlign="center stretch" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="10px" fxLayoutGap="100px">
+  <h1 class="container__title" translate="{{ isCurrentUser ? 'profile' : 'user_data' }}" align="center"></h1>
+  <section class="container__profile" fxLayout="row" fxLayoutAlign="center stretch" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="10px" fxLayoutGap="100px">
     <div fxLayout="column" fxLayoutAlign="start center">
       <div class="container__profile-image">
         <mat-icon class="container__profile-media">account_circle</mat-icon>
@@ -9,15 +8,15 @@
 
       <mat-list role="list" fxLayout="row" fxLayoutAlign="space-between start">
         <mat-list-item role="listitem" *ngIf="isClientUser" fxLayout="row" fxLayoutAlign="center center">
-          <mat-icon mat-list-icon matTooltip="{{ 'number_of_posts_saved' | translate }}">favorite_border</mat-icon>
+          <mat-icon mat-list-icon matTooltip="{{ 'number_of_publications_saved' | translate }}">favorite_border</mat-icon>
           <span>{{ user.myFavorites | count }}</span>
         </mat-list-item>
         <mat-list-item role="listitem" *ngIf="!isClientUser" fxLayout="row" fxLayoutAlign="center center">
-          <mat-icon mat-list-icon matTooltip="{{ 'number_of_posts_uploaded' | translate }}">playlist_add</mat-icon>
+          <mat-icon mat-list-icon matTooltip="{{ 'number_of_publications_uploaded' | translate }}">playlist_add</mat-icon>
           <span>{{ user.myPublications | count: user.myHistory }}</span>
         </mat-list-item>
         <mat-list-item role="listitem" *ngIf="!isClientUser" fxLayout="row" fxLayoutAlign="center center">
-          <mat-icon mat-list-icon matTooltip="{{ 'number_of_posts_adopted' | translate }}">playlist_add_check</mat-icon>
+          <mat-icon mat-list-icon matTooltip="{{ 'number_of_publications_adopted' | translate }}">playlist_add_check</mat-icon>
           <span>{{ user.myHistory | count }}</span>
         </mat-list-item>
       </mat-list>
@@ -27,51 +26,51 @@
       <button class="container__container-button" mat-flat-button color="warn" *ngIf="isCurrentUser || isAdminUser" (click)="onEditUser()">{{ "change" | translate }}</button>
     </div>
 
-    <ul class="container__list container__list--padding" fxFlex="1 1 auto" fxLayout="column" fxLayoutGap.lt-sm="24px">
+    <ul class="container__list container__list--padding" fxFlex="1 1 auto" fxLayout="column" fxLayoutGap.lt-sm="16px">
       <li class="container__item" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "name" | translate }}</p>
-          <p>{{ user.name | titlecase }}</p>
+          <p class="container__item-content">{{ user.name | titlecase }}</p>
         </div>
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "email" | translate }}</p>
-          <p>{{ user.email | capitalize }}</p>
+          <p class="container__item-content">{{ user.email | capitalize }}</p>
         </div>
       </li>
 
       <li class="container__item" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "code" | translate }}</p>
-          <p>{{ user.code }}</p>
+          <p class="container__item-content">{{ user.code }}</p>
         </div>
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "telephone" | translate }}</p>
-          <p>{{ user.telephone }}</p>
+          <p class="container__item-content">{{ user.telephone }}</p>
         </div>
       </li>
 
       <li class="container__item" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "account_type" | translate }}</p>
-          <p>{{ user.role | translate }}</p>
+          <p class="container__item-content">{{ user.role | translate }}</p>
         </div>
 
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "province" | translate }}</p>
-          <p>{{ user.province | translate }}</p>
+          <p class="container__item-content">{{ user.province | translate }}</p>
         </div>
       </li>
 
       <li class="container__item" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "postal_code" | translate }}</p>
-          <p>{{ user.cp }}</p>
+          <p class="container__item-content">{{ user.cp }}</p>
         </div>
         <div fxFlex="50%" fxFlexFill>
           <p class="container__item-title">{{ "street" | translate }}</p>
-          <p>{{ user.street | titlecase }}</p>
+          <p class="container__item-content">{{ user.street | titlecase }}</p>
         </div>
       </li>
     </ul>
-  </div>
+  </section>
 </main>

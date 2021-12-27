@@ -1,34 +1,79 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { IsAdminGuard } from './dashboard/guards/is-admin.guard';
+import { IsAdminGuard } from './guards/is-admin.guard';
+import { PublicationDetailsComponent } from './publication/components/publication-details/publication-details.component';
+import { PublicationFormComponent } from './publication/components/publication-form/publication-form.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { Role } from './shared/enums/role.enum';
+import { RoleGuard } from './shared/guards/role.guard';
+import { PublicationResolver } from './resolvers/publication.resolver';
+import { IsOwnerGuard } from './guards/is-owner.guard';
+import { HomeComponent } from './components/home/home.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';
+import { PublicationsComponent } from './components/publications/publications.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'publication/list', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  { path: 'home', component: HomeComponent },
+
   {
-    path: 'user',
-    loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+    path: 'publication/:state/details/:id',
+    component: PublicationDetailsComponent,
+    resolve: { publication: PublicationResolver },
+  },
+
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
+    data: { role: Role.client },
+    canActivate: [AuthGuard, RoleGuard],
+  },
+
+  {
+    path: 'publications', // my-publications
+    component: PublicationsComponent,
+    data: { role: Role.professional },
+    canActivate: [AuthGuard, RoleGuard],
+  },
+
+  {
+    path: 'publication', // item
+    component: PublicationFormComponent,
+    data: { role: [Role.professional, Role.admin] },
+    canActivate: [AuthGuard, RoleGuard],
   },
   {
-    path: 'publication',
-    loadChildren: () => import('./publication/publication.module').then((m) => m.PublicationModule),
+    path: 'publication/:id', // item/:id
+    component: PublicationFormComponent,
+    canActivate: [AuthGuard, IsOwnerGuard],
+    resolve: { publication: PublicationResolver },
   },
+
+  { path: 'access', loadChildren: () => import('./access/access.module').then((m) => m.AccessModule) },
+  { path: 'user', loadChildren: () => import('./user/user.module').then((m) => m.UserModule) },
+  { path: 'contact', loadChildren: () => import('./contact/contact.module').then((m) => m.ContactModule) },
+
   {
-    path: 'contact',
-    loadChildren: () => import('./consult/consult.module').then((m) => m.ConsultModule),
-  },
-  {
-    path: 'dashboard',
+    path: 'admin',
     canActivate: [AuthGuard],
     canLoad: [IsAdminGuard],
-    loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+    loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
   },
+
   { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+  imports: [
+    RouterModule.forRoot(routes, {
+      onSameUrlNavigation: 'reload',
+      scrollPositionRestoration: 'top',
+      // enableTracing: true,
+      // anchorScrolling: 'enabled',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

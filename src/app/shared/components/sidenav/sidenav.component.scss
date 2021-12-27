@@ -15,12 +15,22 @@
 //   background-color: indianred;
 // }
 
+.logo {
+  color: #000;
+  font-size: 20px !important;
+  font-family: "Alfa Slab One", cursive;
+}
+
 .welcome {
   margin: 1rem 1rem 3rem 1.4rem;
 }
 
-.welcome > p {
-  font-size: 2rem;
+.sidenav__name {
+  font-size: 1.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 30px;
 }
 
 .mat-nav-list,

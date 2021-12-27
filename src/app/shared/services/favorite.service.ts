@@ -24,10 +24,20 @@ export class FavoriteService {
     ]);
   }
 
-  public removeFavorite(idUser: string, idPublication: string): Promise<any> {
+  public async removeFavorite(idUser: string, idPublication: string): Promise<any> {
+    const userFavoritesRef = this.db.object(`favorites/${idPublication}`);
+    const isTheLastOne = (favorite: any) => {
+      if (favorite !== null) {
+        delete favorite?.users[idUser];
+        if (Object.keys(favorite?.users).length === 0) return null;
+      }
+      return favorite;
+    };
+
     return Promise.all([
+      userFavoritesRef.query.ref.transaction(isTheLastOne),
       this.db.object(`users/${idUser}/myFavorites/${idPublication}`).remove(),
-      this.db.object(`favorites/${idPublication}/users/${idUser}`).remove(),
+      // this.db.object(`favorites/${idPublication}/users/${idUser}`).remove(),
     ]);
   }
 

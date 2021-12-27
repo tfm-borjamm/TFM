@@ -26,10 +26,11 @@ export class HeaderComponent implements OnInit {
 
   public ES_ICON = '../../../../assets/images/es.svg';
   public EN_ICON = '../../../../assets/images/en.svg';
+  public LOGO_ICON = '../../../../assets/images/logo.svg';
 
   constructor(
     private authService: AuthService,
-    private router: Router,
+    public router: Router,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
     private utilsService: UtilsService,
@@ -47,6 +48,7 @@ export class HeaderComponent implements OnInit {
   addIcons() {
     this.matIconRegistry.addSvgIcon('es', this.domSanitizer.bypassSecurityTrustResourceUrl(this.ES_ICON));
     this.matIconRegistry.addSvgIcon('en', this.domSanitizer.bypassSecurityTrustResourceUrl(this.EN_ICON));
+    this.matIconRegistry.addSvgIcon('logo', this.domSanitizer.bypassSecurityTrustResourceUrl(this.LOGO_ICON));
   }
 
   createForm(): FormGroup {
@@ -75,10 +77,10 @@ export class HeaderComponent implements OnInit {
     // this.utilsService.clearLocalStorage();
     this.authService.logout();
     // this.router.navigate(['publication']);
-    // if (this.router.url == '/publication/list') {
+    // if (this.router.url == '/home') {
     //   // window.location.reload();
     // } else {
-    this.router.navigate(['publication/list']);
+    this.router.navigate(['home']);
     // }
   }
 }

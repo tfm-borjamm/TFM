@@ -1,0 +1,86 @@
+<!-- <p>consult-details works!</p> -->
+<main class="container container--padding-x" [ngClass.gt-md]="{ 'container--center-auto': true }" *ngIf="consult">
+  <article class="container__article">
+    <div class="container__accions" fxLayout="row" fxLayoutAlign="space-between start">
+      <button class="container__button-back" mat-icon-button matTooltip="{{ 'back' | translate }}" aria-label="Back" (click)="onPreviousPage()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button class="container__button-delete" mat-icon-button matTooltip="{{ 'delete' | translate }}" aria-label="Delete" (click)="onDeleteConsult(consult.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+
+      <!-- <button class="container__button-more" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="{{ 'more_options' | translate }}" aria-label="More options">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onDeleteConsult(consult.id)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ "delete" | translate }}</span>
+          </button>
+        </mat-menu> -->
+    </div>
+    <section>
+      <ul class="container__list" fxLayout="row wrap" fxLayout.lt-sm="column">
+        <li class="container__item" fxLayout="row-reverse" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
+          <p>{{ consult.creation_date | date: "medium" }}</p>
+          <div fxFlex="1 1 auto">
+            <p class="container__item-title">{{ "name" | translate }}</p>
+            <p>{{ consult.name | titlecase }}</p>
+          </div>
+        </li>
+        <li class="container__item" fxFlexFill>
+          <p class="container__item-title">{{ "email" | translate }}</p>
+          <p>{{ consult.email | capitalize }}</p>
+        </li>
+        <li class="container__item" fxFlexFill>
+          <p class="container__item-title">{{ "subject" | translate }}</p>
+          <p>{{ consult.subject | capitalize }}</p>
+        </li>
+        <li class="container__item" fxFlexFill>
+          <p class="container__item-title">{{ "message" | translate }}</p>
+          <p>{{ consult.message | capitalize }}</p>
+        </li>
+      </ul>
+      <form class="container__form" [formGroup]="replyForm" (ngSubmit)="onReplyConsult()">
+        <ul class="container__list" fxLayout="column">
+          <li class="container__item" fxFlexFill>
+            <mat-form-field appearance="fill">
+              <mat-label>{{ "response" | translate }} (*)</mat-label>
+              <textarea class="container__textarea" matInput type="text" id="message" [formControl]="message" placeholder="{{ 'response' | translate }}" #textarea></textarea>
+              <mat-error *ngIf="replyForm.get('message').errors && (replyForm.get('message').touched || replyForm.get('message').dirty)">
+                <span class="container__error" *ngIf="replyForm.get('message').errors.required">{{ "errors.required" | translate }}</span>
+                <span class="container__error" *ngIf="replyForm.get('message').errors.minlength || replyForm.get('message').errors.maxlength">{{
+                  "errors.length_50_500" | translate
+                }}</span>
+              </mat-error>
+              <mat-hint align="end">{{ textarea.value?.length || 0 }}/500</mat-hint>
+            </mat-form-field>
+          </li>
+
+          <li class="container__item" fxFlexFill>
+            <mat-form-field appearance="fill">
+              <mat-label>{{ "no_reply_message" | translate }} (*)</mat-label>
+              <textarea class="container__textarea" matInput type="text" id="message" [formControl]="noReplyMessage"></textarea>
+            </mat-form-field>
+          </li>
+
+          <li class="container__item" fxFlexFill align="end">
+            <button class="container__button" mat-flat-button color="primary" type="submit" [disabled]="replyForm.invalid || consult.state === 'answered' || btnSubmitted">
+              <app-loading *ngIf="btnSubmitted" class="container__loading" [diameter]="20" [display]="'inline'"></app-loading>
+              <span>{{ "reply" | translate }}</span>
+            </button>
+          </li>
+        </ul>
+
+        <!-- <label class="main__label" for="reply">reply (*)</label> -->
+        <!-- <textarea class="main__input" type="message" id="message" [formControl]="message" placeholder="{{ 'response' | translate }}"></textarea>
+            <div class="errors" *ngIf="replyForm.get('message').errors && (replyForm.get('message').touched || replyForm.get('message').dirty)">
+              <span class="errors__msg" *ngIf="replyForm.get('message').errors.required">Este campo es obligatorio</span>
+            </div> -->
+      </form>
+    </section>
+  </article>
+
+  <!-- <button *ngIf="consult.state !== 'answered' && !showForm" (click)="showForm = !showForm">{{ "reply" | translate }}</button> -->
+  <!-- <p>{{ consult.id }}</p> -->
+</main>

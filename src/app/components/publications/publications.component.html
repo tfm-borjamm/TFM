@@ -1,0 +1,11 @@
+<main class="container">
+  <h1>{{ "your_publications" | translate }}</h1>
+  <p>{{ "publications_description" | translate }}</p>
+  <div align="end">
+    <button type="button" mat-raised-button color="primary" (click)="onCreatePublication()" matTooltip="{{ 'to_post' | translate }}">
+      <mat-icon>playlist_add</mat-icon>
+    </button>
+  </div>
+  <app-menu-tabs [links]="links" (newLinkEvent)="onChangeTab($event)"></app-menu-tabs>
+  <app-publication-list [changeTabs]="onChangeTabSubject.asObservable()"></app-publication-list>
+</main>

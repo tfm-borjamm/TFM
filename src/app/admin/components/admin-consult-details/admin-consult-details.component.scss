@@ -1,0 +1,33 @@
+.container--center-auto {
+  margin: 1rem auto 0 auto;
+  width: 95%;
+  max-width: 1100px;
+}
+
+.container--padding-x {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.container__button-delete {
+  right: -0.8rem;
+}
+
+.container__button-back {
+  left: -0.8rem;
+}
+
+.container__accions {
+  margin: 1rem 0;
+}
+
+.container__item-title {
+  font-weight: 700;
+}
+
+.container__article {
+  // border: 1px solid #ddd;
+  border: 1px solid #d7dcdf;
+  border-radius: 4px;
+  padding: 0 2rem;
+}

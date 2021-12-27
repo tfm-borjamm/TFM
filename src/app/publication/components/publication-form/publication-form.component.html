@@ -190,7 +190,7 @@
 </main> -->
 
 <main class="container" *ngIf="publicationForm" fxLayout="column" fxLayoutAlign="center center">
-  <h1 class="main__title">{{ "publication" | translate }}</h1>
+  <h1 class="main__title" translate="{{ !publicationParam ? 'publication.new' : 'publication.edit' }}"></h1>
   <form class="container__form" [formGroup]="publicationForm" (ngSubmit)="onSubmit()">
     <ul class="container__list" fxLayout="row wrap" fxLayout.lt-sm="column">
       <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">
@@ -199,7 +199,7 @@
           <mat-label>{{ "name" | translate }} (*)</mat-label>
           <input matInput type="text" id="name" [formControl]="name" placeholder="{{ 'name' | translate }}" />
           <mat-error *ngIf="publicationForm.get('name').errors && (publicationForm.get('name').touched || publicationForm.get('name').dirty)">
-            <span *ngIf="publicationForm.get('name').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('name').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -211,7 +211,7 @@
             <mat-option *ngFor="let size of sizes" [value]="size">{{ size | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('size').errors && (publicationForm.get('size').touched || publicationForm.get('size').dirty)">
-            <span *ngIf="publicationForm.get('size').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('size').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -225,7 +225,7 @@
             <mat-option *ngFor="let type of types" [value]="type">{{ type | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('type').errors && (publicationForm.get('type').touched || publicationForm.get('type').dirty)">
-            <span *ngIf="publicationForm.get('type').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('type').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -237,7 +237,7 @@
             <mat-option *ngFor="let sex of sexs" [value]="sex">{{ sex | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('sex').errors && (publicationForm.get('sex').touched || publicationForm.get('sex').dirty)">
-            <span *ngIf="publicationForm.get('sex').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('sex').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -251,7 +251,7 @@
             <mat-option *ngFor="let province of provinces" [value]="province">{{ province }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('province').errors && (publicationForm.get('province').touched || publicationForm.get('province').dirty)">
-            <span *ngIf="publicationForm.get('province').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('province').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -263,7 +263,7 @@
             <mat-option *ngFor="let vaccinate of vaccinates" [value]="vaccinate">{{ vaccinate | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('vaccinate').errors && (publicationForm.get('vaccinate').touched || publicationForm.get('vaccinate').dirty)">
-            <span *ngIf="publicationForm.get('vaccinate').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('vaccinate').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -277,7 +277,7 @@
             <mat-option *ngFor="let sterile of steriles" [value]="sterile">{{ sterile | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('sterile').errors && (publicationForm.get('sterile').touched || publicationForm.get('sterile').dirty)">
-            <span *ngIf="publicationForm.get('sterile').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('sterile').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -286,7 +286,7 @@
           <mat-label>{{ "breed" | translate }} (*)</mat-label>
           <input matInput type="text" id="breed" [formControl]="breed" placeholder="{{ 'breed' | translate }}" />
           <mat-error *ngIf="publicationForm.get('breed').errors && (publicationForm.get('breed').touched || publicationForm.get('breed').dirty)">
-            <span *ngIf="publicationForm.get('breed').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('breed').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -300,7 +300,7 @@
             <mat-option *ngFor="let dewormed of dewormeds" [value]="dewormed">{{ dewormed | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('dewormed').errors && (publicationForm.get('dewormed').touched || publicationForm.get('dewormed').dirty)">
-            <span *ngIf="publicationForm.get('dewormed').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('dewormed').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -312,7 +312,7 @@
             <mat-option *ngFor="let chip of chips" [value]="chip">{{ chip | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('chip').errors && (publicationForm.get('chip').touched || publicationForm.get('chip').dirty)">
-            <span *ngIf="publicationForm.get('chip').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('chip').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -326,7 +326,7 @@
             <mat-option *ngFor="let shipping of shippings" [value]="shipping">{{ shipping | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('shipping').errors && (publicationForm.get('shipping').touched || publicationForm.get('shipping').dirty)">
-            <span *ngIf="publicationForm.get('shipping').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('shipping').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
 
@@ -338,7 +338,7 @@
             <mat-option *ngFor="let age of ages" [value]="age">{{ age | translate }}</mat-option>
           </mat-select>
           <mat-error *ngIf="publicationForm.get('age').errors && (publicationForm.get('age').touched || publicationForm.get('age').dirty)">
-            <span *ngIf="publicationForm.get('age').errors.required">Este campo es obligatorio</span>
+            <span class="container__error" *ngIf="publicationForm.get('age').errors.required">{{ "errors.required" | translate }}</span>
           </mat-error>
         </mat-form-field>
       </li>
@@ -347,11 +347,14 @@
       <li class="container__item" fxFlexFill>
         <mat-form-field appearance="fill">
           <mat-label>{{ "description" | translate }} (*)</mat-label>
-          <textarea class="container__textarea" matInput [formControl]="description" placeholder="{{ 'description' | translate }}"></textarea>
+          <textarea class="container__textarea" matInput [formControl]="description" placeholder="{{ 'description' | translate }}" #textarea></textarea>
           <mat-error *ngIf="publicationForm.get('description').errors && (publicationForm.get('description').touched || publicationForm.get('description').dirty)">
-            <span *ngIf="publicationForm.get('description').errors.required">Este campo es obligatorio</span>
-            <span *ngIf="publicationForm.get('description').errors.minlength">Debe contener mínimo 50 caracteres</span>
+            <span class="container__error" *ngIf="publicationForm.get('description').errors.required">{{ "errors.required" | translate }}</span>
+            <span class="container__error" *ngIf="publicationForm.get('description').errors.minlength || publicationForm.get('description').errors.maxlength">{{
+              "errors.length_50_600" | translate
+            }}</span>
           </mat-error>
+          <mat-hint align="end">{{ textarea.value?.length || 0 }}/600</mat-hint>
         </mat-form-field>
       </li>
 
@@ -371,7 +374,7 @@
         </div>
 
         <mat-error class="container__error" *ngIf="publicationForm.get('image').touched || publicationForm.get('image').dirty">
-          <span *ngIf="files.length === 0">Este campo es obligatorio</span>
+          <span *ngIf="files.length === 0">{{ "errors.required" | translate }}</span>
         </mat-error>
       </li>
 

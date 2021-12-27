@@ -10,9 +10,9 @@ import { SocialDialogComponent } from '../components/social-dialog/social-dialog
 export class DialogService {
   constructor(private dialog: MatDialog) {}
 
-  confirm(message: string, width: string = 'auto'): Promise<boolean> {
+  confirm(message: string): Promise<boolean> {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: width,
+      panelClass: 'dialog__confirm',
       data: {
         message: message,
       },
@@ -20,9 +20,8 @@ export class DialogService {
     return dialogRef.afterClosed().pipe(take(1)).toPromise();
   }
 
-  openButtonsDialog(options: any, width: string = 'auto'): void {
+  openButtonsDialog(options: any): void {
     this.dialog.open(SocialDialogComponent, {
-      width: width,
       data: {
         options: options,
       },

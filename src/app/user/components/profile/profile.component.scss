@@ -3,29 +3,11 @@
   margin: 1rem auto 0 auto;
 }
 
-.container__title {
-  position: relative;
-  padding-bottom: 1rem;
-}
-
-// .container__title:before {
-//   content: "";
-//   position: absolute;
-//   margin-left: auto;
-//   margin-right: auto;
-//   left: 0;
-//   right: 0;
-//   text-align: center;
-//   bottom: 0;
-//   width: 60px;
-//   border-radius: 50px;
-//   border-bottom-width: 7px;
-//   border-bottom-style: solid;
-//   color: #000;
-// }
-
 .container__profile {
   margin: 2rem auto;
+  border: 1px solid #d7dcdf;
+  border-radius: 4px;
+  padding: 2rem;
 }
 
 .container__list--padding {
@@ -38,6 +20,12 @@
 
 .container__item-title {
   font-weight: 700;
+}
+
+.container__item-content {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .container__profile-image {

@@ -12,7 +12,6 @@
 }
 
 .container__carrousel {
-  // height: 400px;
   width: 100%;
   max-width: 500px;
 }
@@ -43,4 +42,77 @@
 ::ng-deep .carousel-indicators > button:not(.mat-button-disabled) {
   background-color: rgba(255, 255, 255, 0.4) !important;
   box-shadow: none !important;
+}
+
+.container__publication {
+  padding-top: 1rem;
+}
+
+.container__section {
+  max-width: 500px;
+  word-wrap: break-word;
+  width: 100%;
+}
+
+.container--maxwidth {
+  max-width: 1100px;
+  // outline: 1px solid red;
+  margin: 1rem auto;
+}
+
+.container__button-more {
+  right: -0.8rem;
+}
+
+.container__aside-author {
+  border: 1px solid #d7dcdf;
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.container__aside-author--padding {
+  padding: 1rem;
+}
+
+.container__aside-nav {
+  margin-bottom: 1rem;
+}
+
+.container__aside-nav .mat-icon.container__mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.container__pet {
+  border: 1px solid #d7dcdf;
+  border-radius: 4px;
+  padding: 1rem 0;
+}
+
+.container__publication-maxwidth {
+  max-width: 500px;
+}
+
+// .container__tag {
+//   border: 1px solid #d7dcdf;
+//   border-radius: 4px;
+//   padding: 0 1rem;
+//   text-align: center;
+//   font-size: 12px;
+//   // width: 100%;
+//   font-weight: bold;
+// }
+
+.container__tag {
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid #d7dcdf;
+  border-radius: 4px;
+}
+
+.container__item-title {
+  font-weight: 700;
 }
