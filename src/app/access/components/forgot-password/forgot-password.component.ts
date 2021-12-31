@@ -13,7 +13,6 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent implements OnInit {
-  @ViewChild('btnForm') public btnForm: ElementRef;
   @ViewChild(FormGroupDirective) public formDirective: FormGroupDirective;
   public forgotForm: FormGroup;
   public email: FormControl;
@@ -44,19 +43,16 @@ export class ForgotPasswordComponent implements OnInit {
 
   onForgot(): void {
     if (this.forgotForm.valid) {
-      // this.btnForm.nativeElement.disabled = true;
       this.btnSubmitted = true;
       const email = this.forgotForm.value.email.toLowerCase();
       this.authService
         .resetPassword(email)
         .then(() => {
-          // this.forgotForm.reset();
           this.notificationService.successNotification('success.forgot_password');
           this.formDirective.resetForm();
           this.btnSubmitted = false;
         })
         .catch((e) => {
-          // this.btnForm.nativeElement.disabled = false;
           this.btnSubmitted = false;
           this.utilsService.errorHandling(e);
         });

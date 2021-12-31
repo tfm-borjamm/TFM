@@ -11,7 +11,6 @@ import { ConsultService } from '../../shared/services/consult.service';
 export class ConsultResolver implements Resolve<Consult> {
   constructor(private consultService: ConsultService, private router: Router, private utilsService: UtilsService) {}
   async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Consult> {
-    // return of(true);
     const idConsult = route.params['id'];
 
     const consult = await this.consultService.getConsultById(idConsult).catch((e) => {

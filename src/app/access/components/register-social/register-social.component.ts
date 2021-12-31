@@ -17,7 +17,6 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
   styleUrls: ['./register-social.component.scss'],
 })
 export class RegisterSocialComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
   public registerForm: FormGroup;
   public street: FormControl;
   public province: FormControl;
@@ -66,20 +65,7 @@ export class RegisterSocialComponent implements OnInit {
       Validators.pattern(numbersValidator),
     ]);
 
-    // this.roles = Object.entries(Role).map((entry) => {
-    //   const [key, value] = entry;
-    //   return { key, value };
-    // });
-
     this.roles = Object.values(Role).filter((role) => role !== Role.admin);
-
-    // this.roles = Object.keys(rol).map((key) => {
-    //   return {
-    //     code: key,
-    //     value: rol[key],
-    //   };
-    // });
-
     this.registerForm = this.createForm();
 
     const id = await this.authService.getCurrentUserUID();
@@ -99,7 +85,6 @@ export class RegisterSocialComponent implements OnInit {
 
   onRegister(): void {
     if (this.registerForm.valid) {
-      // this.btnForm.nativeElement.disabled = true;
       this.btnSubmitted = true;
       const user: User = {
         ...this.user,
@@ -114,27 +99,14 @@ export class RegisterSocialComponent implements OnInit {
       this.userService
         .updateUser(user)
         .then(() => {
-          // console.log('Registrado correctamente');
           this.notificationService.successNotification('success.user_registered_social');
-          // this.registerForm.reset();
           this.authService.logout();
           this.router.navigate(['access', 'login']);
-
-          // if (user.role === Role.admin) {
-          //   // this.router.navigate(['/admin']);
-          //   window.location.replace(window.location.origin + '/admin');
-          // } else {
-          //   // this.router.navigate(['/home']);
-          //   window.location.replace(window.location.origin + '/home');
-          // }
         })
         .catch((e) => {
-          // this.btnForm.nativeElement.disabled = false;
           this.btnSubmitted = false;
           this.utilsService.errorHandling(e);
         });
     }
   }
 }
-
-// code.split(" ")[1].replace(/[{()}]/g, ''); // Numbercode

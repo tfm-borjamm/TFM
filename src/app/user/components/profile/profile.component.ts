@@ -17,12 +17,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public user: User;
   public currentUser: User;
   public userID: string;
-
   public isAdminUser: boolean;
   public isProfessionalUser: boolean;
   public isClientUser: boolean;
   public isCurrentUser: boolean;
-
   public telephone: string;
 
   constructor(

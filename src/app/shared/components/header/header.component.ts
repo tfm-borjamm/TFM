@@ -18,12 +18,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class HeaderComponent implements OnInit {
   @Input() public user: User;
-  @Output() snavStateOnChange = new EventEmitter();
-
+  @Output() public snavStateOnChange = new EventEmitter();
   public languagesForm: FormGroup;
   public language: FormControl;
   public languages: string[] = languages;
-
   public ES_ICON = '../../../../assets/images/es.svg';
   public EN_ICON = '../../../../assets/images/en.svg';
   public LOGO_ICON = '../../../../assets/images/logo.svg';
@@ -41,7 +39,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('HEADER');
     this.languagesForm = this.createForm();
   }
 
@@ -52,9 +49,7 @@ export class HeaderComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    // console.log(this.translateService);
     const lang = this.translateService.store.currentLang;
-    // const langValue = this.languages.includes(lang) ? lang : 'ES';
     this.language = new FormControl(lang, [Validators.required]);
     return (this.languagesForm = this.formBuilder.group({
       language: this.language,
@@ -63,9 +58,7 @@ export class HeaderComponent implements OnInit {
 
   onLanguage(event: MatSelectChange) {
     const language = event.value.trim();
-    console.log('LANGUAGE: ', language);
     this.translateService.use(language);
-    console.log('Idioma cambiado satisfactoriamente');
   }
 
   resetMenuTabs() {
@@ -73,14 +66,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout(): void {
-    console.log('Sesión cerrada');
-    // this.utilsService.clearLocalStorage();
     this.authService.logout();
-    // this.router.navigate(['publication']);
-    // if (this.router.url == '/home') {
-    //   // window.location.reload();
-    // } else {
     this.router.navigate(['home']);
-    // }
   }
 }

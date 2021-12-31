@@ -23,24 +23,18 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 })
 export class PublicationDetailsComponent implements OnInit, OnDestroy {
   public shareLink: string;
-
   public publication: Publication;
   public id: string;
-
   public author: User;
   public currentUser: User;
-
   public isFavorite: boolean = false;
   public isAuthor: boolean = false;
   public isCopyFavorite: boolean = false;
   public isAdmin: boolean = false;
   public isClient: boolean = false;
   public isAdopted: boolean = false;
-
   public state: string;
-
   public countFavorites: number = 0;
-
   public CHIP_ICON = '../../../../assets/images/chip.svg';
   public AGE_ICON = '../../../../assets/images/age.svg';
   public SEX_ICON = '../../../../assets/images/sex.svg';
@@ -64,33 +58,11 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     private domSanitizer: DomSanitizer
   ) {
     this.addIcons();
-    console.log(this.activatedRoute.snapshot.data);
-
     this.publication = this.activatedRoute.snapshot.data.publication;
     this.id = this.publication.id;
-    // this.activatedRoute.params.forEach((params) => {
-    //   // this.id = params.id ?? '';
-    //   // this.state = params.state ?? '';
-    //   this.publication = params.publication;
-    //   console.log('--->', params);
-    // });
   }
 
   async ngOnInit(): Promise<void> {
-    // this.shareLink = encodeURI(document.location.href);
-    // console.log(
-    //   `Location Href : ${document.location.href} \n Location path: ${document.location.origin} Route url: ${this.router.url}`
-    // );
-
-    // const url = this.state === State.adopted ? 'history' : 'publications';
-
-    // this.publication = await this.publicationService.getPublicationById(this.id, url);
-
-    // if (!this.publication) {
-    //   this.router.navigate(['no-results']);
-    //   return;
-    // }
-
     this.shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
 
     this.publication.images = this.utilsService.getArrayFromObject(this.publication.images);
@@ -99,10 +71,6 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     this.author = await this.userService.getUserById(this.publication.idAuthor);
 
     this.currentUser = await this.authService.getCurrentUserLogged();
-
-    // Usuario actual:
-    // const id = (await this.authService.getCurrentUserUID()) ?? '';
-    // this.currentUser = await this.userService.getUserById(id);
 
     if (this.currentUser && this.author) {
       this.isAdmin = this.currentUser.role === Role.admin;
@@ -118,7 +86,6 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
       this.isFavorite = favoritesCurrentUser.map((favorite) => favorite.id).includes(this.publication.id);
       this.isCopyFavorite = this.isFavorite;
       this.countFavorites = (await this.favoriteService.getFavorites(this.id)).length;
-      // console.log('-->', this.countFavorites, this.id);
     }
   }
 
@@ -193,29 +160,11 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
     this.dialogService.openButtonsDialog(options);
   }
 
-  // encode(message: string): string {
-  //   return encodeURI(message);
-  // }
-
-  // copyLinkToClipboard(): void {
-  //   navigator.clipboard
-  //     .writeText(this.actualURL)
-  //     .then(() => console.log('Se ha copiado correctamente'))
-  //     .catch((e) => this.utilsService.errorHandling(e));
-  // }
-
-  // encodeShareLink() : string {
-  //   // this.router.navigate([`publication/${this.publication.state}/details/${this.publication.id}`]);
-  //   return encodeURI('')
-  // }
-
   ngOnDestroy() {
-    console.log('Se destruye el componente');
     if (!this.publication) return;
     const isClientCurrentUser = this.currentUser && this.currentUser.role === Role.client;
     const isChangeFavorite = this.isFavorite !== this.isCopyFavorite;
     if (isClientCurrentUser && isChangeFavorite) {
-      // console.log('Se procede a cambiar favorito');
       if (this.isFavorite) {
         this.favoriteService
           .setFavorite(this.currentUser.id, this.publication)
@@ -227,13 +176,4 @@ export class PublicationDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  // Este método tiene pinta de que se irá a utilsService
-  // getTranslate(code: string): Promise<string> {
-  //   return this.translate
-  //     .get(code)
-  //     .pipe(take(1))
-  //     .toPromise()
-  //     .catch((e) => this.utilsService.errorHandling(e));
-  // }
 }

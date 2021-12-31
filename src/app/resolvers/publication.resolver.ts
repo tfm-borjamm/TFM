@@ -15,7 +15,6 @@ export class PublicationResolver implements Resolve<Publication> {
     private utilsService: UtilsService
   ) {}
   async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Publication> {
-    // return of(true);
     const statePublication = route.params['state'];
     const idPublication = route.params['id'];
 

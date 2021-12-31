@@ -1,51 +1,3 @@
-<!-- <div *ngIf="showFilter">
-  <select [formControl]="province" [value]="filterPublication.value.province" (ngModelChange)="onChangeFilter({ filter: 'province', value: $event })">
-    <option value="" selected>{{ "all" | translate }}</option>
-    <option *ngFor="let province of provinces" value="{{ province }}" [selected]="filterPublication.value.province === province">{{ province }}</option>
-  </select>
-
-  <select [formControl]="type" [value]="filterPublication.value.type" (ngModelChange)="onChangeFilter({ filter: 'type', value: $event })">
-    <option value="" selected>{{ "all" | translate }}</option>
-    <option *ngFor="let type of types" value="{{ type }}" [selected]="filterPublication.value.type === type">{{ type | translate }}</option>
-  </select>
-</div> -->
-
-<!-- <table *ngIf="publications && publications.length > 0; else noResults">
-  <tr>
-    <th>{{ "professional" | translate }}</th>
-    <th>{{ "date" | translate }}</th>
-    <th>{{ "type" | translate }}</th>
-    <th>{{ "province" | translate }}</th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-  <tr *ngFor="let publication of publications">
-    <td (click)="onDetailsPublication(publication)">{{ publication.nameAuthor }}</td>
-    <td (click)="onDetailsPublication(publication)">{{ publication.date | date: "medium" }}</td>
-    <td (click)="onDetailsPublication(publication)">{{ publication.type | translate }}</td>
-    <td (click)="onDetailsPublication(publication)">{{ publication.province }}</td>
-
-    <td *ngIf="publication.state !== 'available'">
-      <button (click)="onDeletePublication(publication)">{{ "delete" | translate }}</button>
-    </td>
-
-    <td *ngIf="publication.state === 'available'">
-      <button (click)="onDeletePublication(publication)">{{ "delete" | translate }}</button>
-    </td>
-    <td *ngIf="publication.state === 'available'">
-      <button (click)="onSharePublication(publication)">{{ "share" | translate }}</button>
-    </td>
-    <td *ngIf="publication.state === 'available'">
-      <button (click)="onEditPublication(publication.id)">{{ "edit" | translate }}</button>
-    </td>
-    <td *ngIf="publication.state === 'available'">
-      <button (click)="onMarkAsAdopted(publication)">{{ "mark_as_adopted" | translate }}</button>
-    </td>
-  </tr>
-</table> -->
-
 <main class="container">
   <h1>{{ "publications" | translate }}</h1>
   <p>{{ "publications_admin" | translate }}</p>
@@ -58,7 +10,6 @@
     </button>
     <button mat-button mat-icon-button (click)="showFilter = !showFilter" matTooltip="{{ 'search' | translate }}">
       <mat-icon>search</mat-icon>
-      <!-- <span class="filterSelected" *ngIf="selectedType || selectedProvince"></span> -->
       <span class="filterSelected" *ngIf="this.dataSource.filter"></span>
     </button>
   </div>
@@ -73,28 +24,8 @@
     </mat-form-field>
   </div>
 
-  <!-- <div class="filters" *ngIf="showFilter">
-    <p>Filtros</p>
-    <mat-form-field appearance="fill">
-      <mat-label>{{ "province" | translate }}</mat-label>
-      <mat-select [(value)]="selectedProvince" (selectionChange)="onChangeFilter({ filter: 'province', value: $event.value })">
-        <mat-option value="">{{ "all" | translate }}</mat-option>
-        <mat-option *ngFor="let province of provinces" [value]="province">{{ province }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>{{ "type" | translate }}</mat-label>
-      <mat-select [(value)]="selectedType" (selectionChange)="onChangeFilter({ filter: 'type', value: $event.value })">
-        <mat-option value="">{{ "all" | translate }}</mat-option>
-        <mat-option *ngFor="let type of types" [value]="type">{{ type | translate }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div> -->
-
   <div class="container__table mat-elevation-z2" *ngIf="dataSource">
     <table class="container__table-data" mat-table [dataSource]="dataSource" matSort>
-      <!-- Position Column -->
       <ng-container matColumnDef="professional">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="nameAuthor">{{ "professional" | translate }}</th>
         <td mat-cell *matCellDef="let publication" (click)="onDetailsPublication(publication)">{{ publication.nameAuthor | titlecase }}</td>

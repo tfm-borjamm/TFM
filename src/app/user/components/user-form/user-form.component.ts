@@ -5,7 +5,6 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { codes } from 'src/app/shared/helpers/codes';
 import { provinces } from 'src/app/shared/helpers/provinces';
 import { User } from '../../../shared/models/user.model';
-import { AuthService } from '../../../shared/services/auth.service';
 import { UserService } from '../../../shared/services/user.service';
 import { checkEmail } from '../../../shared/validations/checkEmail.validator';
 import { Location, TitleCasePipe } from '@angular/common';
@@ -20,11 +19,9 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
-  // @ViewChild('btnForm') btnForm: ElementRef;
   public user: User;
   public editForm: FormGroup;
   public id: string;
-
   public role: FormControl;
   public email: FormControl;
   public name: FormControl;
@@ -33,20 +30,16 @@ export class UserFormComponent implements OnInit {
   public code: FormControl;
   public telephone: FormControl;
   public province: FormControl;
-
   public codes: string[] = [];
   public provinces: string[] = provinces;
-
   public btnSubmitted: boolean;
   public roles: Role[] = Object.values(Role);
 
   constructor(
-    private authService: AuthService,
     private userService: UserService,
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    // private router: Router,
     private location: Location,
     private notificationService: NotificationService,
     private dialogService: DialogService,
@@ -54,18 +47,9 @@ export class UserFormComponent implements OnInit {
     private capitalizePipe: CapitalizePipe
   ) {
     this.user = this.activatedRoute.snapshot.data.user;
-    // this.activatedRoute.params.forEach((params) => {
-    //   this.id = params.id;
-    // });
   }
 
   async ngOnInit(): Promise<void> {
-    // this.user = await this.getUser(); // Proteger que nadie pueda editar un usuario si no es el administrador
-    // if (!this.user) {
-    //   this.router.navigate(['user-not-found']);
-    //   return;
-    // }
-
     this.codes = this.utilsService.setFormatPhonesCodes(codes);
     const numbersValidator = /^[0-9]*$/;
     const nameValidator = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
@@ -113,13 +97,6 @@ export class UserFormComponent implements OnInit {
     });
   }
 
-  // async getUser(): Promise<User> {
-  //   const id = this.id ?? (await this.authService.getCurrentUserUID());
-  //   const user = await this.userService.getUserById(id);
-  //   if (!user) return null;
-  //   return user;
-  // }
-
   async onDeleteUser(): Promise<void> {
     // Método para eliminar un usuario
     const confirm = await this.dialogService.confirm('info.confirm.delete');
@@ -130,9 +107,7 @@ export class UserFormComponent implements OnInit {
           const response = await this.utilsService
             .deleteUser(this.user.id)
             .catch((e) => this.utilsService.errorHandling(e));
-          if (response) {
-            console.log('Respuesta: ', response);
-          }
+
           this.notificationService.successNotification('success.user_deleted');
         })
         .catch((e) => this.utilsService.errorHandling(e));
@@ -144,8 +119,6 @@ export class UserFormComponent implements OnInit {
   onEdit(): void {
     // Actualizar los campos del usuario en la base de datos
     if (this.editForm.valid) {
-      // email: this.id ? this.user.email : this.editForm.value.email,
-      // this.btnForm.nativeElement.disabled = true;
       this.btnSubmitted = true;
       const user: User = {
         id: this.user.id,
@@ -163,13 +136,10 @@ export class UserFormComponent implements OnInit {
       this.userService
         .updateUser(user)
         .then(() => {
-          // console.log('Información guardada correctamente');
-          // this.btnForm.nativeElement.disabled = false;
           this.notificationService.successNotification('success.user_updated');
           this.location.back();
         })
         .catch((e) => {
-          // this.btnForm.nativeElement.disabled = false;
           this.btnSubmitted = false;
           this.utilsService.errorHandling(e);
         });

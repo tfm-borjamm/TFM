@@ -26,11 +26,6 @@
       </button>
     </mat-menu>
   </div>
-  <!-- <div >
-      <button (click)="onDeletePublication()">{{ "delete" | translate }}</button>
-      <button *ngIf="!isAdopted" (click)="onEditPublication()">{{ "edit" | translate }}</button>
-      <button *ngIf="!isAdopted" (click)="onMarkAsAdopted()">{{ "mark_as_adopted" | translate }}</button>
-    </div> -->
 
   <div
     class="container__publication"
@@ -80,21 +75,9 @@
             <span *ngIf="isClient" class="container__item-title">{{ countFavorites }}</span>
           </div>
         </div>
-        <!-- <button (click)="onSharePublication()">{{ "share" | translate }}</button> -->
-        <!-- <button (click)="onChangeFavorite(+1)" *ngIf="isClient && !isFavorite">Corazon sin rellenar</button> -->
-        <!-- <h4 *ngIf="isClient">{{ "favorites" | translate }}:</h4> -->
-        <!-- <span *ngIf="isClient">{{ countFavorites }}</span> -->
 
         <p class="container__item-title">{{ "description" | translate }}</p>
         <p>{{ publication.description | capitalize }}</p>
-
-        <!-- <h4>{{ "breed" | translate }}</h4>
-        <h4>{{ "province" | translate }}</h4>
-        <h4>{{ "type" | translate }}</h4>
-        <h4>{{ "state" | translate }}</h4>
-        <h4>{{ "size" | translate }}</h4>
-        <h4>{{ "sex" | translate }}</h4>
-        <h4>{{ "age" | translate }}</h4> -->
 
         <mat-list class="container__pet" fxLayout.gt-xs="row wrap" fxLayout.lt-sm="column" role="list">
           <mat-list-item fxFlex.gt-xs="50%" role="listitem">
@@ -159,52 +142,6 @@
 
         <button mat-flat-button color="accent" (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
       </div>
-
-      <!-- <div class="container__aside-share">
-        <button mat-raised-button color="primary" (click)="onSharePublication()">{{ "share" | translate }}</button>
-      </div> -->
     </aside>
   </div>
 </article>
-
-<!-- <div>
-    <p>Comparte esta publicación</p>
-    <a href="https://www.facebook.com/sharer/sharer.php?u={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Facebook </a>
-    <a href="https://twitter.com/share?&url={{ actualURL }}&text={{ encode('shared_message_link' | translate) }}" target="_blank" rel="noopener noreferrer"> Twitter </a>
-    <a href="https://wa.me/send?text={{ encode('shared_message_link' | translate) }}{{ actualURL }}" target="_blank" rel="noopener noreferrer"> Whatsapp </a>
-    <a href="mailto:?body={{ encode('shared_message_link' | translate) }}{{ actualURL }}" target="_blank" rel="noopener noreferrer"> Email </a>
-    <a href="fb-messenger://share/?link={{ actualURL }}" target="_blank" rel="noopener noreferrer">Messenger</a>
-    <button (click)="copyLinkToClipboard()">Copy link</button>
-  </div> -->
-
-<!-- <div *ngIf="author">
-    <p>Contactar</p>
-    <a href="tel:{{ getTelephoneComplete() }}" target="_blank" rel="noopener noreferrer">Phone</a>
-    <a href="sms:{{ getTelephoneComplete() }}&body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">SMS</a>
-    <a href="https://wa.me/{{ getTelephoneComplete() }}?text={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-    <a href="mailto:{{ author.email }}?body={{ encode('contact_you' | translate) }}" target="_blank" rel="noopener noreferrer">Email</a>
-  </div> -->
-
-<!-- <a href="https://www.facebook.com/sharer/sharer.php?u={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Facebook </a>
-    <a href="https://twitter.com/share?&url={{ actualURL }}&hashtags=Mascotas,Adoptar" target="_blank" rel="noopener noreferrer"> Twitter </a>
-    <a href="https://wa.me/send?text={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Whatsapp </a>
-    <a href="mailto:?body={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Email </a> -->
-
-<!-- <a href="https://pinterest.com/pin/create/button/?url={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Pinterest </a> -->
-<!-- <a href="https://plus.google.com/share?url={{ actualURL }}" target="_blank" rel="noopener noreferrer"> Google Plus </a> -->
-
-<!-- CONTACT -->
-<!-- <a class="item__link" href="mailto:{{ ownerPublication.email }}" role="button" target="_blank" rel="noopener noreferrer">{{ ownerPublication.email }}</a>
-  <a class="item__link" href="tel:{{ ownerPublication.telephone }}" role="button" target="_blank" rel="noopener noreferrer">{{ ownerPublication.telephone }}</a> -->
-<!-- <a href="sms:+18664504185&body=Hi%2520there%252C%2520I%2527d%2520like%2520to%2520place%2520an%2520order%2520for...">Click here to text us!</a> -->
-<!-- <a href="https://wa.me/${code+number}?text=Hola,%20me%20gustaría%20ponerme%20en%20contacto%20contigo." target="_blank" rel="noopener noreferrer">WhatsApp</a> -->
-<!-- <a class="item__shareLink item__shareLink--linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url={{ actualURL }}" target="_blank" rel="noopener noreferrer">
-          <i class="item__icon fab fa-linkedin-in"></i>
-        </a> -->
-
-<!-- SHARED -->
-<!-- https://www.facebook.com/sharer.php?u=https%3A%2F%2Fwww.milanuncios.com%2Fjuegos-de-playstation%2Fmoto-gp-4-playstation-2-ps2-430103249.htm%3Fstc%3Dsm-facebook-send_friend -->
-<!-- http://twitter.com/share?url=https%3A%2F%2Fwww.milanuncios.com%2Fjuegos-de-playstation%2Fmoto-gp-4-playstation-2-ps2-430103249.htm%3Fstc%3Dsm-twitter-send_friend&text=+.+Moto+GP+4.PlayStation+2.+PS2. -->
-<!-- <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site http://www.website.com." title="Share by Email"></a> -->
-<!-- https://twitter.com/intent/tweet?url=https%3A%2F%2Fpetfinder.ricardmolinaferret.com%2Fpet%2F60754d75fa25890850d0cd32&text=Necesitamos%20tu%20ayuda%20para%20encontrar%20a%20Mila%2C%20una%20adorable%20mascota%20perdida%20desde%20hace%20unos%20dias -->
-<!-- https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fpetfinder.ricardmolinaferret.com%2Fpet%2F60754d75fa25890850d0cd32 -->

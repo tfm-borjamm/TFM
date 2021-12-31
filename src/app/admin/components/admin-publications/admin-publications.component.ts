@@ -24,32 +24,22 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
 export class AdminPublicationsComponent implements OnInit {
   public publications: Publication[];
   public publicationsCopy: Publication[];
-
   public showFilter: boolean = false;
-
-  // public defaultLink = PublicationState.available;
-  // public links = Object.values(PublicationState);
   public links = ['available', 'adopteds'];
-
   public filterPublication: FormGroup;
   public province: FormControl;
   public type: FormControl;
-
   public paramType: string = null;
   public paramProvince: string = null;
-
   public types: string[] = Object.values(Type);
   public provinces: string[] = provinces;
-
-  displayedColumns: string[] = ['professional', 'type', 'province', 'date', 'star'];
-  dataSource: any = new MatTableDataSource<Publication>([]);
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  public displayedColumns: string[] = ['professional', 'type', 'province', 'date', 'star'];
+  public dataSource: any = new MatTableDataSource<Publication>([]);
+  @ViewChild(MatPaginator) public paginator: MatPaginator;
+  @ViewChild(MatSort) public sort: MatSort;
   public subscriptionTranslate: Subscription;
-
   public selectedType: any = '';
   public selectedProvince: any = '';
-
   public itemsLoaded: Promise<boolean>;
 
   constructor(
@@ -60,16 +50,7 @@ export class AdminPublicationsComponent implements OnInit {
     public translateService: TranslateService,
     private notificationService: NotificationService,
     private dialogService: DialogService
-  ) {
-    // const filterPublications = this.utilsService.getLocalStorage('filterPublications');
-    // const params = filterPublications;
-    // if (params) {
-    //   const isTypeOK = Object.values(Type).includes(params?.type);
-    //   const isProvinceOK = provinces.includes(params?.province);
-    //   this.selectedType = isTypeOK ? params?.type : '';
-    //   this.selectedProvince = isProvinceOK ? params?.province : '';
-    // }
-  }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -106,11 +87,9 @@ export class AdminPublicationsComponent implements OnInit {
 
   async loadPublications(link: string): Promise<void> {
     if (link === 'adopteds') link = link.substring(0, link.length - 1); // delete plural 's' letter
-    // console.log('Filtra:', link);
     const publications = await this.publicationService.getPublicationsAdmin(link);
     this.publications = await this.replaceIdsToNameAuthor(publications);
     this.publicationsCopy = this.publications;
-    // this.onChangeFilter();
     this.dataSource.data = this.publications;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -118,75 +97,14 @@ export class AdminPublicationsComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    // Filter name search
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
-
-    // this.utilsService.setLocalStorage('searchUsers', {
-    //   search: this.dataSource.filter,
-    // });
-
-    // this.name = filterValue.toLowerCase();
-    // this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
   }
 
   resetFilter() {
     this.dataSource.filter = '';
-    // this.utilsService.removeLocalStorage('searchUsers');
   }
-
-  // onChangeFilter(selected?: any) {
-  //   const search: any = {
-  //     type: this.selectedType,
-  //     province: this.selectedProvince,
-  //   };
-
-  //   if (selected) {
-  //     const { filter, value } = selected;
-  //     search[filter] = value;
-  //   }
-
-  //   console.log(search);
-
-  //   if (search.type && search.province) {
-  //     this.dataSource.data = this.publicationsCopy.filter(
-  //       ({ type, province }) => type.includes(search.type) && province.includes(search.province)
-  //     );
-  //     this.utilsService.setLocalStorage('filterPublications', {
-  //       type: search.type,
-  //       province: search.province,
-  //     });
-  //   } else if (search.type) {
-  //     this.dataSource.data = this.publicationsCopy.filter(({ type }) => type.includes(search.type));
-  //     this.utilsService.setLocalStorage('filterPublications', {
-  //       type: search.type,
-  //     });
-  //   } else if (search.province) {
-  //     this.dataSource.data = this.publicationsCopy.filter(({ province }) => province.includes(search.province));
-  //     this.utilsService.setLocalStorage('filterPublications', {
-  //       province: search.province,
-  //     });
-  //   } else {
-  //     this.dataSource.data = this.publicationsCopy;
-  //     this.utilsService.removeLocalStorage('filterPublications');
-  //   }
-
-  //   console.log('this.data', this.dataSource);
-  // }
-
-  // loadForm() {
-  //   this.type = new FormControl(this.paramType ?? '', [Validators.required]);
-  //   this.province = new FormControl(this.paramProvince ?? '', [Validators.required]);
-  //   this.filterPublication = this.createForm();
-  // }
-
-  // createForm(): FormGroup {
-  //   return this.formBuilder.group({
-  //     type: this.type,
-  //     province: this.province,
-  //   });
-  // }
 
   onCreatePublication() {
     this.router.navigate(['publication']);
@@ -206,8 +124,6 @@ export class AdminPublicationsComponent implements OnInit {
       this.publicationService
         .deletePublication(publication)
         .then(() => {
-          // console.log('Se ha eliminado la publicación correctamente', a);
-          // this.publications = this.publications.filter((x) => x.id !== publication.id);
           this.dataSource.data = this.dataSource.data.filter(
             (publication: Publication) => publication.id !== publication.id
           );
@@ -234,8 +150,6 @@ export class AdminPublicationsComponent implements OnInit {
       this.publicationService
         .updatePublicationState(publication)
         .then(() => {
-          // console.log('Marcado como adoptado', p);
-          // this.publications = this.publications.filter((x) => x.id !== publication.id);
           this.dataSource.data = this.dataSource.data.filter(
             (publication: Publication) => publication.id !== publication.id
           );
@@ -268,11 +182,6 @@ export class AdminPublicationsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // if (!this.subscriptionTab.closed) {
-    //   console.log('Destruimos el subscribe');
-    //   this.subscriptionTab.unsubscribe();
-    // }
-
     if (!this.subscriptionTranslate.closed) this.subscriptionTranslate.unsubscribe();
   }
 }

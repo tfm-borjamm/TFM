@@ -1,18 +1,3 @@
-<!-- <nav>
-  <ul>
-    <button [ngClass]="{ selected: tabValue == tab1 }" (click)="onChangeButton(tab1)">{{ tab1 | translate }}</button>
-    <button [ngClass]="{ selected: tabValue == tab2 }" (click)="onChangeButton(tab2)">{{ tab2 | translate }}</button>
-  </ul>
-</nav> -->
-
-<!-- <mat-tab-group animationDuration="0ms" (selectedTabChange)="onChangeButton($event)">
-  <mat-tab *ngFor="let tab of tabs" label="{{ tab | translate | uppercase }}"></mat-tab>
-</mat-tab-group> -->
-
-<!-- <nav mat-tab-nav-bar [disableRipple]="false">
-  <a mat-tab-link *ngFor="let tab of tabs" (click)="onChangeButton(tab)"> {{ tab | translate | uppercase }}</a>
-</nav> -->
-
 <nav mat-tab-nav-bar>
   <a mat-tab-link *ngFor="let link of links" (click)="onChangeButton(link)" [active]="activeLink == link"> {{ link | translate | uppercase }} </a>
 </nav>

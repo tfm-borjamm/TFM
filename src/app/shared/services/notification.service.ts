@@ -14,7 +14,7 @@ export class NotificationService {
     config: MatSnackBarConfig = {
       horizontalPosition: 'end',
       verticalPosition: 'bottom',
-      duration: 8000,
+      duration: 15000,
       panelClass: ['snackbar__success'],
     }
   ): void {
@@ -27,7 +27,7 @@ export class NotificationService {
     config: MatSnackBarConfig = {
       horizontalPosition: 'end',
       verticalPosition: 'bottom',
-      duration: 8000,
+      duration: 15000,
       panelClass: ['snackbar__info'],
     }
   ): void {
@@ -40,7 +40,7 @@ export class NotificationService {
     config: MatSnackBarConfig = {
       horizontalPosition: 'end',
       verticalPosition: 'bottom',
-      duration: 8000,
+      duration: 15000,
       panelClass: ['snackbar__error'],
     }
   ): void {

@@ -19,17 +19,15 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   @Input() public publication: Publication;
   @Input() public currentUser: User;
   @Output() public onChangePublication = new EventEmitter();
-
   public isAuthor: boolean = false;
   public isClient: boolean = false;
   public isFavorite: boolean = false;
   public isAdmin: boolean = false;
   public isAdopted: boolean = false;
-
   public detectedChangeFavorite: boolean = false;
-
   public carrouselImages: { id: string; url: string }[] = [];
   public image: string;
+
   constructor(
     private router: Router,
     private utilsService: UtilsService,
@@ -40,8 +38,6 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('INIT CARD ITEM');
-
     if (this.currentUser) {
       this.isAuthor = this.currentUser.id === this.publication.idAuthor;
       this.isAdmin = this.currentUser.role === Role.admin;
@@ -54,7 +50,6 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Primera imagen!
     this.carrouselImages = this.utilsService.getArrayFromObject(this.publication?.images) ?? [];
     this.image = this.carrouselImages[0]?.url;
   }
@@ -77,10 +72,6 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   onEditPublication() {
     this.router.navigate(['publication', this.publication.id]);
   }
-
-  // onDetailsPublication() {
-  //   this.router.navigate(['publication', this.publication.state, 'details', this.publication.id]);
-  // }
 
   async onDeleteFavorite(): Promise<void> {
     const confirm = await this.dialogService.confirm('info.confirm.delete');
@@ -113,9 +104,6 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   }
 
   onSharePublication(): void {
-    // Compartir publicación
-    // Open the dialog
-    // const shareLink = `publication/${this.publication.state}/details/${this.publication.id}`;
     const options: { name: string; shareLink: string } = {
       name: 'share',
       shareLink: `publication/${this.publication.state}/details/${this.publication.id}`,
@@ -139,17 +127,13 @@ export class PublicationItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('Se destruye el item!');
     const isChangeFavorite = this.isFavorite !== this.detectedChangeFavorite;
     if (this.isClient && isChangeFavorite) {
-      // console.log('Petición real a la base de datos');
       if (this.isFavorite) {
-        // Se añade a favoritos
         this.favoriteService
           .setFavorite(this.currentUser.id, this.publication)
           .catch((e) => this.utilsService.errorHandling(e));
       } else {
-        // Se quita de favoritos
         this.favoriteService
           .removeFavorite(this.currentUser.id, this.publication.id)
           .catch((e) => this.utilsService.errorHandling(e));

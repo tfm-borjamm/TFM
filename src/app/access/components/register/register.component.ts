@@ -19,7 +19,6 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  @ViewChild('btnForm') btnForm: ElementRef;
   public user: User = new User();
   public registerForm: FormGroup;
   public name: FormControl;
@@ -85,21 +84,7 @@ export class RegisterComponent implements OnInit {
     ]);
     this.password = new FormControl('', [Validators.required, Validators.minLength(8)]);
     this.repeat_password = new FormControl('', [Validators.required]);
-
-    // this.roles = Object.entries(Role).map((entry) => {
-    //   const [key, value] = entry;
-    //   return { key, value };
-    // });
-
     this.roles = Object.values(Role).filter((role) => role !== Role.admin);
-
-    // this.roles = Object.keys(rol).map((key: string) => {
-    //   return {
-    //     code: key,
-    //     value: rol[key],
-    //   };
-    // });
-
     this.registerForm = this.createForm();
     this.currentUserId = await this.authService.getCurrentUserUID();
   }
@@ -135,7 +120,6 @@ export class RegisterComponent implements OnInit {
 
   async onRegister() {
     if (this.registerForm.valid) {
-      // this.btnForm.nativeElement.disabled = true;
       this.btnSubmitted = true;
       const email = this.registerForm.value.email.toLowerCase();
       const password = this.registerForm.value.passwords.password;
@@ -145,7 +129,6 @@ export class RegisterComponent implements OnInit {
       let added_date;
 
       if (this.currentUserId) {
-        // console.log('Administrador...');
         response = await this.utilsService
           .createUser({ email, password })
           .catch((e) => this.utilsService.errorHandling(e));
@@ -155,7 +138,6 @@ export class RegisterComponent implements OnInit {
           added_date = new Date(response.user.metadata.creationTime).getTime();
         }
       } else {
-        // console.log('No registrado...');
         response = await this.authService.register(email, password).catch((e) => this.utilsService.errorHandling(e));
         if (response) {
           id = response.user.uid;
@@ -178,24 +160,15 @@ export class RegisterComponent implements OnInit {
         this.userService
           .createUser(this.user)
           .then(() => {
-            // console.log('Registrado correctamente');
-            // const notification = this.currentUserId
-            //   ? 'Se ha creado el usuario correctamente'
-            //   : 'Se ha registrado correctamente';
-
-            // this.registerForm.reset();
             if (this.currentUserId) {
-              // is admin adding user
               this.notificationService.successNotification('success.user_created');
               this.location.back();
             } else {
-              // is a normal user
               this.notificationService.successNotification('success.user_registered');
               this.router.navigate(['home']);
             }
           })
           .catch((e) => {
-            // this.btnForm.nativeElement.disabled = false;
             this.btnSubmitted = false;
             this.utilsService.errorHandling(e);
           });

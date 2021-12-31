@@ -37,7 +37,6 @@ export class FavoriteService {
     return Promise.all([
       userFavoritesRef.query.ref.transaction(isTheLastOne),
       this.db.object(`users/${idUser}/myFavorites/${idPublication}`).remove(),
-      // this.db.object(`favorites/${idPublication}/users/${idUser}`).remove(),
     ]);
   }
 

@@ -20,31 +20,14 @@ interface filterSelected {
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public onChangeFilterSubject: Subject<void> = new Subject<void>();
-
-  // public idLastItem: string = null;
-  // public limitItems: number = 6;
-
   public filterPublication: FormGroup;
   public province: FormControl;
   public type: FormControl;
-
-  // public publications: any[] = [];
-
-  // public finished: boolean = false;
   public types: string[] = Object.values(Type);
   public provinces: string[] = provinces;
-
-  // public currentURL: string;
-  // public queryDB: string;
-
   public paramType: string = null;
   public paramProvince: string = null;
-
-  // public links = ['available', 'adopteds'];
-
   public showFilter: boolean;
-
-  // public itemsLoaded: Promise<boolean>;
 
   constructor(
     private utilsService: UtilsService,
@@ -62,7 +45,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.paramProvince = isProvinceOK ? params?.province : null;
       this.showFilter = Boolean(this.paramType || this.paramProvince);
     }
-    // console.log('PARAMS: ', this.paramProvince, this.paramType);
   }
 
   ngAfterViewChecked() {
@@ -70,9 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('HOME');
     this.loadForm();
-    // if (this.paramType || this.paramProvince) this.onChangeFilter();
   }
 
   loadForm(): void {
@@ -105,8 +85,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       const { filter, value } = selected;
       search[filter] = value;
     }
-
-    console.log('Search: ', search);
 
     if (search.type && search.province) {
       const query = {

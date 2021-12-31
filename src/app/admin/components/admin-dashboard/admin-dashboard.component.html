@@ -57,10 +57,6 @@
   <section>
     <h3 class="container__section-title container__section-title--margin">{{ "dashboard.last_7_days" | translate }}</h3>
 
-    <!-- <select type="submit" [ngModel]="lineChartType" (ngModelChange)="lineChartType = $event">
-      <option *ngFor="let option of ['bar', 'line']" value="{{ option }}">{{ option | translate }}</option>
-    </select> -->
-
     <mat-form-field appearance="fill">
       <mat-label>{{ "chartType" | translate }}</mat-label>
       <mat-select [ngModel]="lineChartType" (selectionChange)="lineChartType = $event.value">

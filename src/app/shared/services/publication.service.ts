@@ -21,12 +21,8 @@ export class PublicationService {
   ) {}
 
   public async getPublications(options: any): Promise<Publication[]> {
-    // startAt => Incluye la key
-    // startAfter => Excluye la key
-    // Mismo comportamiento para endAt y endBefore
     const { filterKey, filterValue, idLastItem, limitItems } = options;
     let query;
-    console.log('Opciones: ', options);
 
     if (!filterKey) {
       if (!idLastItem) {
@@ -53,7 +49,6 @@ export class PublicationService {
   }
 
   public async getPublicationsID(options: any): Promise<string[]> {
-    // Favoritos, Mis publicaciones, Mi historial
     const { idLastItem, limitItems, url } = options;
 
     // Siguientes y principio
@@ -65,7 +60,6 @@ export class PublicationService {
   }
 
   public async getPublicationsAdmin(tab: string): Promise<Publication[]> {
-    // Debemos tener en cuenta que debemos saber qué referencia usar...
     const url = tab === PublicationState.available ? '/publications' : '/history';
     return this.db.list<Publication>(url).valueChanges().pipe(take(1)).toPromise();
   }

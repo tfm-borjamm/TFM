@@ -14,15 +14,12 @@ import { ConsultService } from '../../../shared/services/consult.service';
   styleUrls: ['./contact-form.component.scss'],
 })
 export class ContactFormComponent implements OnInit {
-  // @ViewChild('btnForm') btnForm: ElementRef;
-  @ViewChild(FormGroupDirective) formDirective: FormGroupDirective;
-
+  @ViewChild(FormGroupDirective) public formDirective: FormGroupDirective;
   public contactForm: FormGroup;
   public name: FormControl;
   public email: FormControl;
   public subject: FormControl;
   public message: FormControl;
-
   public btnSubmitted: boolean;
 
   constructor(
@@ -57,7 +54,6 @@ export class ContactFormComponent implements OnInit {
 
   async onContact() {
     if (this.contactForm.valid) {
-      // this.btnForm.nativeElement.disabled = true;
       this.btnSubmitted = true;
       const servertime = await this.utilsService.getServerTimeStamp().catch((e) => this.utilsService.errorHandling(e));
       if (servertime) {
@@ -75,13 +71,11 @@ export class ContactFormComponent implements OnInit {
         this.consultService
           .createConsult(consult)
           .then(() => {
-            // console.log('Consulta enviada correctamente');
             this.notificationService.successNotification('success.consult_created');
             this.btnSubmitted = false;
             this.formDirective.resetForm();
           })
           .catch((e) => {
-            // this.btnForm.nativeElement.disabled = false;
             this.btnSubmitted = false;
             this.utilsService.errorHandling(e);
           });

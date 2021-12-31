@@ -17,11 +17,9 @@ export class NotAuthGuard implements CanActivate {
       take(1),
       map((auth) => {
         if (auth) {
-          console.log('DENEGADO: USUARIO AUTENTICADO');
           this.router.navigate(['/home']);
           return false;
         }
-        console.log('ACEPTADO: USUARIO NO AUTENTICADO');
         return true;
       })
     );

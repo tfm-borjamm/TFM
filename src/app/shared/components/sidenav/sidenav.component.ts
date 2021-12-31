@@ -13,18 +13,15 @@ import { MediaMatcher } from '@angular/cdk/layout';
 })
 export class SidenavComponent implements OnInit {
   @Input() public user: User;
-  @Output() snavStateOnChange = new EventEmitter();
-  @Input() mobileQuery: MediaQueryList;
+  @Output() public snavStateOnChange = new EventEmitter();
+  @Input() public mobileQuery: MediaQueryList;
 
   constructor(private utilsService: UtilsService, private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-    console.log('SIDENAV ACTIVADO');
-  }
+  ngOnInit(): void {}
 
   resetMenuTabs() {
     this.utilsService.removeLocalStorage('menu');
-    // this.utilsService.removeLocalStorage('search');
   }
 
   onCloseSidenav() {
@@ -32,14 +29,7 @@ export class SidenavComponent implements OnInit {
   }
 
   onLogout(): void {
-    console.log('Sesión cerrada');
-    // this.utilsService.clearLocalStorage();
     this.authService.logout();
-    // this.router.navigate(['publication']);
-    // if (this.router.url == '/home') {
-    //   // window.location.reload();
-    // } else {
     this.router.navigate(['home']);
-    // }
   }
 }

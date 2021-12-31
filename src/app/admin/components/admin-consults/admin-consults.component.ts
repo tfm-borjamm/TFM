@@ -20,18 +20,13 @@ import { ConsultService } from '../../../shared/services/consult.service';
 export class AdminConsultsComponent implements OnInit {
   public consults: Consult[];
   public consult: Consult;
-
-  // public defaultLink = ConsultState.unread;
-  public links = Object.values(ConsultState).splice(1); // Admin not
-
-  displayedColumns: string[] = ['name', 'email', 'subject', 'message', 'date', 'star'];
-  dataSource: any = new MatTableDataSource<Consult>([]);
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
+  public links = Object.values(ConsultState).splice(1);
+  public displayedColumns: string[] = ['name', 'email', 'subject', 'message', 'date', 'star'];
+  public dataSource: any = new MatTableDataSource<Consult>([]);
+  @ViewChild(MatPaginator) public paginator: MatPaginator;
+  @ViewChild(MatSort) public sort: MatSort;
   public showFilter: boolean = false;
   public subscriptionTranslate: Subscription;
-
   public itemsLoaded: Promise<boolean>;
 
   constructor(
@@ -41,14 +36,7 @@ export class AdminConsultsComponent implements OnInit {
     public translateService: TranslateService,
     private notificationService: NotificationService,
     private dialogService: DialogService
-  ) {
-    // const search = this.utilsService.getLocalStorage('search');
-    // const params = search;
-    // if (params) {
-    //   this.dataSource.filter = params.search;
-    //   // this.showFilter = true;
-    // }
-  }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -57,7 +45,6 @@ export class AdminConsultsComponent implements OnInit {
       this.itemsLoaded = null;
       const wordFilter =
         data.name.toLowerCase() + data.email.toLowerCase() + data.subject.toLowerCase() + data.message.toLowerCase();
-      // console.log('--->', data);
       this.itemsLoaded = Promise.resolve(true);
       return wordFilter.indexOf(filter) != -1;
     };
@@ -95,29 +82,16 @@ export class AdminConsultsComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    // Filter name search
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
-    // this.utilsService.setLocalStorage('search', {
-    //   search: this.dataSource.filter,
-    // });
-
-    // if (this.dataSource.paginator) {
-    //   this.dataSource.paginator.firstPage();
-    // }
-
-    // this.name = filterValue.toLowerCase();
-    // this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
   }
 
   resetFilter() {
     this.dataSource.filter = '';
-    // this.utilsService.removeLocalStorage('search');
   }
 
   async onDeleteConsult(id: string): Promise<void> {
-    // console.log('Eliminar: ', id);
     const confirm = await this.dialogService.confirm('info.confirm.delete');
     if (confirm) {
       this.consultService
@@ -133,16 +107,15 @@ export class AdminConsultsComponent implements OnInit {
   }
 
   async onMarkAsRead(id: string): Promise<void> {
-    // console.log('Marcar como leído: ', id);
     const confirm = await this.dialogService.confirm('info.confirm.read');
     if (confirm) {
       this.consultService
         .setState(id, ConsultState.read)
         .then(() => {
-          // this.consults.find((consult) => consult.id === id).state = ConsultState.read;
-          // this.loadConsults(this.tabValue); // Hacerlo local
-          this.dataSource.data = this.dataSource.data.find((consult: Consult) => consult.id === id).state =
-            ConsultState.read;
+          this.dataSource.data = this.dataSource.data.map((consult: Consult) => {
+            if (consult.id === id) consult.state = ConsultState.read;
+            return consult;
+          });
           this.notificationService.successNotification('success.consult_answered');
         })
         .catch((e) => this.utilsService.errorHandling(e));

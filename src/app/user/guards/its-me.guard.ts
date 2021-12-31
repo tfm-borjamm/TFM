@@ -17,7 +17,6 @@ export class ItsMeGuard implements CanActivate {
     private router: Router
   ) {}
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    // return true;
     try {
       const id = route.params['id'];
       const uid = await this.authService.getCurrentUserUID();

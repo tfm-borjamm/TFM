@@ -16,10 +16,9 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    // "lib": ["es2018", "dom"],
-    "lib": ["es2018", "dom", "ESNext.String"], // Añadida librería "ESNext.String" por mí para utilizar replaceAll
-    "strictNullChecks": false, // Añadido por mí
-    "strictPropertyInitialization": false // Añadido por mí
+    "lib": ["es2018", "dom", "ESNext.String"],
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

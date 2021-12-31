@@ -25,9 +25,6 @@ import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
   styleUrls: ['./publication-form.component.scss'],
 })
 export class PublicationFormComponent implements OnInit {
-  // @ViewChild('input') input: HTMLInputElement;
-  // @ViewChild('input', { static: false }) input: ElementRef;
-
   public publication = new Publication();
   public publicationForm: FormGroup;
   public name: FormControl;
@@ -54,26 +51,14 @@ export class PublicationFormComponent implements OnInit {
   public shippings: any = confirm;
   public dewormeds = confirm;
   public publicationID = '';
-  // public datosFormulario = new FormData();
-  // public file: File;
-  // public imageName: string = null;
-  // public imageURL: string = null;
-  // public nombreArchivo = '';
-  // public image: FormControl;
-  // public porcentaje = 0;
-  // public images: any = [];
-
   public editPublication: boolean;
   public files: any = [];
   public originalImages: any = []; // Compare images init on final
-
   public user: User;
   public isAdmin: boolean = false;
   public isAuthor: boolean = false;
   public provinces: string[] = provinces;
-
   public btnSubmitted: boolean;
-
   public publicationParam: Publication;
 
   constructor(
@@ -88,44 +73,16 @@ export class PublicationFormComponent implements OnInit {
     private notificationService: NotificationService,
     private titleCasePipe: TitleCasePipe,
     private capitalizePipe: CapitalizePipe
-  ) {
-    // Editar o Crear
-    // this.activatedRoute.params.forEach((params) => (this.publicationID = params['id']));
-  }
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    // this.route.params.forEach((params) => (publicationID = params['id']));
-
-    // Si vamos a editar una publicación
-
     this.user = await this.authService.getCurrentUserLogged();
     this.publicationParam = this.activatedRoute.snapshot.data.publication;
-    console.log('--->', this.publicationParam);
 
     if (this.publicationParam) {
-      // this.publication = await this.publicationService.getPublicationById(this.publicationID);
       this.publication = this.publicationParam;
       this.publicationID = this.publication.id;
       this.isAuthor = this.publication.idAuthor === this.user.id;
-
-      // this.user = await this.authService.getCurrentUserLogged();
-
-      // this.isAdmin = this.user.role === Role.admin;
-
-      // if (!this.publication) {
-      //   this.router.navigate(['publication-not-found']);
-      //   return;
-      // }
-
-      // if (!this.publication) {
-      //   this.router.navigate(['publication-not-found']);
-      //   return;
-      // } else if (!this.isAuthor && !this.isAdmin) {
-      //   this.location.back();
-      //   console.log('No tienes permisos para editar la publicación!!!'); // Poner un guard para evitar esto
-      //   return;
-      // }
-
       this.editPublication = true;
       this.publication.images ??= {};
       const [clone1, clone2] = [
@@ -134,30 +91,10 @@ export class PublicationFormComponent implements OnInit {
       ];
       this.originalImages = this.utilsService.getArrayFromObject(clone1);
       this.files = this.utilsService.getArrayFromObject(clone2);
-
-      console.log('this.files', this.files);
     } else {
-      // Si vamos a crear una publicación
       this.publicationID = this.utilsService.generateID();
       this.editPublication = false;
-      console.log('Creamos ');
     }
-
-    // Enums del diagrama de clase
-    // this.sexs = Object.entries(Sex).map((entry) => {
-    //   const [key, value] = entry;
-    //   return { key, value };
-    // });
-
-    // this.types = Object.entries(Type).map((entry) => {
-    //   const [key, value] = entry;
-    //   return { key, value };
-    // });
-
-    // this.sizes = Object.entries(Size).map((entry) => {
-    //   const [key, value] = entry;
-    //   return { key, value };
-    // });
 
     this.sexs = Object.values(Sex);
     this.types = Object.values(Type);
@@ -214,46 +151,18 @@ export class PublicationFormComponent implements OnInit {
 
   // Añadir o editar una imagen
   public changeImage(event: any) {
-    // console.log('---', this.input.nativeElement.value);
-    // const filesSelected = event.target.files;
     const filesSelected = event.target.files;
     const sizesArray = this.utilsService.getArrayFromObject(filesSelected);
-
-    // const sizeTotal = sizesArray.reduce((a, b) => ({ size: a.size + b.size })).size;
     const sizeTotal = sizesArray.reduce((acc, obj) => acc + obj.size, 0);
     const maxSizeFile = 1024 * 1024 * 5; // Máximo 5 MB total de subida
-    console.log(sizeTotal, maxSizeFile);
 
     // Validations
     const isSizeValid = maxSizeFile > sizeTotal;
     const isNumFilesValid = filesSelected.length > 0 && filesSelected.length <= 5;
     const isFormatValid = sizesArray.every((file) => /\.(jpg|gif|jpeg|png|webp|svg)$/i.test(file.name));
-    console.log(isSizeValid, isNumFilesValid, isFormatValid);
-    console.log(filesSelected, sizesArray);
-
-    // const validations = {
-    //   size: (s: boolean) => {
-    //     if (!s) return 'Ha superado el tamaño máximo permitido (5 MB). ';
-    //     return '';
-    //   },
-    //   maxFiles: (m: boolean) => {
-    //     if (!m) return 'Ha superado el máximo de ficheros permitido (Máximo 5 ficheros). ';
-    //     return '';
-    //   },
-    //   format: (f: boolean) => {
-    //     if (!f) return 'Formato no permitido. Asegurese de subir sólo imágenes. ';
-    //     return '';
-    //   },
-    //   init: (s: boolean, m: boolean, f: boolean) => {
-    //     return validations.size(s) + validations.maxFiles(m) + validations.format(f);
-    //   },
-    // };
 
     if (isSizeValid && isNumFilesValid && isFormatValid) {
-      // this.input.nativeElement.value = null;
-      this.originalImages.map((img: any) => (img.status = 'deleted')); // Al estar editando un objeto que no ha sido copiado
-      // console.log('suerteee:', this.originalImages, this.publication.images);
-
+      this.originalImages.map((img: any) => (img.status = 'deleted'));
       this.files = [];
       sizesArray.forEach((f) => {
         const id = this.utilsService.generateID();
@@ -264,40 +173,17 @@ export class PublicationFormComponent implements OnInit {
         };
         reader.readAsDataURL(f);
       });
-
-      // for (let i = 0; i < filesSelected.length; i++) {
-      //   // Comprobación de que es un formato válido
-      //   // if (!/\.(jpg|gif|jpeg|png|webp)$/i.test(filesSelected[i].name)) {
-      //   //   this.files = [];
-      //   //   console.log('Formato no válido');
-      //   //   break;
-      //   // } else {
-      //   const id = this.utilsService.generateID();
-      //   const reader = new FileReader();
-      //   reader.onload = (e) => this.files.push({ id: id, src: reader.result, file: filesSelected[i] });
-      //   reader.readAsDataURL(filesSelected[i]);
-      //   // }
-      // }
     } else {
       // Se pueden subir como máximo 5 imágenes que no superen los 5 MB
       this.notificationService.errorNotification('errors.upload_images');
-      // console.info(validations.init(isSizeValid, isNumFilesValid, isFormatValid));
     }
   }
-
-  // public async getCurrentUser(): Promise<User> {
-  //   const idUser = await this.authService.getCurrentUserUID();
-  //   const user = await this.userService.getUserById(idUser);
-  //   return user;
-  // }
 
   public deleteImage(file: any): void {
     if (!this.image.dirty) this.image.markAsDirty();
     if (file.url) {
       this.originalImages.filter((img: any) => img.id === file.id).map((obj: any) => (obj.status = 'deleted'));
-      // console.log('suerte', this.originalImages);
     }
-    // console.log(this.files, this.originalImages);
     this.files = this.files.filter((f: any) => f.id !== file.id);
     if (this.files.length === 0) this.image.setValue('');
   }
@@ -309,18 +195,13 @@ export class PublicationFormComponent implements OnInit {
         // Comprobamos si existe alguna imagen eliminada
         const isDeleted = this.originalImages.filter((image: any) => image.status === 'deleted');
         if (isDeleted.length > 0) {
-          console.log('Existen eliminados: ', isDeleted);
           const deletedPromises = isDeleted.map((image: any) =>
             this.publicationService.deleteCloudStorage(`publications/${this.publicationID}/${image.id}`)
           );
-          console.log('deletedPromises:', deletedPromises);
 
           const deleted = await Promise.all(deletedPromises).catch((e) => this.utilsService.errorHandling(e));
         }
       }
-
-      // // Comprobación si es el administrador!
-      // const user = await this.authService.getCurrentUserLogged();
 
       let images: any = {};
       this.files.forEach((file: any) => {
@@ -330,14 +211,10 @@ export class PublicationFormComponent implements OnInit {
         };
       });
 
-      // console.log('validacion', this.editPublication, this.isAdmin);
-
       let publication: Publication = {
         id: this.publicationID,
         idAuthor: !this.editPublication ? this.user.id : this.publication.idAuthor,
-        // idAuthor: this.editPublication && this.isAdmin ? this.publication.idAuthor : this.user.id,
         name: this.publicationForm.value.name.toLowerCase(),
-        // province: this.editPublication && this.isAdmin ? this.publication.province : this.user.province,
         province: this.publicationForm.value.province,
         description: this.publicationForm.value.description,
         images: images,
@@ -352,8 +229,6 @@ export class PublicationFormComponent implements OnInit {
         dewormed: this.publicationForm.value.dewormed,
         shipping: this.publicationForm.value.shipping,
         date: this.editPublication ? this.publication.date : null,
-        // Campos extras!
-        // countFavorites: this.publication.countFavorites ?? 0,
         state: this.publication.state ?? PublicationState.available,
         filter: this.publicationForm.value.type + '+' + this.publicationForm.value.province.replaceAll(' ', ''),
       };
@@ -362,26 +237,17 @@ export class PublicationFormComponent implements OnInit {
       const isNewImages = this.files.filter((image: any) => image.src);
 
       if (isNewImages.length > 0) {
-        console.log('Existen imágenes para subir');
-
         const promisesTasks = isNewImages.map((image: any) =>
           this.publicationService.tareaCloudStorage(`publications/${this.publicationID}/${image.id}`, image.file)
         );
-
         const tasks = await Promise.all(promisesTasks);
-        console.log('TASKS', tasks);
-
         const promisesURLs = isNewImages.map((image: any) =>
           this.publicationService.referenciaCloudStorage(`publications/${this.publicationID}/${image.id}`)
         );
-
         const urls = await Promise.all(promisesURLs);
-        console.log('URLS', urls);
-
         isNewImages.map((image: any, index: number) => {
           const url = urls[index];
           publication.images[image.id].url = url;
-          console.log('percen, url', url);
         });
       }
 
@@ -399,10 +265,7 @@ export class PublicationFormComponent implements OnInit {
         this.publicationService
           .createPublication(publication)
           .then(() => {
-            // this.utilsService.successToast('Añadido correctamente');
-            // this.publicationForm.reset();
             this.location.back();
-            // console.log('Creado correctamente!');
             this.notificationService.successNotification('success.publication_created');
           })
           .catch((e) => {
@@ -413,10 +276,7 @@ export class PublicationFormComponent implements OnInit {
         this.publicationService
           .updatePublication(publication)
           .then(() => {
-            // this.utilsService.successToast('Editado correctamente');
-            // this.publicationForm.reset();
             this.location.back();
-            // console.log('Editado correctamente!');
             this.notificationService.successNotification('success.publication_updated');
           })
           .catch((e) => {

@@ -20,24 +20,13 @@ import { UserService } from '../../../shared/services/user.service';
 })
 export class AdminUsersComponent implements OnInit {
   public users: User[];
-  // public usersV0: User[];
-  // public name: string = null;
-
-  // public defaultTab = Role.client;
-  // public tabs = Object.values(Role).splice(1);
-  // public defaultLink = 'clients';
   public links = ['clients', 'professionals'];
-
-  // public currentUserID: string;
-
   public link: string;
-
-  displayedColumns: string[] = ['name', 'email', 'telephone', 'province', 'star'];
-  dataSource: any = new MatTableDataSource<User>([]);
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  public displayedColumns: string[] = ['name', 'email', 'telephone', 'province', 'star'];
+  public dataSource: any = new MatTableDataSource<User>([]);
+  @ViewChild(MatPaginator) public paginator: MatPaginator;
+  @ViewChild(MatSort) public sort: MatSort;
   public subscriptionTranslate: Subscription;
-
   public showFilter: boolean = false;
   public itemsLoaded: Promise<boolean>;
 
@@ -48,14 +37,7 @@ export class AdminUsersComponent implements OnInit {
     private translateService: TranslateService,
     private notificationService: NotificationService,
     private dialogService: DialogService
-  ) {
-    // const search = this.utilsService.getLocalStorage('search');
-    // const params = search;
-    // if (params) {
-    //   this.dataSource.filter = params.search;
-    //   // this.showFilter = true;
-    // }
-  }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -89,22 +71,6 @@ export class AdminUsersComponent implements OnInit {
   }
 
   async loadUsers(link: string): Promise<void> {
-    // this.currentUserID = await this.authService.getCurrentUserUID();
-
-    // this.users = this.users.filter((user) => {
-    //   if (user.role === Role.client) {
-    //     const numberFavorites = this.utilsService.getArrayFromObject(user?.myFavorites ?? {}).length;
-    //     user.myFavorites = numberFavorites;
-    //   } else {
-    //     const numberPublications = this.utilsService.getArrayFromObject(user?.myPublications ?? {}).length;
-    //     user.myPublications = numberPublications;
-    //   }
-    //   return user;
-    // });
-
-    // this.usersV0 = this.users;
-    // this.name = '';
-
     this.link = link.substring(0, link.length - 1); // delete plural 's' letter
     this.users = await this.userService.getUsersAdmin(this.link);
     this.dataSource.data = this.users;
@@ -113,43 +79,22 @@ export class AdminUsersComponent implements OnInit {
     this.itemsLoaded = Promise.resolve(true);
   }
 
-  // filterAdmin(user: User) {
-  //   console.log('El usuario es: ', user);
-  //   return user.id !== 'YXq9Kyyoa6dMAyacb9EIO5OY88g1';
-  // }
-
   applyFilter(event: Event): void {
-    // Filter name search
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
-
-    // this.utilsService.setLocalStorage('search', {
-    //   search: this.dataSource.filter,
-    // });
-
-    // this.name = filterValue.toLowerCase();
-    // this.users = this.name ? this.usersV0.filter((user) => this.isEqualNames(user.name, this.name)) : this.usersV0;
   }
 
   resetFilter() {
     this.dataSource.filter = '';
-    // this.utilsService.removeLocalStorage('search');
   }
 
-  // isEqualNames(name1: string, name2: string): boolean {
-  //   return name1.includes(name2);
-  // }
-
   async onDeleteUser(user: User) {
-    // Método para eliminar un usuario '¿Esta seguro de que desea eliminar el usuario? Esta acción no se puede deshacer'
     const confirm = await this.dialogService.confirm('info.confirm.delete');
     if (confirm) {
       this.userService
         .deleteUser(user)
         .then(async () => {
-          // console.log('Se ha eliminado correctamente el usuario', a);
-          // this.users = this.users.filter((x) => x.id !== user.id); // Localmente!
           await this.utilsService.deleteUser(user.id).catch((e) => this.utilsService.errorHandling(e));
           this.dataSource.data = this.dataSource.data.filter((user: User) => user.id !== user.id);
           this.notificationService.successNotification('success.user_deleted');
@@ -173,10 +118,6 @@ export class AdminUsersComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // if (!this.subscriptionTab.closed) {
-    //   console.log('Destruimos el subscribe');
-    //   this.subscriptionTab.unsubscribe();
-    // }
     if (!this.subscriptionTranslate.closed) this.subscriptionTranslate.unsubscribe();
   }
 }

@@ -1,4 +1,3 @@
-<!-- <p>consult-details works!</p> -->
 <main class="container container--padding-x" [ngClass.gt-md]="{ 'container--center-auto': true }" *ngIf="consult">
   <article class="container__article">
     <div class="container__accions" fxLayout="row" fxLayoutAlign="space-between start">
@@ -8,16 +7,6 @@
       <button class="container__button-delete" mat-icon-button matTooltip="{{ 'delete' | translate }}" aria-label="Delete" (click)="onDeleteConsult(consult.id)">
         <mat-icon>delete</mat-icon>
       </button>
-
-      <!-- <button class="container__button-more" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="{{ 'more_options' | translate }}" aria-label="More options">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onDeleteConsult(consult.id)">
-            <mat-icon>delete</mat-icon>
-            <span>{{ "delete" | translate }}</span>
-          </button>
-        </mat-menu> -->
     </div>
     <section>
       <ul class="container__list" fxLayout="row wrap" fxLayout.lt-sm="column">
@@ -71,16 +60,7 @@
             </button>
           </li>
         </ul>
-
-        <!-- <label class="main__label" for="reply">reply (*)</label> -->
-        <!-- <textarea class="main__input" type="message" id="message" [formControl]="message" placeholder="{{ 'response' | translate }}"></textarea>
-            <div class="errors" *ngIf="replyForm.get('message').errors && (replyForm.get('message').touched || replyForm.get('message').dirty)">
-              <span class="errors__msg" *ngIf="replyForm.get('message').errors.required">Este campo es obligatorio</span>
-            </div> -->
       </form>
     </section>
   </article>
-
-  <!-- <button *ngIf="consult.state !== 'answered' && !showForm" (click)="showForm = !showForm">{{ "reply" | translate }}</button> -->
-  <!-- <p>{{ consult.id }}</p> -->
 </main>

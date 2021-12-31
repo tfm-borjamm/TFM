@@ -39,13 +39,11 @@ export class UtilsService {
   }
 
   async errorHandling(e: any) {
-    // Tiparlo de la mejor manera...
     let error = e;
     if (!e.code && e.error) error = e.error;
     if (error.code) {
       switch (error.code) {
         case 'auth/user-not-found':
-          // console.error('El usuario no se encuentra registrado en la aplicación');
           this.notificationService.errorNotification('errors.register');
           break;
         case 'auth/popup-closed-by-user':
@@ -72,7 +70,6 @@ export class UtilsService {
           break;
         default:
           this.notificationService.errorNotification(error.message);
-          // console.error(error.message);
           break;
       }
     }
@@ -113,7 +110,6 @@ export class UtilsService {
 
   setLocalStorage(id: string, storage: any): void {
     try {
-      // localStorage.setItem(id, JSON.stringify(storage));
       sessionStorage.setItem(id, JSON.stringify(storage));
     } catch (e) {
       this.errorHandling(e);
@@ -121,7 +117,6 @@ export class UtilsService {
   }
 
   getLocalStorage(id: string): any {
-    // return JSON.parse(localStorage.getItem(id));
     const storage = sessionStorage.getItem(id);
     try {
       return JSON.parse(storage);
@@ -133,45 +128,4 @@ export class UtilsService {
   removeLocalStorage(id: string): void {
     sessionStorage.removeItem(id);
   }
-
-  // isAObject(storage: any) {
-  //   return typeof storage === 'object' && storage !== null;
-  // }
-
-  // clearLocalStorage() {
-  //   try {
-  //     // localStorage.clear();
-  //     sessionStorage.clear();
-  //   } catch (e) {
-  //     this.errorHandling(e);
-  //   }
-  // }
-
-  // /**
-  //  * Función que devuelve los identificadores de las actividades favoritas del usuario logado.
-  //  * @return array con el id de las actividades favoritas del usuario logado.
-  //  */
-  // getUserFavoriteActivities(idUser: number): Observable<number[]> {
-  //   let idActivitiesUserFavorites: number[];
-  //   idActivitiesUserFavorites = JSON.parse(localStorage.getItem('lStorageFavorites' + idUser));
-  //   if (idActivitiesUserFavorites === null)
-  //   {
-  //     idActivitiesUserFavorites = new Array<number>();
-  //   }
-  //   return of(idActivitiesUserFavorites);
-  // }
-
-  // /**
-  //  * Función que actualiza los identificadores de las actividades favoritas del usuario logado.
-  //  * @param idActivitiesUserFavorites - array con los id de las actividades favoritas del usuario
-  //  */
-  // setUserFavoriteActivities(idActivitiesUserFavorites: number[], idUser: number): Observable<boolean> {
-  //   try {
-  //     localStorage.setItem('lStorageFavorites' + idUser, JSON.stringify(idActivitiesUserFavorites));
-  //     return of(true);
-  //   }
-  //   catch (e) {
-  //     throw throwError(e);
-  //   }
-  // }
 }

@@ -32,20 +32,20 @@ const routes: Routes = [
   },
 
   {
-    path: 'publications', // my-publications
+    path: 'publications',
     component: PublicationsComponent,
     data: { role: Role.professional },
     canActivate: [AuthGuard, RoleGuard],
   },
 
   {
-    path: 'publication', // item
+    path: 'publication',
     component: PublicationFormComponent,
     data: { role: [Role.professional, Role.admin] },
     canActivate: [AuthGuard, RoleGuard],
   },
   {
-    path: 'publication/:id', // item/:id
+    path: 'publication/:id',
     component: PublicationFormComponent,
     canActivate: [AuthGuard, IsOwnerGuard],
     resolve: { publication: PublicationResolver },
@@ -70,8 +70,6 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       onSameUrlNavigation: 'reload',
       scrollPositionRestoration: 'top',
-      // enableTracing: true,
-      // anchorScrolling: 'enabled',
     }),
   ],
   exports: [RouterModule],

@@ -1,59 +1,5 @@
-<!-- <p>publication-item works!</p> -->
-<!-- CARD MATERIAL -->
-<!-- <li *ngIf="currentUser && isClient && !isFavorite" (click)="onChangeFavorite()">Añadir a favorito</li>
-    <li *ngIf="currentUser && isClient && isFavorite" (click)="onChangeFavorite()">Eliminar de favorito</li> -->
-<!-- <div *ngIf="publication" class="card">
-
-  <div *ngIf="currentUser && isClient && !isPageFavorites() && !isPageMyPublications()">
-    <button *ngIf="!isFavorite" (click)="onChangeFavorite()">Icono de corazon sin rellenar</button>
-    <button *ngIf="isFavorite" (click)="onChangeFavorite()">Icono de corazon rellenado</button>
-  </div>
-
-  <div (click)="onDetailsPublication()">
-    <img class="card__image" [src]="image | imagePublication" (error)="image = ''" />
-    <p>{{ publication.id }}</p>
-    <h4>{{ "name" | translate }}</h4>
-    <p>{{ publication.name }}</p>
-    <h4>{{ "date" | translate }}</h4>
-    <p>{{ publication.date | date }}</p>
-    <h4>{{ "description" | translate }}</h4>
-    <p>{{ publication.description }}</p>
-    <h4>{{ "type" | translate }}</h4>
-    <p>{{ publication.type | translate }}</p>
-  </div>
-  <span *ngIf="isAdopted" class="tag">Adoptado</span>
-  <ul *ngIf="currentUser && (isAdmin || isAuthor) && !isAdopted">
-    <li *ngIf="isPageMyPublications()">
-      <button (click)="onSharePublication()">{{ "share" | translate }}</button>
-    </li>
-    <li>
-      <button (click)="onMarkAsAdopted()">{{ "mark_as_adopted" | translate }}</button>
-    </li>
-    <li>
-      <button (click)="onEditPublication()">{{ "edit" | translate }}</button>
-    </li>
-    <li>
-      <button (click)="onDeletePublication()">{{ "delete" | translate }}</button>
-    </li>
-  </ul>
-
-  <button (click)="onDeletePublication()" *ngIf="!isClient && isAdopted">{{ "delete" | translate }}</button>
-
-  <button *ngIf="currentUser && isClient && isFavorite && isPageFavorites()" (click)="onDeleteFavorite()">{{ "delete_from_favorites" | translate }}</button>
-  <button *ngIf="!isPageMyPublications()" (click)="onSharePublication()">{{ "share" | translate }}</button>
-</div> -->
-
 <article>
   <mat-card class="card mat-elevation-z3" [ngClass]="{ adopted: isAdopted }">
-    <!-- <mat-card-actions class="card__favorite"  align="end">
-    <button mat-button mat-icon-button *ngIf="!isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_border' | translate }}">
-      <mat-icon>favorite_border</mat-icon>
-    </button>
-    <button mat-button mat-icon-button *ngIf="isFavorite" (click)="onChangeFavorite()" matTooltip="{{ 'favorite_not_border' | translate }}">
-      <mat-icon>favorite</mat-icon>
-    </button>
-  </mat-card-actions> -->
-
     <img mat-card-image [src]="image | imagePublication" (error)="image = ''" alt="#" />
     <mat-card-title class="card__title">{{ publication.name | titlecase }}</mat-card-title>
     <mat-card-subtitle class="card__subtitle">{{ publication.province }}</mat-card-subtitle>

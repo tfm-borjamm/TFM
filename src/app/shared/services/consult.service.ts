@@ -32,7 +32,6 @@ export class ConsultService {
   }
 
   updateConsult(consult: Consult): Promise<[void, any]> {
-    // Método para contestar a la consulta!
     return Promise.all([
       this.db.object<Consult>(`consults/${consult.id}`).update(consult),
       this.utilsService.sendEmail(consult),

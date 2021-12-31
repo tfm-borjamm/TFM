@@ -11,8 +11,4 @@ export class Consult {
   creation_date: number;
   state: ConsultState;
   reply?: Reply;
-  // admin?: { //admin
-  //   reply_date: number;
-  //   reply: string;
-  // };
 }

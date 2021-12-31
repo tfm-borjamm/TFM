@@ -61,7 +61,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatToolbarModule,
     MatMenuModule,
     FlexLayoutModule,
-  ], // No Translate Module
+  ],
   exports: [
     TranslateModule,
     MomentModule,

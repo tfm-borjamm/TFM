@@ -13,18 +13,14 @@ import { UtilsService } from '../../services/utils.service';
 })
 export class SocialDialogComponent implements OnInit {
   public option: string;
-
   public author: User;
-
   public shareLinkRelative: string;
   public origin: string;
   public shareLink: string;
-
   public FACEBOOK_ICON = '../../../../assets/images/facebook.svg';
   public TWITTER_ICON = '../../../../assets/images/twitter.svg';
   public WHATSAPP_ICON = '../../../../assets/images/whatsapp.svg';
   public COPY_ICON = '../../../../assets/images/copy.svg';
-
   public telephone: string;
 
   constructor(
@@ -49,14 +45,14 @@ export class SocialDialogComponent implements OnInit {
     this.addIcons();
   }
 
+  ngOnInit(): void {}
+
   addIcons() {
     this.matIconRegistry.addSvgIcon('facebook', this.domSanitizer.bypassSecurityTrustResourceUrl(this.FACEBOOK_ICON));
     this.matIconRegistry.addSvgIcon('twitter', this.domSanitizer.bypassSecurityTrustResourceUrl(this.TWITTER_ICON));
     this.matIconRegistry.addSvgIcon('whatsapp', this.domSanitizer.bypassSecurityTrustResourceUrl(this.WHATSAPP_ICON));
     this.matIconRegistry.addSvgIcon('copy', this.domSanitizer.bypassSecurityTrustResourceUrl(this.COPY_ICON));
   }
-
-  ngOnInit(): void {}
 
   encode(message: string): string {
     return encodeURI(message);

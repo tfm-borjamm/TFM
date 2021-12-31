@@ -24,35 +24,15 @@ interface filterSelected {
 export class PublicationListComponent implements OnInit, OnDestroy {
   @Input() public changeTabs: Observable<string>;
   @Input() public changeFilters: Observable<void>;
-
   public subscriptionTabs: Subscription;
   public subscriptionFilters: Subscription;
-
   public idLastItem: string = null;
   public limitItems: number = 9;
-
-  // public filterPublication: FormGroup;
-  // public province: FormControl;
-  // public type: FormControl;
-
   public publications: any[] = [];
-
   public finished: boolean = false;
-  // public types: string[] = Object.values(Type);
-  // public provinces: string[] = provinces;
-
   public currentURL: string;
   public queryDB: string;
-
-  // public paramType: string = null;
-  // public paramProvince: string = null;
-
   public user: User;
-
-  // public links = ['available', 'adopteds'];
-
-  // public showFilter: boolean;
-
   public itemsLoaded: Promise<boolean>;
   public onLoadingNextItems: boolean;
 
@@ -61,18 +41,7 @@ export class PublicationListComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private router: Router,
     private authService: AuthService
-  ) {
-    // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    // const filterPublications = this.utilsService.getLocalStorage('filterPublications');
-    // const params = filterPublications;
-    // if (params) {
-    //   const isTypeOK = Object.values(Type).includes(params?.type);
-    //   const isProvinceOK = provinces.includes(params?.province);
-    //   this.paramType = isTypeOK ? params?.type : null;
-    //   this.paramProvince = isProvinceOK ? params?.province : null;
-    // }
-    // console.log('PARAMS: ', this.paramProvince, this.paramType);
-  }
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.currentURL = this.router.url;
@@ -83,35 +52,12 @@ export class PublicationListComponent implements OnInit, OnDestroy {
     if (this.currentURL === '/publications')
       this.subscriptionTabs = this.changeTabs.subscribe((link) => this.onChangeTab(link));
 
-    console.log('---->', this.currentURL);
-
     if (this.currentURL !== '/publications') this.getPublications();
   }
-
-  // loadForm() {
-  //   this.type = new FormControl(this.paramType ?? '');
-  //   this.province = new FormControl(this.paramProvince ?? '');
-  //   this.filterPublication = this.createForm();
-  // }
-
-  // createForm(): FormGroup {
-  //   return this.formBuilder.group({
-  //     type: this.type,
-  //     province: this.province,
-  //   });
-  // }
 
   onChangePublication(id: string) {
     this.publications = this.publications.filter((x) => x.id !== id);
   }
-
-  // resetFilter() {
-  //   this.resetSearch();
-  //   // this.type.setValue('');
-  //   // this.province.setValue('');
-  //   this.utilsService.removeLocalStorage('filterPublications');
-  //   this.getPublications();
-  // }
 
   resetSearch(): void {
     this.idLastItem = null;
@@ -127,40 +73,6 @@ export class PublicationListComponent implements OnInit, OnDestroy {
     this.resetLoading();
     this.resetSearch();
     this.getPublications();
-
-    // const search: any = {
-    //   type: this.filterPublication.value.type,
-    //   province: this.filterPublication.value.province,
-    // };
-
-    // if (selected) {
-    //   const { filter, value } = selected;
-    //   search[filter] = value;
-    // }
-
-    // console.log('Search: ', search);
-
-    // if (search.type && search.province) {
-    //   const query = {
-    //     type: search.type,
-    //     province: search.province,
-    //   };
-    //   this.utilsService.setLocalStorage('filterPublications', query);
-    // } else if (search.type) {
-    //   const query = {
-    //     type: search.type,
-    //   };
-    //   this.utilsService.setLocalStorage('filterPublications', query);
-    // } else if (search.province) {
-    //   const query = {
-    //     province: search.province,
-    //   };
-    //   this.utilsService.setLocalStorage('filterPublications', query);
-    // } else {
-    //   this.utilsService.removeLocalStorage('filterPublications');
-    // }
-
-    // if (selected) this.getPublications();
   }
 
   onChangeTab(link: string) {
@@ -173,9 +85,7 @@ export class PublicationListComponent implements OnInit, OnDestroy {
   }
 
   onScroll() {
-    console.log('SCROLLED');
     if (this.finished) return;
-    console.log('Sigue habiendo articulos');
     this.onLoadingNextItems = true;
     this.getPublications({ start: false });
   }
@@ -211,7 +121,6 @@ export class PublicationListComponent implements OnInit, OnDestroy {
         }
       }
     }
-    console.log('Valores: ', filterKey, filterValue);
 
     if (this.currentURL.includes('/home')) {
       options = {
@@ -221,7 +130,6 @@ export class PublicationListComponent implements OnInit, OnDestroy {
         limitItems: this.limitItems,
       };
       nextPublications = await this.publicationService.getPublications(options);
-      // settings.start ? this.publications.push(nextPublications) : this.publications.concat(...nextPublications);
       this.publications = settings.start ? nextPublications : this.publications.concat(...nextPublications);
       // debugger;
     } else if (this.currentURL.includes('/favorites') || this.currentURL.includes('/publications')) {
@@ -253,7 +161,6 @@ export class PublicationListComponent implements OnInit, OnDestroy {
     }
     this.finished = nextPublications.length < this.limitItems;
     this.setLastItemID();
-    console.log('IS FINISHED? ', this.finished);
     this.itemsLoaded = Promise.resolve(true);
     this.onLoadingNextItems = false;
   }
@@ -276,16 +183,7 @@ export class PublicationListComponent implements OnInit, OnDestroy {
     this.idLastItem = lastPublication.id;
   }
 
-  // onCreatePublication() {
-  //   this.router.navigate(['publication', 'item']);
-  // }
-
-  // trackByFn(index: number) {
-  //   return index;
-  // }
-
   trackByFn(index: number, item: Publication) {
-    // return item.id;
     return item ? item.id : undefined;
   }
 
@@ -294,6 +192,5 @@ export class PublicationListComponent implements OnInit, OnDestroy {
       this.subscriptionFilters.unsubscribe();
     if (this.currentURL === '/publications' && this.subscriptionTabs && !this.subscriptionTabs.closed)
       this.subscriptionTabs.unsubscribe();
-    // console.log('Nos vamos del componente padre');
   }
 }

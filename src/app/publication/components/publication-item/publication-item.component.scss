@@ -1,17 +1,3 @@
-// .tag {
-//   display: block;
-//   background: #000000;
-//   color: #ffffff;
-//   text-transform: uppercase;
-//   padding: 0.5rem 0;
-//   font-weight: bold;
-//   width: 200px;
-//   text-align: center;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-// }
-
 .mat-card {
   margin: 1.5rem 0.8rem;
   transition: transform 0.1s;
@@ -69,7 +55,6 @@
 .mat-card-content {
   cursor: pointer;
   text-overflow: ellipsis;
-  // white-space: nowrap;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -90,7 +75,6 @@
 }
 
 .mat-card-actions.card__favorite {
-  // margin: 0;
   margin-bottom: 0.5rem;
   padding: 0;
 }

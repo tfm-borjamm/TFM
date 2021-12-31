@@ -21,16 +21,12 @@ export class AdminConsultDetailsComponent implements OnInit {
   public replyForm: FormGroup;
   public message: FormControl;
   public noReplyMessage: FormControl;
-
   public id: string;
   public consult: Consult;
-
   public showForm: boolean;
   public btnSubmitted: boolean;
-
   public suscriptionLanguage: Subscription;
   constructor(
-    // private router: Router,
     private activatedRoute: ActivatedRoute,
     private consultService: ConsultService,
     private utilsService: UtilsService,
@@ -42,20 +38,9 @@ export class AdminConsultDetailsComponent implements OnInit {
     private dialogService: DialogService
   ) {
     this.consult = this.activatedRoute.snapshot.data.consult;
-    // this.activatedRoute.params.forEach((params) => {
-    //   // Params desde el routing
-    //   console.log('params', params);
-    //   this.id = params.id;
-    // });
   }
 
   async ngOnInit(): Promise<void> {
-    // this.consult = await this.consultService.getConsultById(this.id ?? '');
-    // if (!this.consult) {
-    //   this.router.navigate(['page-not-found']);
-    //   return;
-    // }
-
     this.loadForm();
     this.showForm = Boolean(this.consult.reply);
   }
@@ -79,7 +64,6 @@ export class AdminConsultDetailsComponent implements OnInit {
 
   onTranslateText() {
     this.suscriptionLanguage = this.translateService.onLangChange.subscribe((lang) => {
-      console.log(lang);
       this.noReplyMessage.setValue(this.translateService.instant('no_reply_message_description'));
     });
     this.noReplyMessage.setValue(this.translateService.instant('no_reply_message_description'));
@@ -90,7 +74,6 @@ export class AdminConsultDetailsComponent implements OnInit {
   }
 
   async onDeleteConsult(id: string): Promise<void> {
-    // '¿Está seguro que desea eliminar la consulta? Esta acción no se puede deshacer'
     const confirm = await this.dialogService.confirm('info.confirm.delete');
     if (confirm) {
       this.consultService
@@ -108,7 +91,6 @@ export class AdminConsultDetailsComponent implements OnInit {
 
   async onReplyConsult(): Promise<void> {
     if (this.replyForm.valid) {
-      // this.btnForm.nativeElement.disabled = true;
       this.btnSubmitted = true;
       const consult: Consult = {
         ...this.consult,
@@ -126,16 +108,12 @@ export class AdminConsultDetailsComponent implements OnInit {
         this.consultService
           .updateConsult(consult)
           .then((res) => {
-            // Mostramos el mensaje traducido res[1].message!
-            // console.log('Respuesta del servidor: ', res[1].message);
             this.consult = consult;
             this.replyForm.controls['message'].disable();
             this.btnSubmitted = false;
             this.notificationService.successNotification(res[1].message);
           })
           .catch((e) => {
-            // console.log('Respuesta de error del servidor: ', e);
-            // this.btnForm.nativeElement.disabled = false;
             this.btnSubmitted = false;
             this.utilsService.errorHandling(e[1].message);
           });

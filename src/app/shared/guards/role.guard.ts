@@ -16,7 +16,6 @@ export class RoleGuard implements CanActivate {
     private router: Router
   ) {}
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    // return true;
     const roleParam = route.data.role;
     const uid = await this.authService.getCurrentUserUID();
 

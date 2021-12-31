@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private utilsService: UtilsService,
     private router: Router,
-    private notificationService: NotificationService,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer
   ) {
@@ -67,11 +66,8 @@ export class LoginComponent implements OnInit {
       const password = this.loginForm.value.password;
       this.authService
         .login(email, password)
-        .then((userAuth) => {
-          // this.loginForm.reset();
-          console.log('Inicio de sesión correcto');
-          // this.router.navigate(['/home']);
-          this.routeNavigateHome(userAuth.user.uid);
+        .then(() => {
+          this.router.navigate(['/home']);
         })
         .catch((e) => {
           this.btnSubmitted = false;
@@ -87,10 +83,8 @@ export class LoginComponent implements OnInit {
       this.setBlockedBtnSocial(provider, false);
       return;
     }
-    // console.log('Usuario logueado:', userAuth);
     const isNewUser = userAuth?.additionalUserInfo?.isNewUser;
     if (isNewUser) {
-      // console.info('El usuario es nuevo en la plataforma');
       const date: string = userAuth.user.metadata.creationTime;
 
       const user: any = {
@@ -102,8 +96,6 @@ export class LoginComponent implements OnInit {
       this.userService
         .createUser(user)
         .then(() => {
-          // console.log('Se ha creado el usuario correctamente');
-          // this.notificationService.successNotification('user.created');
           this.router.navigate(['access/register-social']);
         })
         .catch((e) => {
@@ -111,55 +103,11 @@ export class LoginComponent implements OnInit {
           this.setBlockedBtnSocial(provider, false);
         });
     } else {
-      // console.info('El usuario ya se había registrado');
-      // const user = await this.userService.getUserById(userAuth.user.uid);
-      // if (user?.role === Role.admin) {
-      //   this.router.navigate(['/publication/admin']);
-      // } else {
-      // this.router.navigate(['/home']);
-      // }
-      this.routeNavigateHome(userAuth.user.uid);
+      this.router.navigate(['/home']);
     }
   }
 
   setBlockedBtnSocial(provider: string, disabled: boolean) {
     provider.includes('google') ? (this.btnFormGoogle.disabled = disabled) : (this.btnFormFacebook.disabled = disabled);
   }
-
-  async routeNavigateHome(uid: string) {
-    // const user = await this.userService.getUserById(uid);
-    // if (user?.role === Role.admin) {
-    //   this.router.navigate(['/admin']);
-    // } else {
-    // setTimeout(() => this.router.navigate(['/home']), 100);
-    this.router.navigate(['/home']);
-    // }
-    // this.router.navigate(['/publication/available/details/-MpwIBKTmDkTNHC0tnv7']);
-  }
-
-  // async onLoginGoogle() {
-  //   // const user = await this.authService.loginWithGoogle();
-  //   const user = await this.authService.loginWithProvider('google.com');
-  //   console.log('Usuario logueado:', user);
-
-  //   const isNewUser = user?.additionalUserInfo?.isNewUser;
-  //   if (isNewUser) {
-  //     console.info('El usuario es nuevo en la plataforma');
-  //   } else {
-  //     console.info('El usuario ya se había registrado');
-  //     this.router.navigate(['/home']);
-  //   }
-  // }
-
-  // async onLoginFacebook() {
-  //   const user = await this.authService.loginWithProvider('facebook.com');
-  //   console.log('Usuario logueado:', user);
-  //   const isNewUser = user?.additionalUserInfo?.isNewUser;
-  //   if (isNewUser) {
-  //     console.info('El usuario es nuevo en la plataforma');
-  //   } else {
-  //     console.info('El usuario ya se había registrado');
-  //     this.router.navigate(['/home']);
-  //   }
-  // }
 }

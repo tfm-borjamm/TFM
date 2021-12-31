@@ -23,25 +23,19 @@ export class AdminDashboardComponent implements OnInit {
   public countFavorites: number;
   public countUsers: number;
   public countConsults: number;
-
   public publications: Publication[];
   public users: User[];
   public consults: Consult[];
-
   public lineChartDataPublications: ChartDataSets[] = [{ data: [], label: '' }];
   public lineChartDataUsers: ChartDataSets[] = [{ data: [], label: '' }];
   public lineChartDataConsults: ChartDataSets[] = [{ data: [], label: '' }];
-
   public lineChartColorsPublications: Color[] = [];
   public lineChartColorsUsers: Color[] = [];
   public lineChartColorsConsults: Color[] = [];
-
   public lineChartLabels: Label[] = [];
   public lineChartOptions = {};
   public lineChartLegend = true;
   public lineChartType: ChartType = 'line';
-  // lineChartPlugins: any = [];
-
   public chartTypes = ['bar', 'line'];
   public subscriptionTranslate: Subscription;
 
@@ -102,15 +96,10 @@ export class AdminDashboardComponent implements OnInit {
   setOptionsChart(): void {
     this.lineChartOptions = {
       responsive: true,
-      // title: {
-      //   display: true,
-      //   text: 'Última semana',
-      // },
       scales: {
         xAxes: [
           {
             ticks: {
-              // reverse: true,
               autoSkip: false,
               stepSize: 1,
             },
@@ -154,7 +143,6 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   dateToMidnight(timestamp: number): number {
-    // new Date(servertime.timestamp).setHours(24, 0, 0, 0);
     return moment(timestamp).set({ hours: 24, minutes: 0, seconds: 0, millisecond: 0 }).unix() * 1000;
   }
 
@@ -182,7 +170,6 @@ export class AdminDashboardComponent implements OnInit {
         this.publications = datasets[0];
         this.consults = datasets[1];
         this.users = datasets[2];
-        console.log(this.users, this.publications);
 
         this.setDatasets(timestamp, ONE_DAY_TIMESTAMP);
       }
