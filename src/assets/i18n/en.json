@@ -13,8 +13,7 @@
   "publications": "Publications",
   "publication": "Publication",
   "share_link_message": "Hello, I share a pet that needs an owner in case you are interested: ",
-  "contact_message": "Hello, I would like to contact you.",
-
+  "contact_message": "Hello, I would like to contact you because I am interested in a pet that you have for adoption.",
   "welcome": "Welcome, ",
   "users": "Users",
   "consults": "Consults",
@@ -30,7 +29,7 @@
   "answered": "Answered",
   "home": "Home",
   "contact": "Contact",
-  "log_in": "Log in",
+  "log_in": "Access",
   "message": "Message",
   "contact_us": "Contact us",
   "contact_description": "For any questions please contact us",
@@ -52,7 +51,6 @@
   "telephone": "Telephone",
   "province": "Province",
   "postal_code": "Postal code",
-  "features": "Features",
   "share_publication": "Share this publication",
   "contact_btn": "Contact",
   "your_favorites": "Your favorites",
@@ -76,7 +74,7 @@
   "confirm_password": "Confirm password",
   "register_description": "We need a series of extra data to complete the registration correctly",
   "reset_password": "Reset password",
-  "reset_description": "Enter the email address of your account and we will send you a link to reset your password",
+  "reset_description": "We will send you a link to your email so that you can reset your account password",
   "client": "Client",
   "clients": "Clients",
   "professional": "Professional",
@@ -86,7 +84,6 @@
   "yes": "Yes",
   "no": "No",
   "state": "State",
-
   "male": "Male",
   "female": "Female",
   "small": "Small",
@@ -103,7 +100,6 @@
   "six_nine_years": "6 to 9 years",
   "more_ten_years": "More than 10 years",
   "all": "All",
-
   "mark_as_read": "Mark as read",
   "share": "Share",
   "edit": "Edit",
@@ -111,13 +107,11 @@
   "delete_from_favorites": "Delete from favorites",
   "no_results": "No results found",
   "to_post": "To post",
-
   "general": "General",
   "my_publications": "My publications",
   "my_favorites": "My favorites",
   "complete_registration": "Complete registration",
   "logout": "Logout",
-
   "admin": "Admin",
   "role": "Role",
   "change": "Change",
@@ -132,7 +126,6 @@
   "new_user": "New user",
   "to_contact": "Contact",
   "pet_image": "Pet's image",
-
   "select_a_option": "Select a option",
   "select_a_province": "Select a province",
   "image": "Image",
@@ -141,14 +134,9 @@
   "edit_user": "Edit user",
   "reply": "Reply",
   "back": "Back",
-
   "ok": "OK",
   "close": "CLOSE",
-  "edit_success": "Has been created successfully",
-  "create_success": "Has been created successfully",
-
   "confirm": "Are you sure?",
-  "confirm_delete": "Are you sure you want to delete it?",
   "im_sure": "Yes, I'm sure",
   "cancel": "Cancel",
   "favorite_border": "Add to favorites",
@@ -161,7 +149,6 @@
   "of": "of",
   "more": "More",
   "shipping": "shipping possibility",
-
   "chip.yes": "With chip",
   "chip.no": "Without chip",
   "vaccinate.unknown": "It is unknown",
@@ -174,28 +161,22 @@
   "shipping.no": "With shipping option",
   "shipping.yes": "No shipping option",
   "more_options": "More options",
-
   "choose_file": "Choose files",
   "no_reply_message": "Automatic message to be added",
   "no_reply_message_description": "Please do not reply to this message. In case you need to make another new question, go to the contact page of the web application and fill out the form. Thanks a lot.",
   "search": "Search",
-
   "copy_link": "Copy link",
   "all_rights_reserved": "All rights reserved",
   "page_not_found": "Page not found",
   "success_message_sent": "Message sent successfully",
   "failed_message_sent": "Error sending message",
   "user_data": "User's data",
-
   "chartType": "Chart's type",
-
   "header": {
     "title": "The simplest way to adopt",
     "subtitle": "Find the pet that needs your adoption"
   },
-
   "clear": "Clear",
-
   "info": {
     "cancelled": "The operation has been cancelled",
     "confirm": {
@@ -204,7 +185,6 @@
       "read": "Are you sure you want the query marked as read? This action can not be undone"
     }
   },
-
   "success": {
     "forgot_password": "An email has been sent to you so that you can reset your account password",
     "user_created": "User created successfully",
@@ -224,7 +204,6 @@
     "link_copied": "Publication link copied successfully",
     "message_sent": "The mail has been sent successfully"
   },
-
   "errors": {
     "required": "This field is required",
     "email": "Email doesn't have a correct format",
@@ -255,7 +234,6 @@
     "user_deleted": "An error occurred while deleting the user",
     "message_sent": "An error occurred while sending the mail"
   },
-
   "new_publication": "New publication",
   "edit_publication": "Edit publication",
   "dashboard": {
@@ -269,5 +247,6 @@
       "users": "Count of registered users in the web application",
       "consults": "Count of consults that exist in the web application"
     }
-  }
+  },
+  "details_of": "Details of "
 }

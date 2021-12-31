@@ -1,5 +1,5 @@
 <article class="container container--maxwidth" [ngClass.lt-lg]="{ 'container__publication-maxwidth': true }" *ngIf="publication">
-  <h1 class="container__title">Detalles de {{ publication.name | capitalize }}</h1>
+  <h1 class="container__title">{{ "details_of" | translate }} {{ publication.name | capitalize }}</h1>
   <div align="end">
     <button
       *ngIf="isAuthor || isAdmin"
@@ -41,7 +41,7 @@
     fxLayout.gt-md="row"
     fxLayoutAlign.gt-md="start start"
   >
-    <section class="container__section" aria-label="Detalle de la publicación" fxFlex="1 1 auto">
+    <section class="container__section" aria-label="Publication details" fxFlex="1 1 auto">
       <div fxLayout="column" fxLayoutGap="16px">
         <div class="container__carrousel">
           <mat-carousel
@@ -52,9 +52,11 @@
             [hideArrows]="publication.images.length === 1"
             [hideIndicators]="publication.images.length === 1"
             [useMouseWheel]="false"
+            [useKeyboard]="true"
             orientation="ltr"
             [maintainAspectRatio]="false"
             slideHeight="500px"
+            [slides]="publication?.images.length"
             maxWidth="500px"
             class="carrousel"
           >
@@ -155,7 +157,7 @@
           </a>
         </mat-nav-list>
 
-        <button mat-flat-button color="primary" (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
+        <button mat-flat-button color="accent" (click)="onContactAuthor()">{{ "to_contact" | translate }}</button>
       </div>
 
       <!-- <div class="container__aside-share">

@@ -1,3 +1,5 @@
+import { Role } from '../enums/role.enum';
+
 export class User {
   id: string;
   email: string;
@@ -7,7 +9,7 @@ export class User {
   code: string;
   telephone: string;
   province: string;
-  role: string;
+  role: Role;
   added_date: number;
   myPublications?: { [idPublication: string]: { id: [idPublication: string]; state: string }[] };
   myFavorites?: { [idPublication: string]: [idPublication: string][] };

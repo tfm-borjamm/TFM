@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Rubik&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+@import "~@angular/material/theming";
+@include mat-core();
+
+// Material palette
+$my-app-primary: mat-palette($mat-indigo, A700);
+$my-app-accent: mat-palette($mat-green, A200);
+$my-app-warn: mat-palette($mat-red);
+
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+@include angular-material-theme($my-app-theme);
+
+// Material typography
+$custom-typography: mat-typography-config(
+  $font-family: "Rubik",
+);
+@include angular-material-typography($custom-typography);

@@ -91,7 +91,7 @@ export class RegisterComponent implements OnInit {
     //   return { key, value };
     // });
 
-    this.roles = Object.values(Role);
+    this.roles = Object.values(Role).filter((role) => role !== Role.admin);
 
     // this.roles = Object.keys(rol).map((key: string) => {
     //   return {

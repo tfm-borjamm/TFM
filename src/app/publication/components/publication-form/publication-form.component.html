@@ -190,7 +190,7 @@
 </main> -->
 
 <main class="container" *ngIf="publicationForm" fxLayout="column" fxLayoutAlign="center center">
-  <h1 class="main__title" translate="{{ !publicationParam ? 'publication.new' : 'publication.edit' }}"></h1>
+  <h1 class="main__title" translate="{{ !publicationParam ? 'new_publication' : 'edit_publication' }}"></h1>
   <form class="container__form" [formGroup]="publicationForm" (ngSubmit)="onSubmit()">
     <ul class="container__list" fxLayout="row wrap" fxLayout.lt-sm="column">
       <li class="container__item" fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" fxLayoutGap.gt-xs="24px">

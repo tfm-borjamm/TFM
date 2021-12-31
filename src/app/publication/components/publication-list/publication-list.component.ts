@@ -29,7 +29,7 @@ export class PublicationListComponent implements OnInit, OnDestroy {
   public subscriptionFilters: Subscription;
 
   public idLastItem: string = null;
-  public limitItems: number = 3;
+  public limitItems: number = 9;
 
   // public filterPublication: FormGroup;
   // public province: FormControl;

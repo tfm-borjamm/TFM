@@ -10,7 +10,8 @@
           <mat-nav-list fxLayout="row" fxShow="true" fxHide.gt-sm="{{ user?.role === 'admin' }}">
             <a mat-list-item routerLink="/home" [ngClass.lt-md]="{ nav__logo: true }">
               <!-- <mat-icon mat-list-icon svgIcon="logo" aria-hidden="false" aria-label="Logo icon"></mat-icon> -->
-              <span mat-line class="logo">CATS&DOGS</span>
+              <div mat-line class="logo">{{ "cats&dogs" | uppercase }}</div>
+              <!-- <img class="logo" src="../../../../assets/images/logo_final.svg" alt="" /> -->
             </a>
           </mat-nav-list>
 
@@ -95,7 +96,7 @@
   </nav>
 
   <!-- Portada -->
-  <div class="header__container" *ngIf="router.url.includes('/home')">
+  <div class="header__container" *ngIf="router.url === '/home'">
     <h1 class="header__title">{{ "header.title" | translate | uppercase }}</h1>
     <p class="header__subtitle">{{ "header.subtitle" | translate }}</p>
   </div>

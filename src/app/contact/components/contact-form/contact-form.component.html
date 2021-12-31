@@ -57,7 +57,6 @@
   <h1 class="container__title">{{ "contact_us" | translate }}</h1>
   <p class="container__description">
     {{ "contact_description" | translate }}
-    <mat-icon class="container__icon">tag_faces</mat-icon>
   </p>
   <form class="container__form" [formGroup]="contactForm" (ngSubmit)="onContact()">
     <ul class="container__list" fxLayout="row wrap" fxLayout.lt-sm="column">

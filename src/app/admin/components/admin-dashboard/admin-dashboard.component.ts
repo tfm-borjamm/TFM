@@ -120,8 +120,8 @@ export class AdminDashboardComponent implements OnInit {
           {
             ticks: {
               autoSkip: false,
-              stepSize: 20,
-              suggestedMax: 100,
+              stepSize: 10,
+              suggestedMax: 50,
               beginAtZero: true,
             },
           },
@@ -133,8 +133,8 @@ export class AdminDashboardComponent implements OnInit {
   setColorChart(): void {
     this.lineChartColorsPublications = [
       {
-        borderColor: 'rgba(63, 81, 181, 1)',
-        backgroundColor: 'rgba(63, 81, 181, 0.4)',
+        borderColor: 'rgba(48, 79, 254, 1)',
+        backgroundColor: 'rgba(48, 79, 254, 0.4)',
       },
     ];
 
@@ -147,8 +147,8 @@ export class AdminDashboardComponent implements OnInit {
 
     this.lineChartColorsUsers = [
       {
-        borderColor: 'rgba(255, 64, 129, 1)',
-        backgroundColor: 'rgba(255, 64, 129, 0.4)',
+        borderColor: 'rgba(105, 240, 174, 1)',
+        backgroundColor: 'rgba(105, 240, 174, 0.4)',
       },
     ];
   }

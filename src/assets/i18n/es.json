@@ -13,8 +13,7 @@
   "publications": "Publicaciones",
   "publication": "Publicación",
   "share_link_message": "Hola, te comparto una mascota que necesita un dueño por si te interesa: ",
-  "contact_message": "Hola, me gustaría ponerme en contacto contigo.",
-
+  "contact_message": "Hola, me gustaría ponerme en contacto contigo porque estoy interesado en una mascota que tiene en adopción.",
   "welcome": "Bienvenido, ",
   "users": "Usuarios",
   "consults": "Consultas",
@@ -52,7 +51,6 @@
   "telephone": "Teléfono",
   "province": "Provincia",
   "postal_code": "Código postal",
-  "features": "Características",
   "share_publication": "Comparte esta publicación",
   "contact_btn": "Contactar",
   "your_favorites": "Tus favoritos",
@@ -76,7 +74,7 @@
   "confirm_password": "Confirmar contraseña",
   "register_description": "Necesitamos una serie de datos extras para poder completar el registro correctamente",
   "reset_password": "Restablecer contraseña",
-  "reset_description": "Introduce la dirección de correo de tu cuenta y te enviaremos un enlace para que restablezcas la contraseña",
+  "reset_description": "Te enviaremos un enlace a tu correo electrónico para que restablezcas la contraseña de tu cuenta",
   "client": "Cliente",
   "clients": "Clientes",
   "professional": "Profesional",
@@ -86,11 +84,6 @@
   "yes": "Si",
   "no": "No",
   "state": "Estado",
-
-  "new_users_last_seven_days": "Nuevos usuarios en los últimos 7 días",
-  "new_consults_last_seven_days": "Nuevas consultas en los últimos 7 días",
-  "new_publications_last_seven_days": "Nuevas publicaciones en los últimos 7 días",
-
   "male": "Macho",
   "female": "Hembra",
   "small": "Pequeño",
@@ -114,13 +107,11 @@
   "delete_from_favorites": "Eliminar de favoritos",
   "no_results": "No se han encontrado resultados",
   "to_post": "Publicar",
-
   "general": "General",
   "my_publications": "Mis publicaciones",
   "my_favorites": "Mis favoritos",
   "complete_registration": "Completar registro",
   "logout": "Cerrar sesión",
-
   "admin": "Administrador",
   "role": "Rol",
   "change": "Cambiar",
@@ -135,7 +126,6 @@
   "new_user": "Nuevo usuario",
   "to_contact": "Contactar",
   "pet_image": "Imagen de la mascota",
-
   "select_a_option": "Selecciona una opción",
   "select_a_province": "Selecciona una provincia",
   "image": "Imagen",
@@ -144,13 +134,9 @@
   "edit_user": "Editar usuario",
   "reply": "Responder",
   "back": "Atrás",
-
   "ok": "OK",
   "close": "CERRAR",
-  "edit_success": "Se ha editado correctamente",
-  "create_success": "Se ha creado correctamente",
   "confirm": "¿Está seguro?",
-  "confirm_delete": "¿Está seguro de que desea eliminar el registro?",
   "im_sure": "Si, estoy seguro",
   "cancel": "Cancelar",
   "favorite_border": "Añadir a favoritos",
@@ -162,8 +148,7 @@
   "LAST_PAGE": "Última página",
   "of": "de",
   "more": "Más",
-  "shipping": "Posibilidad de envio",
-
+  "shipping": "Posibilidad de envío",
   "chip.yes": "Con chip",
   "chip.no": "Sin chip",
   "vaccinate.unknown": "Se desconoce",
@@ -176,28 +161,22 @@
   "shipping.no": "Con opción a envio",
   "shipping.yes": "Sin opción a envio",
   "more_options": "Más opciones",
-
   "choose_file": "Selecciona imágenes",
   "no_reply_message": "Mensaje automático que se añadirá",
   "no_reply_message_description": "Por favor, no responda a este mensaje. En caso de que necesite hacer otra nueva consulta, dirijase a la página de contacto de la aplicación web y rellene el formulario. Muchas gracias.",
   "search": "Buscar",
-
   "copy_link": "Copiar enlace",
   "all_rights_reserved": "Todos los derechos reservados",
   "page_not_found": "Página no encontrada",
   "success_message_sent": "Mensaje enviado correctamente",
   "failed_message_sent": "Error al enviar el mensaje",
   "user_data": "Datos del usuario",
-
   "chartType": "Tipo de gráfica",
-
   "header": {
     "title": "La manera más simple de adoptar",
     "subtitle": "Encuentra la mascota que necesita tu adopción"
   },
-
   "clear": "Limpiar",
-
   "info": {
     "cancelled": "Se ha cancelado la operación",
     "confirm": {
@@ -206,7 +185,6 @@
       "read": "¿Está seguro que desea marcado como leída la consulta? Esta acción no se puede deshacer"
     }
   },
-
   "success": {
     "forgot_password": "Se le ha enviado un correo electrónico para que pueda restablecer la contraseña de su cuenta",
     "user_created": "Se ha creado el usuario correctamente",
@@ -226,7 +204,6 @@
     "link_copied": "Se ha copiado correctamente el enlace de la publicación",
     "message_sent": "Se ha enviado el correo correctamente"
   },
-
   "errors": {
     "required": "Este campo es obligatorio",
     "email": "El correo electrónico no tiene un formato válido",
@@ -257,7 +234,6 @@
     "user_deleted": "Ha ocurrido un error mientras se eliminaba el usuario",
     "message_sent": "Ha ocurrido un error mientras se enviaba el correo"
   },
-
   "new_publication": "Nueva publicación",
   "edit_publication": "Editar publicación",
   "dashboard": {
@@ -271,5 +247,6 @@
       "users": "Recuento de los usuarios registrados en la aplicación web",
       "consults": "Recuento de las consultas que existen en la aplicación web"
     }
-  }
+  },
+  "details_of": "Detalles de "
 }

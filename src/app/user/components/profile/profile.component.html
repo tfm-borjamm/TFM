@@ -22,8 +22,8 @@
       </mat-list>
 
       <p>{{ "joined_on" | translate }} {{ user.added_date | amLocale: translateService.currentLang | amDateFormat: "LL" }}</p>
-      <button class="container__container-button" mat-flat-button color="primary" *ngIf="!isCurrentUser" (click)="onContactUser()">{{ "to_contact" | translate }}</button>
-      <button class="container__container-button" mat-flat-button color="warn" *ngIf="isCurrentUser || isAdminUser" (click)="onEditUser()">{{ "change" | translate }}</button>
+      <button class="container__container-button" mat-flat-button color="accent" *ngIf="!isCurrentUser" (click)="onContactUser()">{{ "to_contact" | translate }}</button>
+      <button class="container__container-button" mat-flat-button color="primary" *ngIf="isCurrentUser || isAdminUser" (click)="onEditUser()">{{ "change" | translate }}</button>
     </div>
 
     <ul class="container__list container__list--padding" fxFlex="1 1 auto" fxLayout="column" fxLayoutGap.lt-sm="16px">
