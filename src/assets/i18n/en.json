@@ -191,7 +191,7 @@
     "user_registered": "You have successfully registered in the application",
     "user_registered_social": "You have successfully registered. Please log in again with the account already registered",
     "consult_created": "The consult was created successfully",
-    "consult_deleted": "The consult has been delimited correctly",
+    "consult_deleted": "The consult has been removed correctly",
     "consult_answered": "The consult has been marked as read correctly",
     "publication_deleted": "The publication has been deleted successfully",
     "publication_adopted": "The publication has been marked as adopted successfully",
